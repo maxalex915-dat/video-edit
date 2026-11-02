@@ -1,0 +1,95 @@
+{
+  "description": "Edit list for the 59.08 s cut. Source times are seconds in the original 2:38.3 video at 25 fps. Segments are joined with 0.2 s cross-dissolves (xfade fade, audio is pre-mixed separately).",
+  "total_output_seconds": 59.08,
+  "crossfade_seconds": 0.2,
+  "segments": [
+    {
+      "n": 1,
+      "source_start": 4.0,
+      "source_end": 5.7,
+      "output_start": 0,
+      "narration": "How do you shape tomorrow?",
+      "on_screen": "Hook card over the opening visual"
+    },
+    {
+      "n": 2,
+      "source_start": 23.4,
+      "source_end": 31.4,
+      "output_start": 1.5,
+      "narration": "To us, shaping tomorrow is about what we design today, in what we build for our clients and what we plan with our people.",
+      "on_screen": "DESIGN / BUILD / PLAN montage"
+    },
+    {
+      "n": 3,
+      "source_start": 31.6,
+      "source_end": 40.2,
+      "output_start": 9.3,
+      "narration": "Since 2002, with thousands of collaborators on four continents, we have showcased our expertise, our experience and our knowledge.",
+      "on_screen": "SINCE 2002, A THOUSAND OF COLLABORATORS, 4 CONTINENTS, EXPERTISE, EXPERIENCE, KNOWLEDGE"
+    },
+    {
+      "n": 4,
+      "source_start": 45.05,
+      "source_end": 51.15,
+      "output_start": 17.7,
+      "narration": "We boast a team that combines fresh thinking, international expertise and local knowledge.",
+      "on_screen": "drawings, then INTERNATIONAL EXPERTISE and LOCAL KNOWLEDGE"
+    },
+    {
+      "n": 5,
+      "source_start": 65.5,
+      "source_end": 70.6,
+      "output_start": 23.6,
+      "narration": "A zero carbon footprint is our ambition and green building is our commitment.",
+      "on_screen": "ZERO CARBON (wind, solar), GREEN BUILDING"
+    },
+    {
+      "n": 6,
+      "source_start": 82.7,
+      "source_end": 85.6,
+      "output_start": 28.5,
+      "narration": "Innovation is at the core of our solutions.",
+      "on_screen": "INNOVATION (VR headset)"
+    },
+    {
+      "n": 7,
+      "source_start": 94.8,
+      "source_end": 103.3,
+      "output_start": 31.2,
+      "narration": "Archetype Group has grown into three main entities. Archetype Industry serves the most renowned companies in industry and manufacturing.",
+      "on_screen": "archetype industry logo card, FOOD & BEVERAGE, CHEMICALS"
+    },
+    {
+      "n": 8,
+      "source_start": 108.7,
+      "source_end": 113.4,
+      "output_start": 39.5,
+      "narration": "Archetype Reality is the preferred partner for real estate and hospitality.",
+      "on_screen": "archetype reality card, MIXED-USE HIGH RISE, HOSPITALITY, HEALTHCARE"
+    },
+    {
+      "n": 9,
+      "source_start": 117.95,
+      "source_end": 123.5,
+      "output_start": 44.0,
+      "narration": "Archetype Y is our integrated studio, combining feasibility with creativity.",
+      "on_screen": "archetype Y card, INTEGRATED ARCHITECTURE SIGNATURE STUDIO"
+    },
+    {
+      "n": 10,
+      "source_start": 140.3,
+      "source_end": 146.9,
+      "output_start": 49.35,
+      "narration": "We are Archetype Group. We are building today, and shaping tomorrow.",
+      "on_screen": "BUILDING TODAY, then SHAPING TOMORROW card"
+    },
+    {
+      "n": 11,
+      "source_start": 155.0,
+      "source_end": 158.33,
+      "output_start": 55.75,
+      "narration": "(no narration) closing logo; music finale lands here",
+      "on_screen": "archetype group logo on white"
+    }
+  ]
+}
