@@ -46,7 +46,7 @@ const Float: React.FC<{x: number; y: number; w: number; h: number; tilt?: string
 const K1 = () => {
   const ps: Platform[] = ['li', 'fb', 'ig', 'yt', 'web', 'search', 'email'];
   return (
-    <Frame g="spot">
+    <Frame g="fluted">
       <H on="grad" a="Seven platforms." b="Seven logins. Every week." size={96} align="center" style={{left: 0, width: 1920, top: 90}} />
       <div style={{position: 'absolute', left: 0, top: 480, width: 1920, height: 600, perspective: 1800}}>
         {ps.map((p, i) => {const k = i - 3, z = -Math.abs(k) * 160; return <div key={p} style={{position: 'absolute', left: 810 + k * 300, top: 40 + Math.abs(k) * 22, transform: `translateZ(${z}px) rotateY(${-k * 9}deg) scale(1.35)`, filter: `blur(${Math.abs(k) * 0.9}px)`, opacity: 1 - Math.abs(k) * 0.1}}><LoginField p={p} /></div>;})}
@@ -59,7 +59,7 @@ const K1 = () => {
 
 // 02  holo: hours of copy and paste
 const K2 = () => (
-  <Frame g="holo">
+  <Frame g="pearl">
     <Shot w={1400} h={700} focus={[600, 230]} at={[1320, 500]} scale={1.9} rx={14} ry={-18} rz={-3} dof={{rx: 380, ry: 200, blur: 5}} fade={{side: 'left', at: 760, soft: 220}}><Spreadsheet /></Shot>
     <Cursor x={1390} y={530} />
     <div style={{position: 'absolute', left: 1330, top: 410, background: C.ink, color: '#fff', borderRadius: 10, padding: '8px 14px', fontFamily: F.mono, fontSize: 18}}>Ctrl + V</div>
@@ -69,7 +69,7 @@ const K2 = () => (
 
 // 03  conic: reveal
 const K3 = () => (
-  <Frame g="conic">
+  <Frame g="mesh">
     <div style={{position: 'absolute', left: 960 - 90, top: 230, width: 180, height: 180, borderRadius: 52, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 30px 80px -20px rgba(0,60,80,.45)'}}><Mark size={120} /></div>
     <div style={{position: 'absolute', left: 0, width: 1920, textAlign: 'center', top: 490, fontFamily: F.mono, fontSize: 22, letterSpacing: '.5em', color: '#fff'}}>ARCHETYPE</div>
     <H on="grad" a="Marketing Dashboard" size={140} align="center" style={{left: 0, width: 1920, top: 545}} />
@@ -89,7 +89,7 @@ const K4 = () => (
 
 // 05  aurora: updates itself; numbers tick up live, sources check in
 const K5 = () => (
-  <Frame g="aurora">
+  <Frame g="waves">
     <H on="grad" a="Updates itself." b="Your hours go back to marketing." size={84} style={{left: 110, top: 120}} />
     <div style={{position: 'absolute', left: 110, top: 400, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 22, width: 1700}}>
       {(['li', 'fb', 'ig', 'yt', 'web', 'search', 'email'] as Platform[]).map((p, i) => (
@@ -116,7 +116,7 @@ const K6 = () => (
 
 // 07  mesh: typing a search filters the table live
 const K7 = () => (
-  <Frame g="blueprint">
+  <Frame g="dots">
     <H on="grad" a="Find what clients" b="search for." size={100} style={{left: 110, top: 100}} />
     <Float x={600} y={380} w={1240} h={760} tilt="perspective(2200px) rotateX(14deg) rotateY(-10deg)" inner="scale(1.3) translate(-640px, -60px)"><SearchScreen hl={1} /></Float>
     <div style={{position: 'absolute', left: 700, top: 330, width: 620, display: 'flex', alignItems: 'center', gap: 14, background: '#fff', borderRadius: 99, padding: '18px 26px', fontFamily: F.text, fontSize: 28, color: C.ink, boxShadow: '0 20px 50px -15px rgba(0,40,60,.5)', zIndex: 5}}>
@@ -127,7 +127,7 @@ const K7 = () => (
 
 // 08  pearl: click the best card, it opens
 const K8 = () => (
-  <Frame g="pearl">
+  <Frame g="whiterings">
     <Shot w={1600} h={1000} focus={[1180, 640]} at={[1280, 680]} scale={1.55} rx={18} ry={-10} rz={-2} dof={{rx: 270, ry: 170, blur: 5}} fade={{side: 'left', at: 780, soft: 200}}><HomeReplica /></Shot>
     <Ripple x={1360} y={600} /><Cursor x={1348} y={586} />
     <Tip x={1360} y={555}>Best this month, +64%</Tip>
@@ -137,7 +137,7 @@ const K8 = () => (
 
 // 09  bands: hover a campaign, its opens appear
 const K9 = () => (
-  <Frame g="bands">
+  <Frame g="topo">
     <Float x={980} y={170} w={830} h={740} tilt="perspective(2200px) rotateY(-14deg) rotateX(4deg)" inner="scale(1.7) translate(-890px, -175px)"><EmailScreen /></Float>
     <Cursor x={1380} y={520} /><Tip x={1390} y={490}>1,317 people opened it</Tip>
     <H on="grad" a="Know which emails" b="get opened." size={88} style={{left: 110, top: 380}} />
@@ -146,7 +146,7 @@ const K9 = () => (
 
 // 10  holo: the briefing writes itself
 const K10 = () => (
-  <Frame g="holo">
+  <Frame g="whitegrid">
     <H on="white" a="Monday’s briefing" b="is already written." size={84} align="center" style={{left: 0, width: 1920, top: 70}} />
     <div style={{position: 'absolute', left: 310, top: 340, boxShadow: '0 40px 100px -40px rgba(5,60,63,.45)', borderRadius: 26}}><InsightsScreen typed={0.86} /></div>
   </Frame>
@@ -154,7 +154,7 @@ const K10 = () => (
 
 // 11  lime: $1,200 a year back; the SEMrush renewal is cancelled with a click
 const K11 = () => (
-  <Frame g="lime">
+  <Frame g="grain">
     <H on="grad" a="Save $1,200 a year." b="No SEMrush subscription." size={80} style={{left: 110, top: 150}} />
     <div style={{position: 'absolute', left: 110, top: 520, width: 700, background: '#fff', borderRadius: 26, padding: 34, fontFamily: F.text, color: C.ink, boxShadow: '0 40px 80px -30px rgba(0,40,40,.5)', transform: 'rotate(-3deg)'}}>
       <div style={{fontSize: 16, color: C.ink3, fontFamily: F.mono, letterSpacing: '.12em'}}>RENEWAL NOTICE</div>
@@ -168,11 +168,11 @@ const K11 = () => (
 
 // 12  spot: competitor moves; click download on the report
 const K12 = () => (
-  <Frame g="spot">
+  <Frame g="pearl">
     <Float x={1000} y={130} w={760} h={880} tilt="perspective(2200px) rotateY(-16deg) rotateX(6deg) rotateZ(2deg)" inner="scale(.9)"><ReportPage /></Float>
-    <div style={{position: 'absolute', left: 1530, top: 100, background: '#fff', color: C.teal, borderRadius: 99, padding: '14px 26px', fontFamily: F.text, fontSize: 22, fontWeight: 700, boxShadow: '0 20px 40px -10px rgba(0,0,0,.5)'}}>⬇ Download PDF</div>
+    <div style={{position: 'absolute', left: 1530, top: 100, background: C.teal, color: '#fff', borderRadius: 99, padding: '14px 26px', fontFamily: F.text, fontSize: 22, fontWeight: 700, boxShadow: '0 20px 40px -10px rgba(0,0,0,.5)'}}>⬇ Download PDF</div>
     <Ripple x={1640} y={128} /><Cursor x={1628} y={114} />
-    <H on="grad" a="Know competitor moves" b="before anyone asks." size={86} style={{left: 110, top: 400}} />
+    <H on="white" a="Know competitor moves" b="before anyone asks." size={86} style={{left: 110, top: 400}} />
   </Frame>
 );
 
@@ -218,7 +218,7 @@ export const Globe: React.FC<{lon0: number; lat0?: number; R: number; arcs?: num
 };
 // 13  duo: click an office on the globe, its local page opens
 const K13 = () => (
-  <Frame g="duo">
+  <Frame g="grid3d">
     <div style={{position: 'absolute', left: 1280 - 480 - 300, top: 540 - 480 - 100}}><Globe lon0={70} R={480} labels={['France', 'UAE', 'India', 'Vietnam', 'Singapore', 'Kazakhstan', 'Morocco', 'Indonesia', 'Mongolia']} /></div>
     <div style={{position: 'absolute', left: 1560, top: 640, width: 330, background: '#fff', borderRadius: 20, padding: 22, fontFamily: F.text, color: C.ink, boxShadow: '0 30px 60px -20px rgba(0,0,0,.5)'}}>
       <div style={{fontSize: 14, fontFamily: F.mono, color: C.teal, letterSpacing: '.12em'}}>ARCHETYPE THAILAND</div>
@@ -243,7 +243,7 @@ const K14 = () => (
 
 // 15  mesh: a new mention arrives as a notification
 const K15 = () => (
-  <Frame g="mesh">
+  <Frame g="bokeh">
     <H on="grad" a="Never miss" b="a press mention." size={100} style={{left: 110, top: 90}} />
     <Float x={560} y={380} w={1300} h={780} tilt="perspective(2200px) rotateX(18deg) rotateZ(-2deg)" inner="scale(1.25) translate(-30px, -20px)"><MentionsScreen /></Float>
     <Toast x={1290} y={110} title="New mention found" sub="Construction trade press, 2 min ago" icon="🔔" />
@@ -264,7 +264,7 @@ const K16 = () => (
 
 // 17  bands: a card dragged to Done
 const K17 = () => (
-  <Frame g="deep">
+  <Frame g="lines">
     <Float x={1010} y={200} w={850} h={720} tilt="perspective(2200px) rotateY(-12deg) rotateX(6deg)" inner="scale(1.05)"><BoardScreen /></Float>
     <div style={{position: 'absolute', left: 1300, top: 430, width: 380, transform: 'rotate(-4deg)', background: '#fff', borderRadius: 18, padding: '20px 22px', fontFamily: F.text, boxShadow: '0 40px 70px -20px rgba(0,50,70,.5)', zIndex: 5}}>
       <div style={{fontSize: 20, fontWeight: 650, color: C.ink, marginBottom: 12}}>Site photos for case study</div><span style={{fontSize: 15, fontWeight: 650, color: C.up, background: 'rgba(63,122,38,.12)', borderRadius: 99, padding: '4px 12px'}}>Approved</span>
@@ -276,7 +276,7 @@ const K17 = () => (
 
 // 18  aurora: the bento, all of marketing
 const K18 = () => (
-  <Frame g="aurora">
+  <Frame g="glass">
     <H on="grad" a="All of marketing. One dashboard." size={70} align="center" style={{left: 0, width: 1920, top: 46}} />
     <div style={{position: 'absolute', left: 960 - 1000 * 0.78, top: 175, transform: 'scale(.78)', transformOrigin: '0 0', borderRadius: 34, overflow: 'hidden', boxShadow: '0 50px 120px -30px rgba(0,0,0,.6)'}}><Bento /></div>
   </Frame>
@@ -284,7 +284,7 @@ const K18 = () => (
 
 // 19  conic: lockup, white type
 const K19 = () => (
-  <Frame g="conic">
+  <Frame g="rings">
     <div style={{position: 'absolute', left: 960 - 80, top: 230, width: 160, height: 160, borderRadius: 46, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 30px 80px -30px rgba(0,50,70,.5)'}}><Mark size={106} /></div>
     <div style={{position: 'absolute', left: 0, width: 1920, textAlign: 'center', top: 460, fontFamily: F.mono, fontSize: 22, letterSpacing: '.5em', color: '#fff'}}>ARCHETYPE</div>
     <H on="grad" a="Marketing Dashboard" size={130} align="center" style={{left: 0, width: 1920, top: 510}} />
