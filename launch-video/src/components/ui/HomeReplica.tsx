@@ -7,7 +7,7 @@ import {fmt} from '../kit/Type';
 
 // Static replica of the dashboard Home page (src/index.template.html + home.css), at 1600x1000.
 // `p` drives entrance per card group (0..1 each), `draw` the chart lines, `count` the numbers.
-export const HomeReplica: React.FC<{cards?: number[]; draw?: number; count?: number}> = ({cards = [1, 1, 1, 1, 1, 1], draw = 1, count = 1}) => {
+export const HomeReplica: React.FC<{cards?: number[]; draw?: number; count?: number; range?: string; lift?: number}> = ({cards = [1, 1, 1, 1, 1, 1], draw = 1, count = 1, range = '1m', lift = -1}) => {
   const c = (i: number) => {
     const p = cards[i] ?? 1;
     return {opacity: p, transform: `translateY(${(1 - p) * 60}px) scale(${0.96 + p * 0.04})`, filter: `blur(${(1 - p) * 10}px)`};
@@ -29,7 +29,7 @@ export const HomeReplica: React.FC<{cards?: number[]; draw?: number; count?: num
           <div><div style={{fontSize: 22, fontWeight: 700}}>Good morning</div><div style={{fontSize: 13, color: C.ink3}}>Updated today, 07:13</div></div>
           <div style={{display: 'flex', gap: 4, background: C.inset, padding: 4, borderRadius: 999, fontSize: 13, fontWeight: 600, color: C.ink3}}>
             {['7d', '1m', '3m', '6m', 'YTD', '12m'].map((r) => (
-              <span key={r} style={{padding: '5px 12px', borderRadius: 999, background: r === '1m' ? LOOP : 'transparent', color: r === '1m' ? '#fff' : C.ink3}}>{r}</span>
+              <span key={r} style={{padding: '5px 12px', borderRadius: 999, background: r === range ? LOOP : 'transparent', color: r === range ? '#fff' : C.ink3}}>{r}</span>
             ))}
           </div>
         </div>
@@ -76,7 +76,7 @@ export const HomeReplica: React.FC<{cards?: number[]; draw?: number; count?: num
             {PLATFORMS.map((pl, i) => {
               const k = Math.max(0, Math.min(1, (draw - i * 0.08) / 0.6));
               return (
-                <div key={pl.p} style={{border: `1px solid ${C.rule}`, borderTop: `3px solid ${pl.p === 'ig' ? C.ig : (C as any)[pl.p]}`, borderRadius: 14, padding: '12px 14px'}}>
+                <div key={pl.p} style={{transform: i === lift ? 'translateY(-6px) scale(1.03)' : 'none', boxShadow: i === lift ? '0 18px 40px -14px rgba(5,60,63,.35)' : 'none', background: '#fff', border: `1px solid ${C.rule}`, borderTop: `3px solid ${pl.p === 'ig' ? C.ig : (C as any)[pl.p]}`, borderRadius: 14, padding: '12px 14px'}}>
                   <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
                     <PlatformIcon p={pl.p as Platform} size={30} />
                     <div><div style={{fontSize: 14, fontWeight: 650}}>{PLATFORM_NAME[pl.p as Platform]}</div><div style={{fontSize: 11.5, color: C.ink3}}>{pl.sub}</div></div>

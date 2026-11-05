@@ -47,7 +47,7 @@ export const Spreadsheet: React.FC<{hl?: [number, number]; name?: string}> = ({h
 );
 
 // ── Website ──
-export const WebsiteScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0, draw = 1}) => {
+export const WebsiteScreen: React.FC<{hl?: number; draw?: number; grow?: number; lit?: number}> = ({hl = 0, draw = 1, grow = 1, lit = 1}) => {
   const cities: [string, number][] = [['Ho Chi Minh City', 1196], ['Hanoi', 832], ['Singapore', 533], ['Paris', 364], ['Da Nang', 286], ['Bangkok', 221], ['Kuala Lumpur', 174]];
   return (
     <Page title="Website" sub="Google Analytics, last 30 days">
@@ -65,8 +65,8 @@ export const WebsiteScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0, d
         <Panel style={{height: 660}}>
           <T>Active users by city</T>
           {cities.map(([c, v], i) => (
-            <div key={c} style={{display: 'grid', gridTemplateColumns: '150px 1fr 54px', alignItems: 'center', gap: 12, padding: '14px 10px', borderRadius: 12, background: i === hl ? C.wash : 'none', fontSize: 14, fontWeight: i === hl ? 650 : 450}}>
-              {c}<div style={{height: 8, borderRadius: 99, background: C.inset}}><div style={{width: `${(v / 1196) * 100}%`, height: '100%', borderRadius: 99, background: i === hl ? LOOP_BAR : '#b9cacd'}} /></div><span style={{textAlign: 'right', fontVariantNumeric: 'tabular-nums'}}>{fmt(v)}</span>
+            <div key={c} style={{display: 'grid', gridTemplateColumns: '150px 1fr 54px', alignItems: 'center', gap: 12, padding: '14px 10px', borderRadius: 12, background: i === hl && lit > 0.5 ? C.wash : 'none', fontSize: 14, fontWeight: i === hl ? 650 : 450}}>
+              {c}<div style={{height: 8, borderRadius: 99, background: C.inset}}><div style={{width: `${(v / 1196) * 100 * Math.max(0, Math.min(1, grow * 1.6 - i * 0.1))}%`, height: '100%', borderRadius: 99, background: i === hl && lit > 0.5 ? LOOP_BAR : '#b9cacd'}} /></div><span style={{textAlign: 'right', fontVariantNumeric: 'tabular-nums'}}>{fmt(Math.round(v * Math.max(0, Math.min(1, grow * 1.6 - i * 0.1))))}</span>
             </div>
           ))}
         </Panel>
@@ -76,7 +76,7 @@ export const WebsiteScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0, d
 };
 
 // ── Search ──
-export const SearchScreen: React.FC<{hl?: number}> = ({hl = 0}) => (
+export const SearchScreen: React.FC<{hl?: number; query?: string; rows?: number}> = ({hl = 0, query = '', rows = 1}) => (
   <Page title="Search" sub="Google Search Console">
     <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 16}}>
       {[['Impressions', '29,870', '9.7%', true], ['Clicks', '1,104', '12.3%', true], ['Click rate', '3.7%', '0.4 pts', true], ['Avg. position', '8.4', '1.2', true]].map(([l, v, d, u]) => <Panel key={l as string}><Sm>{l}</Sm><div style={{display: 'flex', alignItems: 'center', gap: 8, marginTop: 4}}><Num v={v as string} /><Delta v={d as string} up={u as boolean} size={11} /></div></Panel>)}
@@ -85,8 +85,8 @@ export const SearchScreen: React.FC<{hl?: number}> = ({hl = 0}) => (
       <Panel style={{height: 660}}><T sub="impressions and average rank">Search demand vs ranking</T><Spark id="sr1" data={SERIES.b} w={620} h={260} color={C.cyan} dot={false} /><div style={{height: 30}} /><Spark id="sr2" data={SERIES.c} w={620} h={220} color={C.green} area={false} /></Panel>
       <Panel style={{height: 660}}>
         <div style={{display: 'grid', gridTemplateColumns: '1fr 80px 80px 70px', fontSize: 12.5, color: C.ink3, fontWeight: 600, padding: '0 12px 10px', borderBottom: hair}}><span>Top searches</span><span style={{textAlign: 'right'}}>Clicks</span><span style={{textAlign: 'right'}}>Shown</span><span style={{textAlign: 'right'}}>Rank</span></div>
-        {[['design and build company', 214, 3120, 3.1], ['factory construction vietnam', 168, 2876, 4.6], ['office fit-out', 131, 2410, 5.2], ['construction consultancy', 96, 1980, 6.8], ['industrial park design', 74, 1690, 7.4], ['hotel renovation', 52, 1430, 9.9], ['warehouse design', 41, 1210, 11.2], ['project management services', 33, 980, 12.6]].map(([q, c, s, r], i) => (
-          <div key={i} style={{display: 'grid', gridTemplateColumns: '1fr 80px 80px 70px', fontSize: 14, padding: '15px 12px', borderBottom: hair, borderRadius: i === hl ? 12 : 0, background: i === hl ? C.wash : 'none', fontWeight: i === hl ? 650 : 450, fontVariantNumeric: 'tabular-nums'}}>
+        {([['design and build company', 214, 3120, 3.1], ['factory construction vietnam', 168, 2876, 4.6], ['office fit-out', 131, 2410, 5.2], ['construction consultancy', 96, 1980, 6.8], ['industrial park design', 74, 1690, 7.4], ['hotel renovation', 52, 1430, 9.9], ['warehouse design', 41, 1210, 11.2], ['factory design and build', 33, 980, 12.6]] as [string, number, number, number][]).filter(([q]) => !query || (q as string).includes(query) || ('factory'.startsWith(query) && (q as string).includes('factory'))).map(([q, c, s, r], i) => (
+          <div key={q} style={{opacity: Math.max(0, Math.min(1, rows * 8 - i)), transform: `translateY(${(1 - Math.max(0, Math.min(1, rows * 8 - i))) * 16}px)`, display: 'grid', gridTemplateColumns: '1fr 80px 80px 70px', fontSize: 14, padding: '15px 12px', borderBottom: hair, borderRadius: i === hl ? 12 : 0, background: i === hl ? C.wash : 'none', fontWeight: i === hl ? 650 : 450, fontVariantNumeric: 'tabular-nums'}}>
             <span>{q}</span><span style={{textAlign: 'right'}}>{c}</span><span style={{textAlign: 'right'}}>{fmt(s as number)}</span><span style={{textAlign: 'right', color: C.up, fontWeight: 650}}>{r}</span>
           </div>
         ))}
@@ -96,19 +96,19 @@ export const SearchScreen: React.FC<{hl?: number}> = ({hl = 0}) => (
 );
 
 // ── Email ──
-export const EmailScreen: React.FC = () => (
+export const EmailScreen: React.FC<{fill?: number; draw?: number}> = ({fill = 1, draw = 1}) => (
   <Page title="Email" sub="GetResponse">
     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16}}>
       {[['Subscribers', '3,412', '2.3%'], ['Open rate', '38.6%', '3.1 pts'], ['Click rate', '4.1%', '0.6 pts']].map(([l, v, d]) => <Panel key={l}><Sm>{l}</Sm><div style={{display: 'flex', alignItems: 'center', gap: 8, marginTop: 4}}><Num v={v} size={34} /><Delta v={d} size={11} /></div></Panel>)}
     </div>
     <div style={{display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 16}}>
-      <Panel style={{height: 640}}><T sub="last 12 campaigns">Opens per campaign</T><Spark id="em1" data={SERIES.a} w={760} h={540} color={C.email} /></Panel>
+      <Panel style={{height: 640}}><T sub="last 12 campaigns">Opens per campaign</T><Spark id="em1" data={SERIES.a} w={760} h={540} color={C.email} draw={draw} /></Panel>
       <Panel style={{height: 640}}>
         <T>November newsletter</T>
         {[['Sent', 3412, 100], ['Delivered', 3371, 98.8], ['Opened', 1317, 38.6], ['Clicked', 140, 4.1]].map(([l, v, p], i) => (
           <div key={l as string} style={{marginBottom: 26}}>
             <div style={{display: 'flex', justifyContent: 'space-between', fontSize: 14, marginBottom: 8}}><span>{l}</span><span style={{fontWeight: 650, fontVariantNumeric: 'tabular-nums'}}>{fmt(v as number)} <span style={{color: C.ink3, fontWeight: 450}}>{p}%</span></span></div>
-            <div style={{height: 12, borderRadius: 99, background: C.inset}}><div style={{width: `${Math.max(p as number, 3)}%`, height: '100%', borderRadius: 99, background: i === 2 ? LOOP_BAR : '#b9cacd'}} /></div>
+            <div style={{height: 12, borderRadius: 99, background: C.inset}}><div style={{width: `${Math.max(p as number, 3) * Math.max(0, Math.min(1, fill * 2.2 - i * 0.4))}%`, height: '100%', borderRadius: 99, background: i === 2 ? LOOP_BAR : '#b9cacd'}} /></div>
           </div>
         ))}
       </Panel>
@@ -117,7 +117,7 @@ export const EmailScreen: React.FC = () => (
 );
 
 // ── Weekly briefing card (Insights) ──
-export const InsightsScreen: React.FC<{typed?: number}> = ({typed = 1}) => {
+export const InsightsScreen: React.FC<{typed?: number; stats?: number; body?: number}> = ({typed = 1, stats = 1, body = 1}) => {
   const s = INSIGHT.sentence;
   const n = Math.round(s.length * typed);
   return (
@@ -131,9 +131,9 @@ export const InsightsScreen: React.FC<{typed?: number}> = ({typed = 1}) => {
       <div style={{fontFamily: F.display, fontSize: 46, fontWeight: 650, letterSpacing: '-0.025em', lineHeight: 1.15, color: C.teal, margin: '30px 0 14px', minHeight: 110}}>
         {s.slice(0, n)}{typed < 1 && <span style={{display: 'inline-block', width: 3, height: 46, background: C.cyan, verticalAlign: 'middle', marginLeft: 3}} />}
       </div>
-      <div style={{fontSize: 17, color: C.ink2, lineHeight: 1.55, maxWidth: 1000}}>The carousel on the Long An factory handover reached twice the usual audience. Two of the three comments asked about timelines.</div>
+      <div style={{fontSize: 17, color: C.ink2, lineHeight: 1.55, maxWidth: 1000, opacity: body, transform: `translateY(${(1 - body) * 12}px)`}}>The carousel on the Long An factory handover reached twice the usual audience. Two of the three comments asked about timelines.</div>
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 30}}>
-        {INSIGHT.stats.map((x) => <div key={x.l} style={{background: C.inset, borderRadius: 16, padding: '16px 20px'}}><Num v={x.v} size={34} style={{color: x.v.startsWith('-') ? C.down : C.ink}} /><Sm>{x.l}</Sm></div>)}
+        {INSIGHT.stats.map((x, i) => <div key={x.l} style={{background: C.inset, borderRadius: 16, padding: '16px 20px', opacity: Math.max(0, Math.min(1, stats * 3 - i)), transform: `translateY(${(1 - Math.max(0, Math.min(1, stats * 3 - i))) * 24}px)`}}><Num v={x.v} size={34} style={{color: x.v.startsWith('-') ? C.down : C.ink}} /><Sm>{x.l}</Sm></div>)}
       </div>
     </div>
   );
@@ -155,12 +155,12 @@ export const Gauge: React.FC<{v: number; label: string; size: number; draw?: num
     </div>
   );
 };
-export const SiteHealthScreen: React.FC<{done?: number}> = ({done = 2}) => (
+export const SiteHealthScreen: React.FC<{done?: number; gauge?: number}> = ({done = 2, gauge = 1}) => (
   <Page title="Site Audit" sub="archetype-group.com · crawled 5 Nov">
     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16}}>
       <Panel style={{height: 820}}>
         <T>Site health</T>
-        <div style={{display: 'flex', justifyContent: 'center', gap: 30, marginTop: 30}}><Gauge v={SITE.health} label="HEALTH" size={260} /><Gauge v={SITE.geo} label="AI SEARCH" size={260} /></div>
+        <div style={{display: 'flex', justifyContent: 'center', gap: 30, marginTop: 30}}><Gauge v={SITE.health} label="HEALTH" size={260} draw={gauge} /><Gauge v={SITE.geo} label="AI SEARCH" size={260} draw={gauge} /></div>
         <div style={{display: 'flex', gap: 10, justifyContent: 'center', marginTop: 20, fontSize: 13.5, fontWeight: 650}}>
           <span style={{color: C.down, background: 'rgba(171,53,39,.08)', borderRadius: 99, padding: '6px 14px'}}>{fmt(SITE.errors)} errors</span>
           <span style={{color: C.amber, background: '#fdf3e2', borderRadius: 99, padding: '6px 14px'}}>{fmt(SITE.warnings)} warnings</span>
@@ -183,7 +183,7 @@ export const SiteHealthScreen: React.FC<{done?: number}> = ({done = 2}) => (
 );
 
 // ── Competitor report page (PDF) ──
-export const ReportPage: React.FC<{title?: string}> = ({title = 'November at a glance'}) => {
+export const ReportPage: React.FC<{title?: string; fill?: number}> = ({title = 'November at a glance', fill = 1}) => {
   const lv = [['Critical', '#b3261e', '#fbeceb'], ['High', '#c4501b', '#fcf0ea'], ['Medium', '#a87412', '#fdf6e4'], ['Low', '#2f7a4a', '#edf5ef']];
   const dots: [number, number, string][] = [[0, 0, 'NK'], [1, 1, 'TR'], [1, 0, 'AO'], [2, 0, 'BV'], [3, 1, 'LM'], [3, 1, 'QH']];
   return (
@@ -195,7 +195,7 @@ export const ReportPage: React.FC<{title?: string}> = ({title = 'November at a g
       <div style={{display: 'grid', gridTemplateColumns: '120px 1fr 1fr', fontSize: 13, fontWeight: 650, color: C.ink3, padding: '0 14px 10px'}}><span /><span>Plan announced</span><span>Already done</span></div>
       {lv.map(([l, c, b], i) => (
         <div key={l} style={{display: 'grid', gridTemplateColumns: '120px 1fr 1fr', alignItems: 'center', height: 78, background: b, borderRadius: 10, marginBottom: 6, padding: '0 14px', color: c, fontSize: 15, fontWeight: 650}}>
-          {l}{[0, 1].map((col) => <div key={col} style={{display: 'flex', gap: 8}}>{dots.filter((d) => d[0] === i && d[1] === col).map((d) => <span key={d[2]} style={{width: 40, height: 40, borderRadius: 99, background: c, color: '#fff', fontSize: 13, fontWeight: 700, display: 'grid', placeItems: 'center'}}>{d[2]}</span>)}</div>)}
+          {l}{[0, 1].map((col) => <div key={col} style={{display: 'flex', gap: 8}}>{dots.filter((d) => d[0] === i && d[1] === col).map((d) => <span key={d[2]} style={{transform: `scale(${Math.max(0, Math.min(1, fill * 6 - dots.indexOf(d)))})`, width: 40, height: 40, borderRadius: 99, background: c, color: '#fff', fontSize: 13, fontWeight: 700, display: 'grid', placeItems: 'center'}}>{d[2]}</span>)}</div>)}
         </div>
       ))}
       {[0, 1, 2, 3].map((r) => <div key={r} style={{marginTop: 30}}><div style={{fontSize: 16, fontWeight: 650}}>{['NK opened a design studio in Hanoi', 'TR won a 60,000 m2 factory in Bac Ninh', 'AO announced a sustainability unit', 'BV hired a new regional director'][r]}</div><Sm style={{marginTop: 6, lineHeight: 1.5}}>Source checked. What it means for us and which office it touches, in two plain sentences.</Sm></div>)}
@@ -204,27 +204,27 @@ export const ReportPage: React.FC<{title?: string}> = ({title = 'November at a g
 };
 
 // ── Share panel ──
-export const SharePanel: React.FC = () => (
+export const SharePanel: React.FC<{days?: number; copied?: boolean}> = ({days = 1, copied = false}) => (
   <div style={{width: 760, background: '#fff', borderRadius: 22, border: hair, padding: 30, fontFamily: F.text, color: C.ink, boxShadow: '0 30px 70px -30px rgba(5,60,63,.3)'}}>
     <div style={{fontSize: 19, fontWeight: 700}}>Share the report</div>
     <Sm style={{marginTop: 4}}>Opens one month's report, no sign-in needed.</Sm>
     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 22}}>
       <div><Sm>For</Sm><div style={{border: hair, borderRadius: 99, padding: '10px 16px', marginTop: 6, fontSize: 14.5}}>Leadership team</div></div>
-      <div><Sm>Works for</Sm><div style={{display: 'flex', gap: 6, marginTop: 6}}>{['7 days', '30 days', '90 days'].map((d) => <span key={d} style={{flex: 1, textAlign: 'center', borderRadius: 99, padding: '10px 0', fontSize: 13.5, fontWeight: 600, background: d === '30 days' ? LOOP : C.inset, color: d === '30 days' ? '#fff' : C.ink2}}>{d}</span>)}</div></div>
+      <div><Sm>Works for</Sm><div style={{display: 'flex', gap: 6, marginTop: 6}}>{['7 days', '30 days', '90 days'].map((d) => <span key={d} style={{flex: 1, textAlign: 'center', borderRadius: 99, padding: '10px 0', fontSize: 13.5, fontWeight: 600, background: ['7 days', '30 days', '90 days'].indexOf(d) === days ? LOOP : C.inset, color: ['7 days', '30 days', '90 days'].indexOf(d) === days ? '#fff' : C.ink2}}>{d}</span>)}</div></div>
     </div>
     <div style={{display: 'flex', gap: 10, marginTop: 20, alignItems: 'center'}}>
       <div style={{flex: 1, borderRadius: 99, background: C.inset, padding: '12px 18px', fontFamily: F.mono, fontSize: 13.5, color: C.ink2}}>…/share.html#r=nov-2026.k3f9…</div>
-      <span style={{borderRadius: 99, background: C.teal, color: '#fff', padding: '12px 22px', fontSize: 14, fontWeight: 650}}>Copy link</span>
+      <span style={{borderRadius: 99, background: copied ? C.up : C.teal, color: '#fff', padding: '12px 22px', fontSize: 14, fontWeight: 650}}>{copied ? '✓ Copied' : 'Copy link'}</span>
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', marginTop: 18, fontSize: 13, color: C.ink3}}><span><span style={{color: C.up}}>●</span> Active · until 5 December</span><span>Opened 3 times</span></div>
   </div>
 );
 
 // ── PR mentions ──
-export const MentionsScreen: React.FC<{fresh?: number}> = ({fresh = 1}) => (
+export const MentionsScreen: React.FC<{fresh?: number; newIn?: number}> = ({fresh = 1, newIn = 1}) => (
   <Page title="PR Tracking" sub="checked every day">
     {[['New', 'Construction trade press', 'Archetype hands over a 42,000 m2 factory in Long An', 'Today'], ['', 'Business daily', 'Design and build firms bet on industrial parks', 'Yesterday'], ['', 'Industry news site', 'Five firms shaping factory design in Vietnam', '3 Nov'], ['', 'Regional paper', 'New office tower breaks ground in District 1', '1 Nov'], ['', 'Design magazine', 'Workplace trends: the hybrid office in Asia', '29 Oct'], ['', 'Trade press', 'Sustainability rules reshape warehouse design', '27 Oct']].map(([n, src, h, d], i) => (
-      <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, padding: '20px 22px', borderRadius: 18, border: hair, marginBottom: 12, background: i === 0 ? '#fff' : '#fcfdfd', boxShadow: i === 0 ? `0 0 0 ${2 * fresh}px ${C.cyan}, 0 18px 40px -20px rgba(0,120,160,.4)` : 'none'}}>
+      <div key={i} style={{opacity: i === 0 ? newIn : 1, transform: i === 0 ? `translateY(${(1 - newIn) * -40}px) scale(${0.96 + newIn * 0.04})` : `translateY(${(newIn - 1) * 94}px)`, display: 'flex', alignItems: 'center', gap: 18, padding: '20px 22px', borderRadius: 18, border: hair, marginBottom: 12, background: i === 0 ? '#fff' : '#fcfdfd', boxShadow: i === 0 ? `0 0 0 ${2 * fresh}px ${C.cyan}, 0 18px 40px -20px rgba(0,120,160,.4)` : 'none'}}>
         <div style={{width: 48, height: 48, borderRadius: 14, background: i === 0 ? LOOP : C.inset, display: 'grid', placeItems: 'center'}}><svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke={i === 0 ? '#fff' : C.teal} strokeWidth="1.6"><path d="M6 15h8" /><path d="M10 3.2a4.6 4.6 0 0 0-4.6 4.6v2.4L4 13.2h12l-1.4-3V7.8A4.6 4.6 0 0 0 10 3.2Z" /></svg></div>
         <div style={{flex: 1}}><div style={{fontSize: 16, fontWeight: 650}}>{h}</div><Sm style={{marginTop: 4}}>{src}</Sm></div>
         {n && <span style={{fontSize: 12.5, fontWeight: 700, color: C.up, background: 'rgba(63,122,38,.1)', borderRadius: 99, padding: '4px 12px'}}>● {n}</span>}
@@ -235,12 +235,12 @@ export const MentionsScreen: React.FC<{fresh?: number}> = ({fresh = 1}) => (
 );
 
 // ── Business inquiries ──
-export const InquiriesScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0, draw = 1}) => (
+export const InquiriesScreen: React.FC<{hl?: number; draw?: number; won?: boolean; total?: number}> = ({hl = 0, draw = 1, won = true, total}) => (
   <Page title="Business Inquiries" sub="every request, in one list">
     <div style={{display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 16}}>
       <Panel style={{height: 840, padding: 0, overflow: 'hidden'}}>
         <div style={{display: 'grid', gridTemplateColumns: '1fr 120px 90px', fontSize: 12.5, color: C.ink3, fontWeight: 600, padding: '18px 22px', borderBottom: hair}}><span>Request</span><span>Office</span><span>Status</span></div>
-        {[['Office fit-out, 2,400 m2', 'Vietnam', 'New'], ['Factory design and build', 'Thailand', 'New'], ['Hotel renovation study', 'Cambodia', 'Won'], ['Warehouse expansion', 'Indonesia', 'New'], ['Showroom interior', 'Philippines', 'Quoted'], ['Logistics hub master plan', 'Malaysia', 'Quoted'], ['School campus feasibility', 'Vietnam', 'New'], ['Data centre shell', 'Singapore', 'Lost']].map(([n, o, s], i) => (
+        {[['Office fit-out, 2,400 m2', 'Vietnam', 'New'], ['Factory design and build', 'Thailand', 'New'], ['Hotel renovation study', 'Cambodia', won ? 'Won' : 'Quoted'], ['Warehouse expansion', 'Indonesia', 'New'], ['Showroom interior', 'Philippines', 'Quoted'], ['Logistics hub master plan', 'Malaysia', 'Quoted'], ['School campus feasibility', 'Vietnam', 'New'], ['Data centre shell', 'Singapore', 'Lost']].map(([n, o, s], i) => (
           <div key={i} style={{display: 'grid', gridTemplateColumns: '1fr 120px 90px', alignItems: 'center', fontSize: 14.5, padding: '19px 22px', borderBottom: hair, background: i === hl ? C.wash : 'none', fontWeight: i === hl ? 650 : 450}}>
             <span>{n}</span><span style={{color: C.ink2}}>{o}</span><span style={{fontSize: 12.5, fontWeight: 650, borderRadius: 99, padding: '4px 10px', width: 'fit-content', background: s === 'Won' ? C.teal : C.inset, color: s === 'Won' ? '#fff' : C.ink2}}>{s}</span>
           </div>
@@ -248,7 +248,7 @@ export const InquiriesScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0,
       </Panel>
       <Panel style={{height: 840}}>
         <T sub="last 12 months">Requests per month</T>
-        <div style={{display: 'flex', alignItems: 'baseline', gap: 12}}><Num v={String(Math.round(24 * draw))} size={64} /><Delta v="26%" size={13} /></div>
+        <div style={{display: 'flex', alignItems: 'baseline', gap: 12}}><Num v={String(total ?? Math.round(24 * draw))} size={64} /><Delta v="26%" size={13} /></div>
         <div style={{display: 'flex', alignItems: 'flex-end', gap: 12, height: 560, marginTop: 30}}>{REQ_MONTHS.map((v, i) => <div key={i} style={{flex: 1, height: `${(v / 24) * 100 * draw}%`, borderRadius: 6, background: i === REQ_MONTHS.length - 1 ? `linear-gradient(0deg, ${C.green}, ${C.cyan})` : '#dbe6e8'}} />)}</div>
         <div style={{display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.ink3, marginTop: 10}}><span>Dec</span><span>Nov</span></div>
       </Panel>
@@ -257,7 +257,7 @@ export const InquiriesScreen: React.FC<{hl?: number; draw?: number}> = ({hl = 0,
 );
 
 // ── To Be Approved board + PPM donut ──
-export const BoardScreen: React.FC<{lift?: number}> = ({lift = 1}) => {
+export const BoardScreen: React.FC<{lift?: number; moved?: boolean}> = ({lift = 1, moved = false}) => {
   const task = (t: string, tag: string, tc: string, who: string) => (
     <div style={{background: '#fff', borderRadius: 14, border: hair, padding: '14px 16px', boxShadow: '0 2px 6px rgba(5,60,63,.05)'}}>
       <div style={{fontSize: 14.5, fontWeight: 600, marginBottom: 10}}>{t}</div>
@@ -271,9 +271,9 @@ export const BoardScreen: React.FC<{lift?: number}> = ({lift = 1}) => {
           <div key={n as string} style={{background: C.inset, borderRadius: 18, padding: 14, height: 830}}>
             <div style={{fontSize: 15, fontWeight: 700, marginBottom: 12}}>{n} <span style={{background: C.teal, color: '#fff', borderRadius: 99, padding: '1px 9px', fontSize: 12}}>{k as number}</span></div>
             <div style={{display: 'grid', gap: 10}}>
-              {col === 0 && <>{task('Office tour reel, final cut', 'Urgent', '#ab3527', 'MT')}{task('Brochure copy, page 4', 'Important', '#8f5d18', 'LN')}{task('Award entry text', 'This week', '#00768f', 'HP')}</>}
+              {col === 0 && <>{!moved && task('Site photos for case study', 'Urgent', '#ab3527', 'QA')}{task('Office tour reel, final cut', 'Urgent', '#ab3527', 'MT')}{task('Brochure copy, page 4', 'Important', '#8f5d18', 'LN')}{task('Award entry text', 'This week', '#00768f', 'HP')}</>}
               {col === 1 && <>{task('LinkedIn post: factory handover', 'Review', '#00768f', 'DT')}</>}
-              {col === 2 && <>{task('Newsletter, November', 'Done', '#3f7a26', 'DT')}{task('Case study photos', 'Done', '#3f7a26', 'QA')}</>}
+              {col === 2 && <>{moved && task('Site photos for case study', 'Approved', '#3f7a26', 'QA')}{task('Newsletter, November', 'Done', '#3f7a26', 'DT')}{task('Case study photos', 'Done', '#3f7a26', 'QA')}</>}
             </div>
           </div>
         ))}
@@ -291,11 +291,11 @@ export const BoardScreen: React.FC<{lift?: number}> = ({lift = 1}) => {
   );
 };
 
-export const LoginField: React.FC<{p: Platform}> = ({p}) => (
+export const LoginField: React.FC<{p: Platform; error?: boolean}> = ({p, error = false}) => (
   <div style={{width: 300, background: '#fff', borderRadius: 18, border: hair, padding: 20, fontFamily: F.text, color: C.ink, boxShadow: '0 20px 50px -24px rgba(5,60,63,.28)'}}>
     <div style={{display: 'flex', alignItems: 'center', gap: 12, fontSize: 15, fontWeight: 650}}><PlatformIcon p={p} size={34} />{PLATFORM_NAME[p]}</div>
     <div style={{marginTop: 16, border: hair, borderRadius: 99, padding: '9px 14px', fontSize: 13, color: C.ink4}}>Email address</div>
-    <div style={{marginTop: 8, border: hair, borderRadius: 99, padding: '9px 14px', fontSize: 13, color: C.ink4, letterSpacing: '.2em'}}>••••••••</div>
+    <div style={{marginTop: 8, border: error ? '1.5px solid #ab3527' : hair, borderRadius: 99, padding: '9px 14px', fontSize: 13, color: C.ink4, letterSpacing: '.2em'}}>••••••••</div>
     <div style={{marginTop: 12, borderRadius: 99, padding: '9px 0', fontSize: 13, fontWeight: 650, textAlign: 'center', background: C.ink, color: '#fff'}}>Sign in</div>
   </div>
 );
