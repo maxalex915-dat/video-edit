@@ -24,7 +24,7 @@ export const Launch: React.FC<{music?: boolean; sfx?: boolean}> = ({music = true
         </Sequence>
       );
     })}
-    {music && <Html5Audio src={staticFile('music.m4a')} volume={0.85} />}
+    {music && <Html5Audio src={staticFile('music.m4a')} volume={0.6} />}
     {sfx && TIMING.flatMap((t, i) => MODS[i].sfx.map((c, k) => (
       <Sequence key={`${t.id}-${k}`} from={t.from + c.at} durationInFrames={90} layout="none">
         <Html5Audio src={staticFile(`sfx/${c.s}.wav`)} volume={c.v ?? 0.4} />
