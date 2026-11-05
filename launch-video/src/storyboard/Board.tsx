@@ -35,7 +35,7 @@ export const Board: React.FC = () => (
   <AbsoluteFill style={{background: '#ffffff', fontFamily: F.text, color: C.ink}}>
     <div style={{position: 'absolute', left: GAP, top: 56}}>
       <div style={{fontFamily: F.display, fontSize: 64, fontWeight: 700, letterSpacing: '-0.03em'}}>Marketing Dashboard launch film</div>
-      <div style={{fontSize: 26, color: C.mutedOnDark, marginTop: 10}}>Storyboard v4 · real UI at real scale, the camera does the work, one accent per shot · 90 s · 1920x1080 · cuts on the music's bars (108 BPM) · all figures are demo data</div>
+      <div style={{fontSize: 26, color: C.mutedOnDark, marginTop: 10}}>Storyboard v5 · vivid brand gradient and white scenes alternate · text always on a clean area · 90 s · 1920x1080 · cuts on the music's bars (108 BPM) · all figures are demo data</div>
       <div style={{width: 240, height: 6, borderRadius: 3, background: LOOP_BAR, marginTop: 20}} />
     </div>
     {KEYFRAMES.map((K, i) => {
