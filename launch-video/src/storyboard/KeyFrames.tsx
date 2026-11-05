@@ -1,183 +1,182 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Grain} from '../components/kit/Backdrop';
-import {Light, LightKind, Shot} from '../components/kit/Shot';
+import {Ground, GradKind, textOn} from '../components/kit/Gradients';
+import {Shot} from '../components/kit/Shot';
 import {Mark, PlatformIcon, Platform} from '../components/ui/Primitives';
 import {HomeReplica} from '../components/ui/HomeReplica';
 import {Bento} from '../components/ui/Bento';
-import {BoardScreen, EmailScreen, InquiriesScreen, InsightsScreen, LoginField, MentionsScreen, ReportPage, SearchScreen, SharePanel, SiteHealthScreen, Spreadsheet, WebsiteScreen} from '../components/ui/Screens';
+import {BoardScreen, EmailScreen, InquiriesScreen, InsightsScreen, LoginField, MentionsScreen, ReportPage, SearchScreen, SharePanel, SiteHealthScreen, Spreadsheet, WebsiteScreen, Gauge} from '../components/ui/Screens';
 import {C} from '../theme/tokens';
 import {F} from '../theme/fonts';
 
-// Type rules (Dat, 5 Nov): gradient text only on white; white text only on the gradient;
-// text never sits on top of dashboard UI. Every headline has its own clean area.
+// Rules (Dat, 5 Nov): gradient text only on white; white text only on gradient or dark;
+// text never on top of dashboard UI; copy says the value, not the mechanism.
 export const GRAD_TEXT = 'linear-gradient(95deg, #7fbc42 0%, #00b9ef 55%, #45b8ee 100%)';
-const H: React.FC<{a: string; b?: string; on: 'white' | 'grad'; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'}> = ({a, b, on, size = 96, style, align = 'left'}) => (
+type On = 'white' | 'grad';
+const H: React.FC<{a: string; b?: string; on: On; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'}> = ({a, b, on, size = 96, style, align = 'left'}) => (
   <div style={{position: 'absolute', fontFamily: F.display, fontWeight: 700, fontSize: size, lineHeight: 1.03, letterSpacing: '-0.04em', textAlign: align, ...style}}>
-    <div style={on === 'grad' ? {color: '#fff', textShadow: '0 2px 18px rgba(0,70,90,.28)'} : {color: C.ink}}>{a}</div>
-    {b && <div style={on === 'grad' ? {color: '#fff', textShadow: '0 2px 18px rgba(0,70,90,.28)'} : {backgroundImage: GRAD_TEXT, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.06em'}}>{b}</div>}
+    <div style={on === 'grad' ? {color: '#fff', textShadow: '0 2px 18px rgba(0,50,70,.3)'} : {color: C.ink}}>{a}</div>
+    {b && <div style={on === 'grad' ? {color: 'rgba(255,255,255,.92)', textShadow: '0 2px 18px rgba(0,50,70,.3)'} : {backgroundImage: GRAD_TEXT, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.06em'}}>{b}</div>}
   </div>
 );
-const Sub: React.FC<{children: React.ReactNode; on: 'white' | 'grad'; style?: React.CSSProperties}> = ({children, on, style}) => (
-  <div style={{position: 'absolute', fontFamily: F.text, fontSize: 32, lineHeight: 1.45, color: on === 'grad' ? 'rgba(255,255,255,.95)' : C.ink2, textShadow: on === 'grad' ? '0 1px 10px rgba(0,70,90,.25)' : 'none', ...style}}>{children}</div>
+const Frame: React.FC<{children: React.ReactNode; g: GradKind}> = ({children, g}) => (
+  <AbsoluteFill style={{overflow: 'hidden'}}><Ground kind={g} t={90} />{children}</AbsoluteFill>
 );
-const Eyebrow: React.FC<{children: React.ReactNode; on: 'white' | 'grad'; style?: React.CSSProperties}> = ({children, on, style}) => (
-  <div style={{position: 'absolute', fontFamily: F.mono, fontSize: 21, letterSpacing: '.18em', textTransform: 'uppercase', color: on === 'grad' ? '#fff' : C.teal, fontWeight: 500, ...style}}>{children}</div>
+// ── interaction props ──
+const Cursor: React.FC<{x: number; y: number; s?: number; hand?: boolean}> = ({x, y, s = 1.5}) => (
+  <svg style={{position: 'absolute', left: x, top: y, transform: `scale(${s})`, transformOrigin: 'top left', filter: 'drop-shadow(0 4px 6px rgba(5,40,44,.3))', zIndex: 10}} width="22" height="28" viewBox="0 0 20 24"><path d="M2 1.5v18l5-4.6 3.2 7.2 3-1.3-3.1-7h6.6z" fill="#10242a" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" /></svg>
 );
-// callout pill: always a solid white pill, so it reads on anything
-const Callout: React.FC<{x: number; y: number; dx: number; dy: number; label: string; line?: string}> = ({x, y, dx, dy, label, line = C.teal}) => (
-  <>
-    <svg style={{position: 'absolute', left: 0, top: 0}} width="1920" height="1080"><path d={`M${x},${y} L${x + dx},${y + dy}`} stroke={line} strokeWidth="2" /><circle cx={x} cy={y} r="8" fill="#fff" stroke={C.cyan} strokeWidth="3" /></svg>
-    <div style={{position: 'absolute', left: x + dx + (dx > 0 ? 10 : -10), top: y + dy - 22, transform: dx < 0 ? 'translateX(-100%)' : 'none', background: '#fff', borderRadius: 99, padding: '10px 20px', fontFamily: F.mono, fontSize: 19, color: C.teal, fontWeight: 600, whiteSpace: 'nowrap', boxShadow: '0 12px 30px -10px rgba(5,60,63,.35)'}}>{label}</div>
-  </>
+const Ripple: React.FC<{x: number; y: number}> = ({x, y}) => (
+  <>{[34, 56].map((r, i) => <div key={r} style={{position: 'absolute', left: x - r, top: y - r, width: r * 2, height: r * 2, borderRadius: '50%', border: `${3 - i}px solid ${C.cyan}`, opacity: 0.8 - i * 0.35, zIndex: 9}} />)}</>
 );
-const Frame: React.FC<{children: React.ReactNode; light: LightKind; toward?: [number, number]; texture?: 'dots' | 'lines' | 'none'}> = ({children, light, toward, texture}) => (
-  <AbsoluteFill style={{overflow: 'hidden'}}>
-    <Light kind={light} toward={toward} texture={texture} t={90} />
-    {children}
-    <Grain opacity={0.025} />
-  </AbsoluteFill>
+const Tip: React.FC<{x: number; y: number; children: React.ReactNode}> = ({x, y, children}) => (
+  <div style={{position: 'absolute', left: x, top: y, transform: 'translate(-50%, -100%)', background: C.ink, color: '#fff', borderRadius: 12, padding: '10px 16px', fontFamily: F.text, fontSize: 19, fontWeight: 600, whiteSpace: 'nowrap', boxShadow: '0 14px 30px -10px rgba(0,30,40,.5)', zIndex: 11}}>{children}<div style={{position: 'absolute', left: '50%', bottom: -7, marginLeft: -7, width: 14, height: 14, background: C.ink, transform: 'rotate(45deg)'}} /></div>
 );
-const Cursor: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1.3}) => (
-  <svg style={{position: 'absolute', left: x, top: y, transform: `scale(${s})`, transformOrigin: 'top left', filter: 'drop-shadow(0 4px 6px rgba(5,40,44,.25))'}} width="22" height="28" viewBox="0 0 20 24"><path d="M2 1.5v18l5-4.6 3.2 7.2 3-1.3-3.1-7h6.6z" fill="#10242a" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" /></svg>
+const Toast: React.FC<{x: number; y: number; title: string; sub: string; icon?: React.ReactNode}> = ({x, y, title, sub, icon}) => (
+  <div style={{position: 'absolute', left: x, top: y, width: 520, display: 'flex', gap: 16, alignItems: 'center', background: '#fff', borderRadius: 22, padding: '18px 22px', fontFamily: F.text, boxShadow: '0 30px 70px -20px rgba(0,40,60,.5)', zIndex: 12}}>
+    <div style={{width: 52, height: 52, borderRadius: 16, background: 'linear-gradient(135deg,#7fbc42,#00b9ef 45%,#70cbf3)', display: 'grid', placeItems: 'center', color: '#fff', fontSize: 26}}>{icon ?? '✓'}</div>
+    <div><div style={{fontSize: 20, fontWeight: 700, color: C.ink}}>{title}</div><div style={{fontSize: 16, color: C.ink3, marginTop: 2}}>{sub}</div></div>
+  </div>
 );
-const Glow: React.FC<{x: number; y: number; r?: number; o?: number}> = ({x, y, r = 520, o = 1}) => (
-  <div style={{position: 'absolute', left: x - r, top: y - r, width: r * 2, height: r * 2, borderRadius: '50%', opacity: o, filter: 'blur(80px)', background: `conic-gradient(from 200deg, ${C.green}, ${C.cyan}, ${C.sky}, ${C.green})`}} />
-);
-// a floating white UI card on the gradient (no text over it)
-const Float: React.FC<{x: number; y: number; w: number; children: React.ReactNode; tilt?: string}> = ({x, y, w, children, tilt = ''}) => (
-  <div style={{position: 'absolute', left: x, top: y, width: w, transform: tilt, borderRadius: 28, boxShadow: '0 40px 100px -30px rgba(0,60,80,.5)'}}>{children}</div>
+const Float: React.FC<{x: number; y: number; w: number; h: number; tilt?: string; children: React.ReactNode; inner: string}> = ({x, y, w, h, tilt = '', children, inner}) => (
+  <div style={{position: 'absolute', left: x, top: y, width: w, height: h, transform: tilt, borderRadius: 28, overflow: 'hidden', boxShadow: '0 40px 100px -30px rgba(0,40,60,.55)', background: '#fff'}}><div style={{transform: inner, transformOrigin: '0 0'}}>{children}</div></div>
 );
 
-// 01  Seven logins. Vivid stage, white type above, cards below
+// 01  spot: seven logins, one failing
 const K1 = () => {
   const ps: Platform[] = ['li', 'fb', 'ig', 'yt', 'web', 'search', 'email'];
   return (
-    <Frame light="vivid" toward={[960, 760]}>
-      <H on="grad" a="Seven platforms." b="Seven logins." size={104} align="center" style={{left: 0, width: 1920, top: 90}} />
+    <Frame g="spot">
+      <H on="grad" a="Seven platforms." b="Seven logins. Every week." size={96} align="center" style={{left: 0, width: 1920, top: 90}} />
       <div style={{position: 'absolute', left: 0, top: 480, width: 1920, height: 600, perspective: 1800}}>
-        {ps.map((p, i) => {const k = i - 3, z = -Math.abs(k) * 160; return <div key={p} style={{position: 'absolute', left: 810 + k * 300, top: 40 + Math.abs(k) * 22, transform: `translateZ(${z}px) rotateY(${-k * 9}deg) scale(1.35)`, filter: `blur(${Math.abs(k) * 0.9}px)`}}><LoginField p={p} /></div>;})}
+        {ps.map((p, i) => {const k = i - 3, z = -Math.abs(k) * 160; return <div key={p} style={{position: 'absolute', left: 810 + k * 300, top: 40 + Math.abs(k) * 22, transform: `translateZ(${z}px) rotateY(${-k * 9}deg) scale(1.35)`, filter: `blur(${Math.abs(k) * 0.9}px)`, opacity: 1 - Math.abs(k) * 0.1}}><LoginField p={p} /></div>;})}
       </div>
+      <Ripple x={1012} y={828} /><Cursor x={1000} y={812} />
+      <div style={{position: 'absolute', left: 860, top: 880, background: '#ab3527', color: '#fff', borderRadius: 99, padding: '8px 18px', fontFamily: F.text, fontSize: 18, fontWeight: 650}}>Wrong password. Try again.</div>
     </Frame>
   );
 };
 
-// 02  Spreadsheet, macro, right side only; text on white at left
+// 02  holo: hours of copy and paste
 const K2 = () => (
-  <Frame light="warm" texture="lines" toward={[1300, 540]}>
-    <Shot w={1400} h={700} focus={[600, 230]} at={[1320, 500]} scale={1.9} rx={14} ry={-18} rz={-3} dof={{rx: 380, ry: 200, blur: 6}} fade={{side: 'left', at: 760, soft: 220}}><Spreadsheet /></Shot>
-    <Cursor x={1390} y={530} s={1.6} />
+  <Frame g="holo">
+    <Shot w={1400} h={700} focus={[600, 230]} at={[1320, 500]} scale={1.9} rx={14} ry={-18} rz={-3} dof={{rx: 380, ry: 200, blur: 5}} fade={{side: 'left', at: 760, soft: 220}}><Spreadsheet /></Shot>
+    <Cursor x={1390} y={530} />
     <div style={{position: 'absolute', left: 1330, top: 410, background: C.ink, color: '#fff', borderRadius: 10, padding: '8px 14px', fontFamily: F.mono, fontSize: 18}}>Ctrl + V</div>
-    <H on="white" a="Copied by hand." b="Every single week." size={92} style={{left: 110, top: 400}} />
+    <H on="white" a="Hours lost to" b="copy and paste." size={96} style={{left: 110, top: 400}} />
   </Frame>
 );
 
-// 03  Reveal: vivid field, white type
+// 03  conic: reveal
 const K3 = () => (
-  <Frame light="vivid" texture="none" toward={[960, 400]}>
-    <AbsoluteFill style={{background: 'radial-gradient(700px 500px at 50% 36%, rgba(255,255,255,.45), transparent 70%)'}} />
+  <Frame g="conic">
     <div style={{position: 'absolute', left: 960 - 90, top: 230, width: 180, height: 180, borderRadius: 52, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 30px 80px -20px rgba(0,60,80,.45)'}}><Mark size={120} /></div>
-    <Eyebrow on="grad" style={{left: 0, width: 1920, textAlign: 'center', top: 490, letterSpacing: '.5em'}}>Archetype</Eyebrow>
+    <div style={{position: 'absolute', left: 0, width: 1920, textAlign: 'center', top: 490, fontFamily: F.mono, fontSize: 22, letterSpacing: '.5em', color: '#fff'}}>ARCHETYPE</div>
     <H on="grad" a="Marketing Dashboard" size={140} align="center" style={{left: 0, width: 1920, top: 545}} />
-    <Sub on="grad" style={{left: 0, width: 1920, top: 730, textAlign: 'center', fontSize: 36}}>All of our marketing, in one place.</Sub>
+    <div style={{position: 'absolute', left: 0, width: 1920, top: 735, textAlign: 'center', fontFamily: F.text, fontSize: 36, color: '#fff', textShadow: '0 1px 10px rgba(0,60,80,.3)'}}>All of our marketing, in one place.</div>
   </Frame>
 );
 
-// 04  Home: headline band on top, the page rises from below
+// 04  sunrise: the full picture; cursor switches the range to 12 months
 const K4 = () => (
-  <Frame light="cool" toward={[960, 760]}>
-    <Glow x={960} y={900} r={620} o={0.55} />
-    <H on="white" a="Every channel." b="One screen." size={92} align="center" style={{left: 0, width: 1920, top: 70}} />
-    <Shot w={1600} h={1000} focus={[700, 250]} at={[960, 640]} scale={1.15} rx={28} ry={0} dof={{rx: 640, ry: 330, blur: 4}} fade={{side: 'top', at: 300, soft: 80}}><HomeReplica /></Shot>
+  <Frame g="sunrise">
+    <H on="white" a="See the full picture." b="Every channel, one screen." size={88} align="center" style={{left: 0, width: 1920, top: 60}} />
+    <Shot w={1600} h={1000} focus={[900, 200]} at={[960, 620]} scale={1.15} rx={26} dof={null} fade={{side: 'top', at: 300, soft: 70}}><HomeReplica /></Shot>
+    <Ripple x={1478} y={438} /><Cursor x={1466} y={424} />
+    <Tip x={1478} y={400}>Last 12 months</Tip>
   </Frame>
 );
 
-// 05  Time: vivid, one big white number
+// 05  aurora: updates itself; numbers tick up live, sources check in
 const K5 = () => (
-  <Frame light="vivid2" toward={[1250, 540]}>
-    <svg style={{position: 'absolute', left: 1360 - 470, top: 540 - 470}} width="940" height="940" viewBox="-470 -470 940 940">
-      <circle r="440" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.5)" strokeWidth="2" />
-      {Array.from({length: 120}).map((_, i) => {const a = (i / 120) * Math.PI * 2, l = i % 10 ? 10 : 26; return <line key={i} x1={Math.cos(a) * 440} y1={Math.sin(a) * 440} x2={Math.cos(a) * (440 - l)} y2={Math.sin(a) * (440 - l)} stroke={i < 88 ? '#fff' : 'rgba(255,255,255,.35)'} strokeWidth={i % 10 ? 2 : 3} transform="rotate(-90)" />;})}
-      <circle r="400" fill="none" stroke="#fff" strokeWidth="6" strokeDasharray={`${2 * Math.PI * 400 * 0.73} 9999`} strokeLinecap="round" transform="rotate(-90)" />
-    </svg>
-    <div style={{position: 'absolute', left: 1360 - 400, width: 800, top: 370, textAlign: 'center'}}>
-      <div style={{fontFamily: F.mono, fontSize: 22, letterSpacing: '.16em', color: '#fff'}}>EVERY MORNING, ON ITS OWN</div>
-      <div style={{fontFamily: F.display, fontSize: 230, fontWeight: 650, letterSpacing: '-0.05em', color: '#fff', lineHeight: 1.05, textShadow: '0 4px 30px rgba(0,70,90,.3)'}}>07:13</div>
-      <div style={{display: 'inline-flex', gap: 8, alignItems: 'center', background: '#fff', borderRadius: 99, padding: '10px 20px 10px 12px', boxShadow: '0 16px 40px -14px rgba(0,60,80,.45)'}}>{(['web', 'search', 'li', 'fb', 'ig', 'yt', 'email'] as Platform[]).map((p) => <PlatformIcon key={p} p={p} size={34} />)}<span style={{fontFamily: F.text, fontSize: 18, fontWeight: 650, marginLeft: 6, color: C.ink}}>7 sources updated</span></div>
+  <Frame g="aurora">
+    <H on="grad" a="Updates itself." b="Your hours go back to marketing." size={84} style={{left: 110, top: 120}} />
+    <div style={{position: 'absolute', left: 110, top: 400, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 22, width: 1700}}>
+      {(['li', 'fb', 'ig', 'yt', 'web', 'search', 'email'] as Platform[]).map((p, i) => (
+        <div key={p} style={{background: '#fff', borderRadius: 24, padding: 24, fontFamily: F.text, boxShadow: '0 30px 60px -25px rgba(0,0,0,.55)', opacity: i === 6 ? 0.55 : 1, transform: i === 6 ? 'translateY(30px)' : 'none'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: 12}}><PlatformIcon p={p} size={44} /><span style={{fontSize: 21, fontWeight: 650, color: C.ink}}>{['LinkedIn', 'Facebook', 'Instagram', 'YouTube', 'Website', 'Search', 'Email'][i]}</span>
+            <span style={{marginLeft: 'auto', width: 32, height: 32, borderRadius: 99, background: i < 6 ? C.up : C.inset, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 18}}>{i < 6 ? '✓' : ''}</span></div>
+          <div style={{fontSize: 40, fontWeight: 750, color: C.ink, marginTop: 14, fontVariantNumeric: 'tabular-nums'}}>{['14,210', '13,980', '1,120', '2,640', '7,930', '29,870', '3,412'][i]}</div>
+          <div style={{fontSize: 15, color: C.ink3}}>{i < 6 ? 'updated just now' : 'updating…'}</div>
+        </div>
+      ))}
+      <div style={{borderRadius: 24, border: '2px dashed rgba(255,255,255,.4)', display: 'grid', placeItems: 'center', fontFamily: F.text, color: '#fff', fontSize: 22, fontWeight: 600}}>No one typed this.</div>
     </div>
-    <H on="grad" a="Updates itself." b="No copy and paste." size={80} style={{left: 110, top: 420}} />
   </Frame>
 );
 
-// 06  Website: UI on the left, faded before the text; text on white at right
+// 06  liquid: where visitors come from; hover tooltip on a city
 const K6 = () => (
-  <Frame light="sky" toward={[700, 560]}>
-    <Shot w={1600} h={1000} focus={[1180, 300]} at={[640, 520]} scale={2.0} rx={10} ry={14} dof={{rx: 380, ry: 120, blur: 5}} fade={{side: 'right', at: 820, soft: 200}}><WebsiteScreen hl={0} /></Shot>
-    <H on="white" a="Know who visits," b="and from where." size={88} style={{left: 1180, top: 400}} />
+  <Frame g="liquid">
+    <Shot w={1600} h={1000} focus={[1180, 300]} at={[1340, 520]} scale={2.0} rx={10} ry={-14} dof={{rx: 380, ry: 140, blur: 5}} fade={{side: 'left', at: 860, soft: 200}}><WebsiteScreen hl={0} /></Shot>
+    <Cursor x={1460} y={500} /><Tip x={1470} y={470}>1,196 visitors, +18%</Tip>
+    <H on="white" a="Know where" b="visitors come from." size={88} style={{left: 110, top: 400}} />
   </Frame>
 );
 
-// 07  Search: vivid field, the table floats as a white card below the headline
+// 07  mesh: typing a search filters the table live
 const K7 = () => (
-  <Frame light="vivid" toward={[1100, 700]}>
-    <H on="grad" a="See how Google" b="finds us." size={100} style={{left: 110, top: 100}} />
-    <Float x={560} y={380} w={1300} tilt="perspective(2200px) rotateX(16deg) rotateY(-10deg)">
-      <div style={{height: 760, overflow: 'hidden', borderRadius: 28}}><div style={{transform: 'scale(1.3) translate(-640px, -60px)', transformOrigin: '0 0'}}><SearchScreen hl={0} /></div></div>
-    </Float>
-    <Callout x={1700} y={540} dx={40} dy={-200} label="rank 3.1" line="#fff" />
+  <Frame g="blueprint">
+    <H on="grad" a="Find what clients" b="search for." size={100} style={{left: 110, top: 100}} />
+    <Float x={600} y={380} w={1240} h={760} tilt="perspective(2200px) rotateX(14deg) rotateY(-10deg)" inner="scale(1.3) translate(-640px, -60px)"><SearchScreen hl={1} /></Float>
+    <div style={{position: 'absolute', left: 700, top: 330, width: 620, display: 'flex', alignItems: 'center', gap: 14, background: '#fff', borderRadius: 99, padding: '18px 26px', fontFamily: F.text, fontSize: 28, color: C.ink, boxShadow: '0 20px 50px -15px rgba(0,40,60,.5)', zIndex: 5}}>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.teal} strokeWidth="2.6" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 5 5" /></svg>factory<span style={{width: 3, height: 32, background: C.cyan}} />
+    </div>
   </Frame>
 );
 
-// 08  Social: headline on white at top-left, the cards fill the right and bottom
+// 08  pearl: click the best card, it opens
 const K8 = () => (
-  <Frame light="mint" toward={[1250, 650]}>
+  <Frame g="pearl">
     <Shot w={1600} h={1000} focus={[1180, 640]} at={[1280, 680]} scale={1.55} rx={18} ry={-10} rz={-2} dof={{rx: 270, ry: 170, blur: 5}} fade={{side: 'left', at: 780, soft: 200}}><HomeReplica /></Shot>
-    <Callout x={1450} y={470} dx={60} dy={-150} label="best this month, +64%" />
-    <H on="white" a="See what" b="is working." size={112} style={{left: 110, top: 330}} />
+    <Ripple x={1360} y={600} /><Cursor x={1348} y={586} />
+    <Tip x={1360} y={555}>Best this month, +64%</Tip>
+    <H on="white" a="See what works." b="Then do more of it." size={96} style={{left: 110, top: 380}} />
   </Frame>
 );
 
-// 09  Email: vivid; the funnel card floats right, white text left
+// 09  bands: hover a campaign, its opens appear
 const K9 = () => (
-  <Frame light="vivid2" toward={[1300, 540]}>
-    <Float x={880} y={170} w={900} tilt="perspective(2200px) rotateY(-14deg) rotateX(4deg)">
-      <div style={{height: 740, overflow: 'hidden', borderRadius: 28}}><div style={{transform: 'scale(1.7) translate(-890px, -175px)', transformOrigin: '0 0'}}><EmailScreen /></div></div>
-    </Float>
-    <H on="grad" a="Every campaign," b="measured." size={104} style={{left: 110, top: 380}} />
+  <Frame g="bands">
+    <Float x={980} y={170} w={830} h={740} tilt="perspective(2200px) rotateY(-14deg) rotateX(4deg)" inner="scale(1.7) translate(-890px, -175px)"><EmailScreen /></Float>
+    <Cursor x={1380} y={520} /><Tip x={1390} y={490}>1,317 people opened it</Tip>
+    <H on="grad" a="Know which emails" b="get opened." size={88} style={{left: 110, top: 380}} />
   </Frame>
 );
 
-// 10  The weekly briefing writes itself, on white
+// 10  holo: the briefing writes itself
 const K10 = () => (
-  <Frame light="cool" texture="none">
-    <Glow x={960} y={560} r={600} o={0.4} />
-    <H on="white" a="Your week," b="written for you." size={84} align="center" style={{left: 0, width: 1920, top: 70}} />
+  <Frame g="holo">
+    <H on="white" a="Monday’s briefing" b="is already written." size={84} align="center" style={{left: 0, width: 1920, top: 70}} />
     <div style={{position: 'absolute', left: 310, top: 340, boxShadow: '0 40px 100px -40px rgba(5,60,63,.45)', borderRadius: 26}}><InsightsScreen typed={0.86} /></div>
   </Frame>
 );
 
-// 11  Site audit: vivid; gauge card floats left, white text right
+// 11  lime: $1,200 a year back; the SEMrush renewal is cancelled with a click
 const K11 = () => (
-  <Frame light="vivid" toward={[650, 540]}>
-    <Float x={110} y={170} w={860} tilt="perspective(2200px) rotateY(14deg) rotateX(4deg)">
-      <div style={{height: 760, overflow: 'hidden', borderRadius: 28}}><div style={{transform: 'scale(1.1) translate(-10px, -40px)', transformOrigin: '0 0'}}><SiteHealthScreen done={2} /></div></div>
-    </Float>
-    <H on="grad" a="Your website," b="checked in-house." size={92} style={{left: 1100, top: 340}} />
-    <Sub on="grad" style={{left: 1104, top: 560}}>118 checks, every two weeks.<br />Fixes ranked by impact.</Sub>
+  <Frame g="lime">
+    <H on="grad" a="Save $1,200 a year." b="No SEMrush subscription." size={80} style={{left: 110, top: 150}} />
+    <div style={{position: 'absolute', left: 110, top: 520, width: 700, background: '#fff', borderRadius: 26, padding: 34, fontFamily: F.text, color: C.ink, boxShadow: '0 40px 80px -30px rgba(0,40,40,.5)', transform: 'rotate(-3deg)'}}>
+      <div style={{fontSize: 16, color: C.ink3, fontFamily: F.mono, letterSpacing: '.12em'}}>RENEWAL NOTICE</div>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 12}}><span style={{fontSize: 30, fontWeight: 700}}>SEMrush, yearly plan</span><span style={{fontSize: 38, fontWeight: 750, textDecoration: 'line-through', textDecorationColor: '#ab3527', textDecorationThickness: 4}}>$1,200</span></div>
+      <div style={{display: 'flex', gap: 12, marginTop: 24}}><span style={{flex: 1, textAlign: 'center', borderRadius: 99, padding: '14px 0', background: C.inset, fontWeight: 650, fontSize: 19}}>Renew</span><span style={{flex: 1, textAlign: 'center', borderRadius: 99, padding: '14px 0', background: C.ink, color: '#fff', fontWeight: 650, fontSize: 19}}>Cancel plan</span></div>
+    </div>
+    <Ripple x={640} y={784} /><Cursor x={628} y={770} />
+    <Float x={1080} y={330} w={740} h={660} tilt="perspective(2200px) rotateY(-12deg) rotateX(4deg)" inner="scale(1.05) translate(-10px, -40px)"><SiteHealthScreen done={3} /></Float>
   </Frame>
 );
 
-// 12  Competitor report: pages on the right, text on white left
+// 12  spot: competitor moves; click download on the report
 const K12 = () => (
-  <Frame light="warm" toward={[1350, 560]}>
-    <Shot w={900} h={1270} focus={[450, 560]} at={[1700, 560]} scale={0.82} rx={18} ry={-24} rz={4} dof={{rx: 600, ry: 700, blur: 8}} fade={{side: 'left', at: 960, soft: 160}}><ReportPage title="Country offices" /></Shot>
-    <Shot w={900} h={1270} focus={[450, 640]} at={[1330, 600]} scale={1.0} rx={14} ry={-14} rz={-3} dof={{rx: 470, ry: 300, blur: 6}} fade={{side: 'left', at: 960, soft: 160}}><ReportPage /></Shot>
-    <H on="white" a="Competitor moves," b="every month." size={84} style={{left: 110, top: 360}} />
-    <Sub on="white" style={{left: 114, top: 580}}>Researched, checked and<br />emailed as a PDF.</Sub>
+  <Frame g="spot">
+    <Float x={1000} y={130} w={760} h={880} tilt="perspective(2200px) rotateY(-16deg) rotateX(6deg) rotateZ(2deg)" inner="scale(.9)"><ReportPage /></Float>
+    <div style={{position: 'absolute', left: 1530, top: 100, background: '#fff', color: C.teal, borderRadius: 99, padding: '14px 26px', fontFamily: F.text, fontSize: 22, fontWeight: 700, boxShadow: '0 20px 40px -10px rgba(0,0,0,.5)'}}>⬇ Download PDF</div>
+    <Ripple x={1640} y={128} /><Cursor x={1628} y={114} />
+    <H on="grad" a="Know competitor moves" b="before anyone asks." size={86} style={{left: 110, top: 400}} />
   </Frame>
 );
 
-// 13  22 offices on a white-line globe
+// globe (white lines, for dark grounds)
 const OFF: [string, number, number][] = [
   ['France', 46.6, 2.2], ['Ivory Coast', 7.5, -5.5], ['Tunisia', 34, 9], ['Morocco', 31.8, -7.1], ['UAE', 24, 54], ['USA', 39, -98], ['Brazil', -14, -51], ['Mexico', 23, -102],
   ['Bangladesh', 23.7, 90.4], ['Cambodia', 12.6, 105], ['China', 35, 104], ['India', 21, 78], ['Indonesia', -2.5, 118], ['Laos', 19.9, 102.5], ['Kazakhstan', 48, 67], ['Malaysia', 4.2, 102],
@@ -217,73 +216,80 @@ export const Globe: React.FC<{lon0: number; lat0?: number; R: number; arcs?: num
     </svg>
   );
 };
+// 13  duo: click an office on the globe, its local page opens
 const K13 = () => (
-  <Frame light="vivid2" toward={[1250, 540]}>
+  <Frame g="duo">
     <div style={{position: 'absolute', left: 1280 - 480 - 300, top: 540 - 480 - 100}}><Globe lon0={70} R={480} labels={['France', 'UAE', 'India', 'Vietnam', 'Singapore', 'Kazakhstan', 'Morocco', 'Indonesia', 'Mongolia']} /></div>
-    <H on="grad" a="22 offices." b="Every local competitor." size={92} style={{left: 110, top: 400}} />
-  </Frame>
-);
-
-// 14  Shared in one link: text on white top-left, panel and report bottom-right
-const K14 = () => (
-  <Frame light="cool" texture="lines" toward={[1250, 650]}>
-    <Glow x={1400} y={700} r={520} o={0.45} />
-    <Shot w={900} h={1270} focus={[450, 500]} at={[1450, 560]} scale={0.85} rx={10} ry={-28} rz={3} dof={null} fade={{side: 'top', at: 300, soft: 120}}><ReportPage /></Shot>
-    <div style={{position: 'absolute', left: 760, top: 470, transform: 'perspective(2000px) rotateY(-10deg) rotateX(6deg) scale(1.3)', transformOrigin: 'top left'}}><SharePanel /></div>
-    <Cursor x={1620} y={830} />
-    <H on="white" a="Emailed to leadership." b="Shared in one link." size={84} style={{left: 110, top: 90}} />
-  </Frame>
-);
-
-// 15  PR: vivid; white text on top, feed card floats below
-const K15 = () => (
-  <Frame light="vivid" toward={[960, 760]}>
-    <H on="grad" a="Every mention," b="found daily." size={100} style={{left: 110, top: 90}} />
-    <Float x={560} y={360} w={1300} tilt="perspective(2200px) rotateX(18deg) rotateZ(-2deg)">
-      <div style={{height: 780, overflow: 'hidden', borderRadius: 28}}><div style={{transform: 'scale(1.25) translate(-30px, -20px)', transformOrigin: '0 0'}}><MentionsScreen /></div></div>
-    </Float>
-  </Frame>
-);
-
-// 16  Inquiries: text on white left, chart right
-const K16 = () => (
-  <Frame light="sky" toward={[1350, 520]}>
-    <Shot w={1600} h={1000} focus={[1400, 330]} at={[1400, 520]} scale={1.45} rx={10} ry={-14} dof={{rx: 330, ry: 330, blur: 5}} fade={{side: 'left', at: 760, soft: 200}}><InquiriesScreen /></Shot>
-    <H on="white" a="Every request," b="logged and counted." size={84} style={{left: 110, top: 400}} />
-  </Frame>
-);
-
-// 17  Approvals: vivid; board floats right, white text left
-const K17 = () => (
-  <Frame light="vivid2" toward={[1250, 560]}>
-    <Float x={760} y={200} w={1100} tilt="perspective(2200px) rotateY(-12deg) rotateX(6deg)">
-      <div style={{height: 720, overflow: 'hidden', borderRadius: 28}}><div style={{transform: 'scale(1.05)', transformOrigin: '0 0'}}><BoardScreen /></div></div>
-    </Float>
-    <div style={{position: 'absolute', left: 1080, top: 420, width: 380, transform: 'rotate(-4deg)', background: '#fff', borderRadius: 18, padding: '20px 22px', fontFamily: F.text, boxShadow: '0 40px 70px -20px rgba(0,50,70,.5)'}}>
-      <div style={{fontSize: 20, fontWeight: 650, color: C.ink, marginBottom: 12}}>Site photos for case study</div><span style={{fontSize: 15, fontWeight: 650, color: '#ab3527', background: '#ab352718', borderRadius: 99, padding: '4px 12px'}}>Urgent</span>
+    <div style={{position: 'absolute', left: 1560, top: 640, width: 330, background: '#fff', borderRadius: 20, padding: 22, fontFamily: F.text, color: C.ink, boxShadow: '0 30px 60px -20px rgba(0,0,0,.5)'}}>
+      <div style={{fontSize: 14, fontFamily: F.mono, color: C.teal, letterSpacing: '.12em'}}>ARCHETYPE THAILAND</div>
+      <div style={{fontSize: 22, fontWeight: 700, marginTop: 8}}>3 local competitors</div>
+      <div style={{fontSize: 16, color: C.ink3, marginTop: 4}}>1 new development this month</div>
     </div>
-    <Cursor x={1390} y={490} />
-    <H on="grad" a="Approvals and" b="projects, together." size={88} style={{left: 110, top: 400}} />
+    <Ripple x={1446} y={612} /><Cursor x={1434} y={598} />
+    <H on="grad" a="Local intelligence" b="for all 22 offices." size={88} style={{left: 110, top: 400}} />
   </Frame>
 );
 
-// 18  Your bento on the vivid field, white headline above it
+// 14  sunrise: one link, the whole team informed
+const K14 = () => (
+  <Frame g="sunrise">
+    <Shot w={900} h={1270} focus={[450, 500]} at={[1500, 600]} scale={0.85} rx={10} ry={-28} rz={3} dof={null} fade={{side: 'top', at: 300, soft: 120}}><ReportPage /></Shot>
+    <div style={{position: 'absolute', left: 760, top: 470, transform: 'perspective(2000px) rotateY(-10deg) rotateX(6deg) scale(1.3)', transformOrigin: 'top left'}}><SharePanel /></div>
+    <Ripple x={1612} y={705} /><Cursor x={1600} y={692} />
+    <Tip x={1612} y={660}>Link copied</Tip>
+    <H on="white" a="One link." b="The whole team informed." size={88} style={{left: 110, top: 90}} />
+  </Frame>
+);
+
+// 15  mesh: a new mention arrives as a notification
+const K15 = () => (
+  <Frame g="mesh">
+    <H on="grad" a="Never miss" b="a press mention." size={100} style={{left: 110, top: 90}} />
+    <Float x={560} y={380} w={1300} h={780} tilt="perspective(2200px) rotateX(18deg) rotateZ(-2deg)" inner="scale(1.25) translate(-30px, -20px)"><MentionsScreen /></Float>
+    <Toast x={1290} y={110} title="New mention found" sub="Construction trade press, 2 min ago" icon="🔔" />
+  </Frame>
+);
+
+// 16  liquid: a lead is marked Won from the dropdown
+const K16 = () => (
+  <Frame g="liquid">
+    <Shot w={1600} h={1000} focus={[1000, 360]} at={[1300, 560]} scale={1.45} rx={10} ry={-14} dof={{rx: 640, ry: 380, blur: 4}} fade={{side: 'left', at: 820, soft: 200}}><InquiriesScreen hl={2} /></Shot>
+    <div style={{position: 'absolute', left: 1500, top: 470, width: 220, background: '#fff', borderRadius: 16, padding: 8, fontFamily: F.text, fontSize: 19, boxShadow: '0 24px 50px -16px rgba(5,60,63,.45)', zIndex: 5}}>
+      {['New', 'Quoted', 'Won', 'Lost'].map((x) => <div key={x} style={{padding: '10px 14px', borderRadius: 10, background: x === 'Won' ? C.teal : 'none', color: x === 'Won' ? '#fff' : C.ink, fontWeight: x === 'Won' ? 650 : 450}}>{x}</div>)}
+    </div>
+    <Ripple x={1580} y={588} /><Cursor x={1568} y={575} />
+    <H on="white" a="Every business lead," b="tracked. None lost." size={86} style={{left: 110, top: 400}} />
+  </Frame>
+);
+
+// 17  bands: a card dragged to Done
+const K17 = () => (
+  <Frame g="deep">
+    <Float x={1010} y={200} w={850} h={720} tilt="perspective(2200px) rotateY(-12deg) rotateX(6deg)" inner="scale(1.05)"><BoardScreen /></Float>
+    <div style={{position: 'absolute', left: 1300, top: 430, width: 380, transform: 'rotate(-4deg)', background: '#fff', borderRadius: 18, padding: '20px 22px', fontFamily: F.text, boxShadow: '0 40px 70px -20px rgba(0,50,70,.5)', zIndex: 5}}>
+      <div style={{fontSize: 20, fontWeight: 650, color: C.ink, marginBottom: 12}}>Site photos for case study</div><span style={{fontSize: 15, fontWeight: 650, color: C.up, background: 'rgba(63,122,38,.12)', borderRadius: 99, padding: '4px 12px'}}>Approved</span>
+    </div>
+    <Cursor x={1610} y={500} />
+    <H on="grad" a="Approvals move faster." b="Nothing stuck in inboxes." size={76} style={{left: 110, top: 400}} />
+  </Frame>
+);
+
+// 18  aurora: the bento, all of marketing
 const K18 = () => (
-  <Frame light="vivid" toward={[960, 640]}>
-    <H on="grad" a="One dashboard for all of it." size={72} align="center" style={{left: 0, width: 1920, top: 46}} />
-    <div style={{position: 'absolute', left: 960 - 1000 * 0.78, top: 175, transform: 'scale(.78)', transformOrigin: '0 0', borderRadius: 34, overflow: 'hidden', boxShadow: '0 50px 120px -30px rgba(0,50,70,.55)'}}><Bento /></div>
+  <Frame g="aurora">
+    <H on="grad" a="All of marketing. One dashboard." size={70} align="center" style={{left: 0, width: 1920, top: 46}} />
+    <div style={{position: 'absolute', left: 960 - 1000 * 0.78, top: 175, transform: 'scale(.78)', transformOrigin: '0 0', borderRadius: 34, overflow: 'hidden', boxShadow: '0 50px 120px -30px rgba(0,0,0,.6)'}}><Bento /></div>
   </Frame>
 );
 
-// 19  Lockup on white, gradient name
+// 19  conic: lockup, white type
 const K19 = () => (
-  <Frame light="cool" texture="none">
-    <Glow x={960} y={330} r={360} o={0.5} />
-    <div style={{position: 'absolute', left: 960 - 80, top: 250, width: 160, height: 160, borderRadius: 46, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 30px 80px -30px rgba(5,60,63,.45)'}}><Mark size={106} /></div>
-    <Eyebrow on="white" style={{left: 0, width: 1920, textAlign: 'center', top: 480, letterSpacing: '.5em'}}>Archetype</Eyebrow>
-    <H on="white" a="Marketing" b="Dashboard" size={120} align="center" style={{left: 0, width: 1920, top: 530}} />
-    <div style={{position: 'absolute', left: 0, width: 1920, top: 830, textAlign: 'center'}}><span style={{display: 'inline-block', background: `linear-gradient(95deg, #7fbc42, #00b9ef 55%, #70cbf3)`, color: '#fff', borderRadius: 99, padding: '16px 40px', fontFamily: F.text, fontSize: 30, fontWeight: 650, textShadow: '0 1px 6px rgba(0,70,90,.35)'}}>On the Marketing team site</span></div>
-    <div style={{position: 'absolute', left: 0, width: 1920, top: 990, textAlign: 'center', fontFamily: F.text, fontSize: 20, color: C.ink3}}>Made by Datdeptrai with ♥</div>
+  <Frame g="conic">
+    <div style={{position: 'absolute', left: 960 - 80, top: 230, width: 160, height: 160, borderRadius: 46, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 30px 80px -30px rgba(0,50,70,.5)'}}><Mark size={106} /></div>
+    <div style={{position: 'absolute', left: 0, width: 1920, textAlign: 'center', top: 460, fontFamily: F.mono, fontSize: 22, letterSpacing: '.5em', color: '#fff'}}>ARCHETYPE</div>
+    <H on="grad" a="Marketing Dashboard" size={130} align="center" style={{left: 0, width: 1920, top: 510}} />
+    <div style={{position: 'absolute', left: 0, width: 1920, top: 720, textAlign: 'center'}}><span style={{display: 'inline-block', background: '#fff', color: C.teal, borderRadius: 99, padding: '16px 40px', fontFamily: F.text, fontSize: 30, fontWeight: 700}}>Open it on the Marketing team site</span></div>
+    <div style={{position: 'absolute', left: 0, width: 1920, top: 990, textAlign: 'center', fontFamily: F.text, fontSize: 20, color: '#fff'}}>Made by Datdeptrai with ♥</div>
   </Frame>
 );
 
