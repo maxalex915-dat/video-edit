@@ -15,8 +15,8 @@ export const Backdrop: React.FC<{pulse?: number}> = ({pulse = 0}) => {
       <AbsoluteFill
         style={{
           background: `radial-gradient(900px 700px at ${o1x}% ${o1y}%, rgba(127,188,66,${0.16 + pulse * 0.1}), transparent 70%),
-             radial-gradient(1000px 800px at ${o2x}% ${o2y}%, rgba(0,185,239,${0.18 + pulse * 0.12}), transparent 70%),
-             radial-gradient(1400px 900px at 50% 120%, rgba(5,94,99,.55), transparent 70%)`,
+             radial-gradient(1000px 800px at ${o2x}% ${o2y}%, rgba(0,185,239,${0.14 + pulse * 0.12}), transparent 70%),
+             radial-gradient(1400px 900px at 50% 120%, rgba(112,203,243,.25), transparent 70%), linear-gradient(180deg, #f8fbfb, #eef4f5)`,
         }}
       />
       <Grid />
@@ -31,7 +31,7 @@ export const Grid: React.FC<{opacity?: number; size?: number}> = ({opacity = 1, 
     <AbsoluteFill style={{opacity}}>
       <AbsoluteFill
         style={{
-          backgroundImage: `linear-gradient(rgba(112,203,243,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(112,203,243,.07) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(5,94,99,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(5,94,99,.05) 1px, transparent 1px)`,
           backgroundSize: `${size}px ${size}px`,
           backgroundPosition: `${(f * 0.4) % size}px ${(f * 0.25) % size}px`,
           maskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 30%, transparent 85%)',
@@ -40,7 +40,7 @@ export const Grid: React.FC<{opacity?: number; size?: number}> = ({opacity = 1, 
       />
       <AbsoluteFill
         style={{
-          background: `linear-gradient(100deg, transparent ${sweep - 200}px, rgba(112,203,243,.06) ${sweep}px, transparent ${sweep + 200}px)`,
+          background: `linear-gradient(100deg, transparent ${sweep - 200}px, rgba(255,255,255,.5) ${sweep}px, transparent ${sweep + 200}px)`,
         }}
       />
     </AbsoluteFill>
@@ -48,7 +48,7 @@ export const Grid: React.FC<{opacity?: number; size?: number}> = ({opacity = 1, 
 };
 
 // Film grain: SVG feTurbulence, seed moves per frame so it lives, deterministic.
-export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.05}) => {
+export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.035}) => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{opacity, mixBlendMode: 'overlay', pointerEvents: 'none'}}>
@@ -65,6 +65,6 @@ export const Grain: React.FC<{opacity?: number}> = ({opacity = 0.05}) => {
 
 export const Vignette: React.FC = () => (
   <AbsoluteFill
-    style={{background: 'radial-gradient(ellipse 85% 80% at 50% 50%, transparent 55%, rgba(0,8,10,.6) 100%)', pointerEvents: 'none'}}
+    style={{background: 'radial-gradient(ellipse 85% 80% at 50% 50%, transparent 60%, rgba(5,60,63,.06) 100%)', pointerEvents: 'none'}}
   />
 );

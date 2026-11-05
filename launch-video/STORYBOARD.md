@@ -1,6 +1,6 @@
 # Marketing Dashboard launch film: storyboard (v1, for approval)
 
-60 s, 1920x1080, 30 fps. Cuts land on the music's bars (108 BPM, one bar = 2.22 s).
+90 s, 1920x1080, 30 fps. White theme. Superseded by the rendered board: storyboard/storyboard-v2.png (19 key frames).
 The track's quiet build runs 0 to 9.2 s and the beat drops at 9.2 s, so the reveal sits on the drop.
 Music: first 53.7 s of the supplied track, then its own ending (bar-aligned edit, no fade).
 

@@ -37,9 +37,9 @@ export const Card: React.FC<{style?: React.CSSProperties; children?: React.React
 export const Glass: React.FC<{style?: React.CSSProperties; children?: React.ReactNode}> = ({style, children}) => (
   <div
     style={{
-      background: 'linear-gradient(160deg, rgba(255,255,255,.12), rgba(255,255,255,.04))',
-      border: '1px solid rgba(180,235,240,.18)', borderRadius: R.card, backdropFilter: 'blur(24px)',
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), 0 30px 80px -30px rgba(0,0,0,.6)', color: C.textOnDark, fontFamily: F.text, ...style,
+      background: 'linear-gradient(160deg, rgba(255,255,255,.92), rgba(255,255,255,.72))',
+      border: '1px solid rgba(5,94,99,.10)', borderRadius: R.card, backdropFilter: 'blur(24px)',
+      boxShadow: 'inset 0 1px 0 #fff, 0 24px 60px -24px rgba(5,60,63,.25)', color: C.textOnDark, fontFamily: F.text, ...style,
     }}
   >
     {children}

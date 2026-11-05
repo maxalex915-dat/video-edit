@@ -4,6 +4,7 @@ import {Backdrop, Grain, Vignette} from '../components/kit/Backdrop';
 import {Label, fmt} from '../components/kit/Type';
 import {Card, Chip, Glass, Mark, PlatformIcon, Platform, Spark, linePath, PLATFORM_NAME} from '../components/ui/Primitives';
 import {HomeReplica} from '../components/ui/HomeReplica';
+import {Bento} from '../components/ui/Bento';
 import {C, LOOP, LOOP_BAR} from '../theme/tokens';
 import {F} from '../theme/fonts';
 import {BARS, FIXES, INSIGHT, PORTFOLIO, REQ_MONTHS, REQUESTS, RIVALS, SERIES, SITE} from '../data/demo';
@@ -12,7 +13,7 @@ const H1: React.FC<{children: React.ReactNode; size?: number; style?: React.CSSP
   <div style={{fontFamily: F.display, fontWeight: 700, fontSize: size, lineHeight: 1.02, letterSpacing: '-0.035em', color, ...style}}>{children}</div>
 );
 const G: React.FC<{children: React.ReactNode}> = ({children}) => (
-  <span style={{backgroundImage: `linear-gradient(100deg, ${C.green}, ${C.cyan} 55%, ${C.sky})`, WebkitBackgroundClip: 'text', color: 'transparent'}}>{children}</span>
+  <span style={{backgroundImage: `linear-gradient(100deg, #5fa82e, #00a6dc 60%, #3cb4ea)`, WebkitBackgroundClip: 'text', color: 'transparent'}}>{children}</span>
 );
 const Frame: React.FC<{children: React.ReactNode; bg?: React.ReactNode}> = ({children, bg}) => (
   <AbsoluteFill style={{overflow: 'hidden'}}>
@@ -37,8 +38,8 @@ const K1 = () => {
             <div>
               <div style={{fontSize: 22, fontWeight: 650}}>{PLATFORM_NAME[p]}</div>
               <div style={{marginTop: 8, display: 'flex', gap: 6}}>
-                <div style={{width: 120, height: 26, borderRadius: 999, background: 'rgba(255,255,255,.1)', fontFamily: F.mono, fontSize: 14, color: C.mutedOnDark, padding: '3px 12px'}}>••••••••</div>
-                <div style={{height: 26, borderRadius: 999, background: 'rgba(112,203,243,.25)', fontSize: 13, padding: '4px 12px', fontWeight: 600}}>Sign in</div>
+                <div style={{width: 120, height: 26, borderRadius: 999, background: C.inset, fontFamily: F.mono, fontSize: 14, color: C.mutedOnDark, padding: '3px 12px'}}>••••••••</div>
+                <div style={{height: 26, borderRadius: 999, background: LOOP, color: '#fff', fontSize: 13, padding: '4px 12px', fontWeight: 600}}>Sign in</div>
               </div>
             </div>
           </Glass>
@@ -56,7 +57,7 @@ const K1 = () => {
 // 2. Copied by hand
 const Sheet: React.FC<{x: number; y: number; r: number; seed: number; hl?: boolean}> = ({x, y, r, seed, hl}) => (
   <div style={abs(x, y, {transform: `perspective(1400px) rotateY(${r}deg) rotateX(6deg)`})}>
-    <div style={{width: 640, background: '#fff', borderRadius: 18, overflow: 'hidden', boxShadow: '0 40px 80px -30px rgba(0,0,0,.7)', fontFamily: F.mono, fontSize: 15, color: C.ink2}}>
+    <div style={{width: 640, background: '#fff', borderRadius: 18, overflow: 'hidden', boxShadow: '0 40px 80px -30px rgba(5,60,63,.35)', fontFamily: F.mono, fontSize: 15, color: C.ink2}}>
       <div style={{height: 36, background: '#e9f1f1', display: 'flex', alignItems: 'center', gap: 8, padding: '0 14px'}}>
         {['#ff6058', '#ffbd2e', '#28c940'].map((c) => <span key={c} style={{width: 11, height: 11, borderRadius: 99, background: c}} />)}
         <span style={{marginLeft: 12, fontFamily: F.text, fontSize: 13, fontWeight: 600}}>{['report_final_v3.xlsx', 'social_export.csv', 'weekly_numbers (2).xlsx'][seed % 3]}</span>
@@ -84,8 +85,8 @@ const K2 = () => (
     <Sheet x={1260} y={330} r={-14} seed={2} />
     <Sheet x={1080} y={540} r={-20} seed={3} hl />
     <Cursor x={1600} y={770} s={1.4} />
-    <Chip color={C.ink} bg="#fff" size={22} style={abs(1450, 480, {boxShadow: '0 10px 30px rgba(0,0,0,.4)'})}>Ctrl + C</Chip>
-    <Chip color={C.ink} bg="#fff" size={22} style={abs(1700, 700, {boxShadow: '0 10px 30px rgba(0,0,0,.4)'})}>Ctrl + V</Chip>
+    <Chip color={C.ink} bg="#fff" size={22} style={abs(1450, 480, {boxShadow: '0 10px 30px rgba(5,60,63,.18)'})}>Ctrl + C</Chip>
+    <Chip color={C.ink} bg="#fff" size={22} style={abs(1700, 700, {boxShadow: '0 10px 30px rgba(5,60,63,.18)'})}>Ctrl + V</Chip>
     <div style={abs(150, 400)}>
       <H1 size={110}>Copied by hand.</H1>
       <H1 size={110} color={C.mutedOnDark}>Every single week.</H1>
@@ -112,7 +113,7 @@ const K3 = () => (
 const K4 = () => (
   <Frame>
     <div style={abs(160, 90)}><H1 size={84}>Every channel. <G>One screen.</G></H1></div>
-    <div style={abs(300, 250, {transform: 'perspective(2400px) rotateX(18deg) rotateZ(-2deg) scale(.86)', transformOrigin: 'top center', boxShadow: '0 60px 140px -40px rgba(0,185,239,.45)', borderRadius: 28})}>
+    <div style={abs(300, 250, {transform: 'perspective(2400px) rotateX(18deg) rotateZ(-2deg) scale(.86)', transformOrigin: 'top center', boxShadow: '0 60px 140px -40px rgba(0,120,160,.35)', borderRadius: 28})}>
       <HomeReplica />
     </div>
   </Frame>
@@ -170,7 +171,7 @@ const K6 = () => {
         </div>
         <svg style={abs(20, 50)} width={W} height={Hh}><path d={d} fill="none" stroke={C.cyan} strokeWidth="6" strokeLinecap="round" strokeDasharray="1400 3000" opacity=".9" /></svg>
       </Card>
-      <Chip color="#fff" bg={C.teal} size={34} style={abs(1520, 280, {boxShadow: '0 10px 30px rgba(0,0,0,.4)'})}>+29%</Chip>
+      <Chip color="#fff" bg={C.teal} size={34} style={abs(1520, 280, {boxShadow: '0 10px 30px rgba(5,60,63,.18)'})}>+29%</Chip>
       <div style={abs(150, 380, {width: 470})}><div style={{fontFamily: F.text, fontSize: 40, lineHeight: 1.3, color: C.mutedOnDark}}>Every post, every channel, ranked by what it actually did.</div></div>
     </Frame>
   );
@@ -184,7 +185,7 @@ const K7 = () => (
       <div style={{display: 'flex', alignItems: 'center', gap: 18, marginBottom: 26}}>
         <div style={{width: 64, height: 64, borderRadius: 18, background: LOOP, display: 'grid', placeItems: 'center'}}><svg width="34" height="34" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="#fff" /></svg></div>
         <div style={{fontSize: 30, fontWeight: 650}}>This week</div>
-        <Chip color={C.textOnDark} bg="rgba(255,255,255,.12)" size={20}>Week of 2 to 8 November</Chip>
+        <Chip color={C.textOnDark} bg={C.inset} size={20}>Week of 2 to 8 November</Chip>
       </div>
       <div style={{fontFamily: F.display, fontSize: 52, fontWeight: 650, lineHeight: 1.15, letterSpacing: '-0.02em'}}>LinkedIn reach doubled after Tuesday’s project po<span style={{display: 'inline-block', width: 4, height: 52, background: C.cyan, verticalAlign: 'middle', marginLeft: 4}} /></div>
     </Glass>
@@ -233,7 +234,7 @@ const K8 = () => (
     <div style={abs(1110, 560, {display: 'grid', gap: 16, width: 640})}>
       {FIXES.map((x, i) => (
         <Glass key={x} style={{padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 18, borderRadius: 20, fontSize: 28, opacity: i < 3 ? 1 : 0.5}}>
-          <span style={{width: 36, height: 36, borderRadius: 99, display: 'grid', placeItems: 'center', background: i < 2 ? C.up : 'rgba(255,255,255,.12)', fontSize: 20}}>{i < 2 ? '✓' : ''}</span>
+          <span style={{width: 36, height: 36, borderRadius: 99, display: 'grid', placeItems: 'center', background: i < 2 ? C.up : C.inset, color: '#fff', fontSize: 20}}>{i < 2 ? '✓' : ''}</span>
           <span style={{textDecoration: i < 2 ? 'line-through' : 'none', color: i < 2 ? C.mutedOnDark : C.textOnDark}}>{x}</span>
         </Glass>
       ))}
@@ -269,33 +270,152 @@ const K9 = () => {
           </div>
         ))}
       </Card>
-      <Chip color={C.teal} bg="#fff" size={26} style={abs(1610, 220, {boxShadow: '0 10px 30px rgba(0,0,0,.4)'})}>⬇ PDF</Chip>
+      <Chip color={C.teal} bg="#fff" size={26} style={abs(1610, 220, {boxShadow: '0 10px 30px rgba(5,60,63,.18)'})}>⬇ PDF</Chip>
     </Frame>
   );
 };
 
-// 10. Mentions and requests
-const K10 = () => (
+// 10a. PR mentions
+const KPR = () => (
   <Frame>
-    <div style={abs(150, 120)}><H1 size={96}>Every mention<br />and request,<br /><G>logged.</G></H1></div>
-    <Card style={abs(150, 620, {width: 760, padding: 30, display: 'flex', alignItems: 'center', gap: 26})}>
-      <div style={{width: 96, height: 96, borderRadius: 26, background: LOOP, display: 'grid', placeItems: 'center'}}><svg width="48" height="48" viewBox="0 0 20 20" fill="none" stroke="#fff" strokeWidth="1.6"><path d="M6 15h8" /><path d="M10 3.2a4.6 4.6 0 0 0-4.6 4.6v2.4L4 13.2h12l-1.4-3V7.8A4.6 4.6 0 0 0 10 3.2Z" /></svg></div>
-      <div style={{flex: 1}}><div style={{fontSize: 36, fontWeight: 700}}>New mention</div><div style={{fontSize: 24, color: C.ink3}}>Construction trade press, today</div></div>
-      <Chip size={24} color={C.up} bg="rgba(63,122,38,.12)">● daily</Chip>
-    </Card>
-    <Card style={abs(1010, 160, {width: 760, padding: '24px 30px'})}>
-      <div style={{fontSize: 28, fontWeight: 700, marginBottom: 10}}>Business requests</div>
+    <div style={abs(150, 300)}><Label style={{marginBottom: 24}}>PR tracking</Label><H1 size={110}>Every mention<br />of us, <G>found daily.</G></H1></div>
+    {[0, 1, 2].map((i) => (
+      <Card key={i} style={abs(1060 + i * 30, 200 + i * 230, {width: 720, padding: 28, display: 'flex', alignItems: 'center', gap: 24, opacity: 1 - i * 0.22, transform: `scale(${1 - i * 0.04})`})}>
+        <div style={{width: 88, height: 88, borderRadius: 24, background: i ? C.inset : LOOP, display: 'grid', placeItems: 'center'}}><svg width="44" height="44" viewBox="0 0 20 20" fill="none" stroke={i ? C.teal : '#fff'} strokeWidth="1.6"><path d="M6 15h8" /><path d="M10 3.2a4.6 4.6 0 0 0-4.6 4.6v2.4L4 13.2h12l-1.4-3V7.8A4.6 4.6 0 0 0 10 3.2Z" /></svg></div>
+        <div style={{flex: 1}}><div style={{fontSize: 32, fontWeight: 700}}>{['New mention', 'Industry news site', 'Business daily'][i]}</div><div style={{fontSize: 22, color: C.ink3}}>{['Construction trade press, today', 'Yesterday', '3 days ago'][i]}</div></div>
+        {i === 0 && <Chip size={22} color={C.up} bg="rgba(63,122,38,.12)">● daily</Chip>}
+      </Card>
+    ))}
+  </Frame>
+);
+
+// 10b. Business requests
+const KInq = () => (
+  <Frame>
+    <div style={abs(150, 130)}><Label style={{marginBottom: 24}}>Business inquiries</Label><H1 size={100}>Every request,<br /><G>logged and counted.</G></H1></div>
+    <Card style={abs(150, 520, {width: 820, padding: '24px 30px'})}>
       {REQUESTS.map((r, i) => (
-        <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, padding: '16px 0', borderTop: `1px solid ${C.rule}`, background: i === 2 ? 'rgba(0,185,239,.06)' : 'transparent'}}>
+        <div key={i} style={{display: 'flex', alignItems: 'center', gap: 18, padding: '16px 0', borderTop: i ? `1px solid ${C.rule}` : 'none'}}>
           <span style={{width: 44, height: 44, borderRadius: 99, background: i === 2 ? LOOP : C.inset}} />
-          <span style={{flex: 1, fontSize: 24, fontWeight: 550}}>{r.n}</span>
+          <span style={{flex: 1, fontSize: 26, fontWeight: 550}}>{r.n}</span>
           <Chip size={18} color={r.s === 'won' ? '#fff' : C.ink3} bg={r.s === 'won' ? C.teal : C.inset}>{r.s}</Chip>
         </div>
       ))}
     </Card>
-    <Card style={abs(1010, 700, {width: 760, height: 280, padding: 30, display: 'flex', alignItems: 'flex-end', gap: 18})}>
-      {REQ_MONTHS.map((v, i) => <div key={i} style={{flex: 1, height: `${(v / 24) * 100}%`, borderRadius: 8, background: i === REQ_MONTHS.length - 1 ? `linear-gradient(0deg, ${C.green}, ${C.cyan})` : '#dfe9ea'}} />)}
+    <Card style={abs(1060, 300, {width: 710, height: 640, padding: 40})}>
+      <div style={{fontSize: 28, fontWeight: 700}}>Requests per month</div>
+      <div style={{fontFamily: F.display, fontSize: 96, fontWeight: 800, letterSpacing: '-0.03em', marginTop: 6}}>24 <span style={{fontSize: 30, color: C.up, fontWeight: 650}}>▲ 26%</span></div>
+      <div style={{display: 'flex', alignItems: 'flex-end', gap: 14, height: 330, marginTop: 20}}>{REQ_MONTHS.map((v, i) => <div key={i} style={{flex: 1, height: `${(v / 24) * 100}%`, borderRadius: 8, background: i === REQ_MONTHS.length - 1 ? `linear-gradient(0deg, ${C.green}, ${C.cyan})` : '#dfe9ea'}} />)}</div>
     </Card>
+  </Frame>
+);
+
+// Website
+const KWeb = () => (
+  <Frame>
+    <div style={abs(150, 110)}><Label style={{marginBottom: 24}}>Website</Label><H1 size={100}>Know who visits,<br /><G>and from where.</G></H1></div>
+    <Card style={abs(150, 520, {width: 900, height: 450, padding: 40})}>
+      <div style={{display: 'flex', justifyContent: 'space-between'}}><div style={{fontSize: 28, fontWeight: 700}}>Organic vs total sessions</div><div style={{display: 'flex', gap: 18, fontSize: 20, color: C.ink3}}><span><span style={{color: C.teal}}>●</span> Total</span><span><span style={{color: C.green}}>●</span> Organic</span></div></div>
+      <div style={{position: 'relative', marginTop: 20}}>
+        <div style={{position: 'absolute'}}><Spark id="w1" data={SERIES.b} w={820} h={300} color={C.teal} dot={false} /></div>
+        <div style={{position: 'absolute', top: 60}}><Spark id="w2" data={SERIES.a} w={820} h={240} color={C.green} /></div>
+      </div>
+    </Card>
+    <Card style={abs(1110, 220, {width: 660, padding: 40})}>
+      <div style={{fontSize: 28, fontWeight: 700, marginBottom: 20}}>Active users by city</div>
+      {[['Ho Chi Minh City', 92], ['Hanoi', 64], ['Singapore', 41], ['Paris', 28], ['Da Nang', 22], ['Bangkok', 17]].map(([c, v]) => (
+        <div key={c as string} style={{display: 'grid', gridTemplateColumns: '230px 1fr 70px', alignItems: 'center', gap: 16, margin: '16px 0', fontSize: 23}}>
+          {c}<div style={{height: 16, borderRadius: 99, background: C.inset}}><div style={{width: `${v}%`, height: '100%', borderRadius: 99, background: LOOP_BAR}} /></div><span style={{textAlign: 'right', fontWeight: 650, fontVariantNumeric: 'tabular-nums'}}>{(v as number) * 13}</span>
+        </div>
+      ))}
+    </Card>
+    <Card style={abs(1110, 740, {width: 660, padding: '28px 40px', display: 'flex', gap: 40})}>
+      {[['7,930', 'sessions'], ['62%', 'from search'], ['1:48', 'avg. time']].map(([v, l]) => <div key={l}><div style={{fontFamily: F.display, fontSize: 54, fontWeight: 750}}>{v}</div><div style={{fontSize: 20, color: C.ink3}}>{l}</div></div>)}
+    </Card>
+  </Frame>
+);
+
+// Search
+const KSearch = () => (
+  <Frame>
+    <div style={abs(150, 110)}><Label style={{marginBottom: 24}}>Search</Label><H1 size={100}>See how Google<br /><G>finds us.</G></H1></div>
+    <div style={abs(150, 520, {display: 'flex', gap: 24})}>
+      {[['29,870', 'Impressions', C.teal], ['1,104', 'Clicks', C.cyanInk], ['3.7%', 'Click rate', C.up], ['8.4', 'Avg. position', C.ink]].map(([v, l, c]) => (
+        <Card key={l} style={{width: 210, padding: '26px 26px'}}><div style={{fontFamily: F.display, fontSize: 50, fontWeight: 750, color: c}}>{v}</div><div style={{fontSize: 20, color: C.ink3}}>{l}</div></Card>
+      ))}
+    </div>
+    <Card style={abs(150, 700, {width: 912, height: 280, padding: 30})}>
+      <div style={{fontSize: 24, fontWeight: 700}}>Search demand vs ranking</div>
+      <div style={{position: 'relative', marginTop: 10}}><div style={{position: 'absolute'}}><Spark id="s1" data={SERIES.b} w={850} h={190} color={C.cyan} dot={false} /></div><div style={{position: 'absolute'}}><Spark id="s2" data={SERIES.c} w={850} h={190} color={C.green} area={false} /></div></div>
+    </Card>
+    <Card style={abs(1120, 220, {width: 650, padding: 36})}>
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 100px 90px', fontSize: 18, color: C.ink3, fontWeight: 600, paddingBottom: 12, borderBottom: `1px solid ${C.rule}`}}><span>Top searches</span><span style={{textAlign: 'right'}}>Clicks</span><span style={{textAlign: 'right'}}>Rank</span></div>
+      {[['design and build company', 214, 3.1], ['factory construction', 168, 4.6], ['office fit-out', 131, 5.2], ['construction consultancy', 96, 6.8], ['industrial park design', 74, 7.4], ['hotel renovation', 52, 9.9]].map(([q, c, r], i) => (
+        <div key={i} style={{display: 'grid', gridTemplateColumns: '1fr 100px 90px', fontSize: 23, padding: '15px 0', borderBottom: `1px solid ${C.rule}`}}><span style={{fontWeight: 550}}>{q}</span><span style={{textAlign: 'right', fontVariantNumeric: 'tabular-nums'}}>{c}</span><span style={{textAlign: 'right', color: C.up, fontWeight: 650}}>{r}</span></div>
+      ))}
+    </Card>
+  </Frame>
+);
+
+// Email
+const KEmail = () => (
+  <Frame>
+    <div style={abs(1060, 260)}><Label style={{marginBottom: 24}}>Email</Label><H1 size={104}>Every campaign,<br /><G>measured.</G></H1></div>
+    <Card style={abs(150, 170, {width: 820, height: 760, padding: 44})}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 18}}><PlatformIcon p="email" size={64} /><div style={{fontSize: 32, fontWeight: 700}}>Newsletter</div></div>
+      <div style={{display: 'flex', gap: 50, marginTop: 34}}>
+        {[['3,412', 'subscribers'], ['38.6%', 'open rate'], ['4.1%', 'click rate']].map(([v, l]) => <div key={l}><div style={{fontFamily: F.display, fontSize: 64, fontWeight: 750}}>{v}</div><div style={{fontSize: 22, color: C.ink3}}>{l}</div></div>)}
+      </div>
+      <div style={{marginTop: 40}}><Spark id="em" data={SERIES.a} w={730} h={220} color={C.email} /></div>
+      <div style={{display: 'flex', gap: 10, marginTop: 30}}>{['Sent', 'Opened', 'Clicked'].map((x, i) => <div key={x} style={{flex: 1, height: 50, borderRadius: 14, background: i === 0 ? C.inset : i === 1 ? 'rgba(80,156,213,.25)' : LOOP, display: 'grid', placeItems: 'center', fontSize: 20, fontWeight: 650, color: i === 2 ? '#fff' : C.ink}}>{x}</div>)}</div>
+    </Card>
+  </Frame>
+);
+
+// 22 country offices
+const OFFICES: [string, string[]][] = [
+  ['EMEA', ['France', 'Ivory Coast', 'Tunisia', 'Morocco', 'UAE']],
+  ['Americas', ['USA', 'Brazil', 'Mexico']],
+  ['Asia', ['Bangladesh', 'Cambodia', 'China', 'India', 'Indonesia', 'Laos', 'Kazakhstan', 'Malaysia', 'Myanmar', 'Mongolia', 'Philippines', 'Singapore', 'Thailand', 'Vietnam']],
+];
+const KOffices = () => (
+  <Frame>
+    <div style={abs(150, 110)}><H1 size={100}><G>22 offices.</G><br />Every local competitor.</H1></div>
+    <div style={abs(150, 450, {display: 'grid', gridTemplateColumns: '1fr 1fr 2.2fr', gap: 30, width: 1620})}>
+      {OFFICES.map(([r, cs]) => (
+        <Card key={r} style={{padding: 30}}>
+          <Label color={C.teal} size={20} style={{marginBottom: 18}}>{r}</Label>
+          <div style={{display: 'flex', flexWrap: 'wrap', gap: 12}}>
+            {cs.map((c, i) => <Chip key={c} size={22} color={C.ink} bg={C.inset}><span style={{width: 10, height: 10, borderRadius: 99, background: (c.length + i) % 3 === 0 ? C.cyan : C.green}} />{c}</Chip>)}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </Frame>
+);
+
+// Report emailed and shared
+const KShare = () => (
+  <Frame>
+    <div style={abs(150, 140)}><Label style={{marginBottom: 24}}>Monthly report</Label><H1 size={96}>Emailed to leadership.<br /><G>Shared with one link.</G></H1></div>
+    <Card style={abs(150, 560, {width: 760, padding: 34})}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 16, fontSize: 24}}><PlatformIcon p="email" size={52} /><div><div style={{fontWeight: 700}}>Your November report</div><div style={{color: C.ink3, fontSize: 20}}>To: leadership list · PDF attached</div></div></div>
+      <div style={{display: 'flex', gap: 14, marginTop: 26, alignItems: 'center'}}>
+        <div style={{flex: 1, height: 58, borderRadius: 999, background: C.inset, fontFamily: F.mono, fontSize: 20, color: C.ink2, display: 'flex', alignItems: 'center', padding: '0 24px'}}>share.html#nov-report</div>
+        <div style={{height: 58, borderRadius: 999, background: LOOP, color: '#fff', fontWeight: 700, fontSize: 22, padding: '0 28px', display: 'grid', placeItems: 'center'}}>Make the link</div>
+      </div>
+      <div style={{fontSize: 19, color: C.ink3, marginTop: 16}}>No sign-in needed · ends after 30 days · can be stopped</div>
+    </Card>
+    <div style={abs(1040, 230, {width: 760, height: 760, perspective: 2200})}>
+      <div style={{position: 'absolute', left: 0, top: 60, width: 380, height: 540, background: '#fff', borderRadius: '14px 0 0 14px', boxShadow: '0 30px 60px -30px rgba(5,60,63,.4)', padding: 30}}>
+        <div style={{fontFamily: F.mono, fontSize: 14, letterSpacing: '.14em', color: C.teal, fontWeight: 600}}>COMPETITIVE INTELLIGENCE</div>
+        <div style={{fontFamily: F.display, fontSize: 34, fontWeight: 700, marginTop: 16}}>November<br />at a glance</div>
+        {[0, 1, 2, 3, 4].map((r) => <div key={r} style={{height: 11, borderRadius: 6, background: C.inset, marginTop: 22, width: `${92 - r * 9}%`}} />)}
+      </div>
+      <div style={{position: 'absolute', left: 380, top: 60, width: 380, height: 540, background: 'linear-gradient(90deg, #e9f0f0, #fff 30%)', borderRadius: '0 14px 14px 0', transformOrigin: 'left center', transform: 'rotateY(-38deg)', boxShadow: '0 30px 60px -20px rgba(5,60,63,.35)', padding: 30}}>
+        {[0, 1, 2, 3, 4, 5, 6].map((r) => <div key={r} style={{height: 11, borderRadius: 6, background: C.inset, marginTop: 24, width: `${90 - (r * 13) % 35}%`}} />)}
+      </div>
+    </div>
   </Frame>
 );
 
@@ -320,7 +440,7 @@ const K11 = () => {
           </div>
         ))}
       </Card>
-      <div style={abs(700, 640, {transform: 'rotate(-4deg)', boxShadow: '0 30px 60px rgba(0,0,0,.35)', borderRadius: 16})}>{task('Site photos for case study', 'Urgent', '#ab3527', 440)}</div>
+      <div style={abs(700, 640, {transform: 'rotate(-4deg)', boxShadow: '0 30px 60px rgba(5,60,63,.25)', borderRadius: 16})}>{task('Site photos for case study', 'Urgent', '#ab3527', 440)}</div>
       <Cursor x={1080} y={720} s={1.4} />
       <Card style={abs(1290, 400, {width: 480, height: 600, padding: 40, textAlign: 'center'})}>
         <div style={{fontSize: 28, fontWeight: 700, textAlign: 'left'}}>Project portfolio</div>
@@ -334,39 +454,27 @@ const K11 = () => {
   );
 };
 
-// 12. Bento pull-back
-const K12 = () => {
-  const tiles: [number, number, number, number, string][] = [
-    [0, 0, 1, 1, 'What is working'], [1, 0, 1, 1, 'Site audit'], [2, 0, 2, 1, 'All channels'], [4, 0, 1, 1, 'Time saved'], [5, 0, 1, 1, 'Portfolio'],
-    [0, 1, 1, 1, 'PR mentions'], [1, 1, 1, 1, 'Trends'], [2, 1, 2, 1, ''], [4, 1, 2, 1, 'Approvals'],
-    [0, 2, 2, 1, 'Competitor report'], [2, 2, 1, 1, 'AI briefing'], [3, 2, 3, 1, 'Business requests'],
-  ];
-  const cw = 250, ch = 230, gap = 20, ox = (1920 - (6 * cw + 5 * gap)) / 2, oy = 210;
-  return (
-    <Frame>
-      <div style={abs(0, 70, {width: 1920, textAlign: 'center'})}><H1 size={84}>One dashboard for <G>all of it.</G></H1></div>
-      {tiles.map(([x, y, w, h, t], i) => (
-        <div key={i} style={abs(ox + x * (cw + gap), oy + y * (ch + gap), {width: w * cw + (w - 1) * gap, height: h * ch + (h - 1) * gap, borderRadius: 30, background: t ? '#fff' : LOOP, boxShadow: '0 30px 60px -30px rgba(0,0,0,.6)', padding: 24, fontFamily: F.display, fontSize: 26, fontWeight: 700, color: C.ink, display: 'flex', flexDirection: 'column', justifyContent: t ? 'space-between' : 'center', alignItems: t ? 'stretch' : 'center'})}>
-          {t ? (<>{t}<Spark id={`b${i}`} data={[SERIES.a, SERIES.b, SERIES.c][i % 3]} w={w * cw - 48} h={70} color={[C.cyan, C.tealMid, C.green][i % 3]} dot={false} /></>) : (<><Mark size={84} /><div style={{fontSize: 34, marginTop: 10}}>Marketing Dashboard</div></>)}
-        </div>
-      ))}
-    </Frame>
-  );
-};
+// Dat's bento, every tile in place
+const K12 = () => (
+  <Frame>
+    <div style={abs(0, 56, {width: 1920, textAlign: 'center'})}><H1 size={72}>One dashboard for <G>all of it.</G></H1></div>
+    <div style={abs(200, 172, {transform: 'scale(.76)', transformOrigin: 'top left', borderRadius: 30, overflow: 'hidden', boxShadow: '0 50px 120px -40px rgba(5,60,63,.35)'})}><Bento /></div>
+  </Frame>
+);
 
 // 13. Lockup
 const K13 = () => (
-  <Frame bg={<AbsoluteFill style={{background: `radial-gradient(1200px 800px at 30% 20%, rgba(127,188,66,.55), transparent 60%), radial-gradient(1200px 900px at 75% 80%, rgba(0,185,239,.6), transparent 60%), ${C.bg}`}} />}>
+  <Frame bg={<AbsoluteFill style={{background: `radial-gradient(1200px 800px at 30% 20%, rgba(127,188,66,.28), transparent 60%), radial-gradient(1200px 900px at 75% 80%, rgba(0,185,239,.28), transparent 60%), #f7fbfb`}} />}>
     <AbsoluteFill style={{display: 'grid', placeItems: 'center', textAlign: 'center'}}>
       <div>
         <Mark size={110} />
         <div style={{fontFamily: F.mono, fontSize: 26, letterSpacing: '.3em', color: C.textOnDark, marginTop: 30}}>ARCHETYPE</div>
         <H1 size={150} style={{marginTop: 10}}>Marketing Dashboard</H1>
         <div style={{fontFamily: F.text, fontSize: 38, color: C.textOnDark, marginTop: 34, opacity: 0.9}}>On the Marketing team site.</div>
-        <div style={{fontFamily: F.text, fontSize: 22, color: C.mutedOnDark, marginTop: 70}}>Made by Datdeptrai with ♥</div>
+        <div style={{fontFamily: F.text, fontSize: 22, color: C.ink3, marginTop: 70}}>Made by Datdeptrai with ♥</div>
       </div>
     </AbsoluteFill>
   </Frame>
 );
 
-export const KEYFRAMES = [K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, K13];
+export const KEYFRAMES = [K1, K2, K3, K4, K5, KWeb, KSearch, K6, KEmail, K7, K8, K9, KOffices, KShare, KPR, KInq, K11, K12, K13];
