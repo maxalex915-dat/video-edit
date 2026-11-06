@@ -14,15 +14,15 @@ const W = 440;
 const peak = (i: number) => {const t = TOOLS[i]; const k = t.data.indexOf(Math.max(...t.data)); return {x: t.x + 24 + (k / 15) * (W - 48), y: t.y + 80 + 120 * (1 - (t.data[k] - Math.min(...t.data)) / (Math.max(...t.data) - Math.min(...t.data))) + 6};};
 const CRUSH = 106;
 export const sfx: Cue[] = [...TOOLS.map((_, i) => ({at: 6 + i * 6, s: 'pop_hi', v: 0.2})), {at: 46, s: 'swoosh_soft', v: 0.2}, {at: 66, s: 'tick', v: 0.35}, {at: 82, s: 'tick', v: 0.35}, {at: 79, s: 'riser', v: 0.55}, {at: CRUSH, s: 'whoosh_long', v: 0.35}];
-export const S03: React.FC<{dur: number}> = ({dur}) => {
+export const S03: React.FC<{dur: number; bare?: boolean}> = ({dur, bare = false}) => {
   const f = useF();
-  const crush = prog(f, CRUSH, dur - CRUSH, E.expoIn);
+  const crush = bare ? 0 : prog(f, CRUSH, dur - CRUSH, E.expoIn);
   const spread = prog(f, 0, 100, E.glide);
   const tries: [number, number, number][] = [[0, 1, 46], [0, 2, 70]];
   return (
     <AbsoluteFill>
-      <Ground kind="pearl" />
-      <div style={{position: 'absolute', inset: 0, transform: `scale(${1 - crush * 0.97})`, transformOrigin: '1330px 560px', filter: `blur(${crush * 8}px)`, opacity: 1 - prog(f, dur - 5, 5)}}>
+      {!bare && <Ground kind="pearl" />}
+      <div style={{position: 'absolute', inset: 0, transform: `scale(${1 - crush * 0.97})`, transformOrigin: '1330px 560px', filter: `blur(${crush * 8}px)`, opacity: bare ? 1 : 1 - prog(f, dur - 5, 5)}}>
         {TOOLS.map((t, i) => {
           const q = prog(f, 4 + i * 6, 18, E.snappy);
           const dx = (t.x - 1330) * spread * 0.06, dy = (t.y - 520) * spread * 0.06;
@@ -47,9 +47,9 @@ export const S03: React.FC<{dur: number}> = ({dur}) => {
         <Cursor path={[{f: 26, x: 1200, y: 1000}, {f: 44, x: peak(0).x - 4, y: peak(0).y - 6}, {f: 62, x: peak(0).x + 60, y: peak(0).y + 40}, {f: 80, x: peak(0).x + 20, y: peak(0).y + 120}]} show={26} />
       </div>
       <div style={{position: 'absolute', left: 1330 - 30, top: 560 - 30, width: 60, height: 60, borderRadius: '50%', background: '#fff', boxShadow: `0 0 ${80 * crush}px ${40 * crush}px rgba(0,185,239,.8)`, opacity: crush, transform: `scale(${crush})`}} />
-      <div style={{opacity: 1 - prog(f, CRUSH, 12)}}>
+      {!bare && <div style={{opacity: 1 - prog(f, CRUSH, 12)}}>
         <Headline on="white" a="Data in seven places." b="The bigger picture stays hidden." size={70} style={{left: 110, top: 400, width: 660}} at={2} />
-      </div>
+      </div>}
     </AbsoluteFill>
   );
 };

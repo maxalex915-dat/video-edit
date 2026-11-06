@@ -17,7 +17,7 @@ const STEPS: [number, 'tab' | 'copy' | 'paste', number][] = [
 const ERR = 95;
 export const sfx: Cue[] = STEPS.map(([at, a]) => ({at, s: a === 'tab' ? 'click' : a === 'copy' ? 'key1' : 'key3', v: a === 'tab' ? 0.35 : 0.45})).concat([{at: ERR + 2, s: 'pop', v: 0.4}, {at: 100, s: 'tick', v: 0.3}]);
 const val = (tab: number, r: number, c: number) => ((tab * 131 + r * 37 + c * 91) % 900) * 7 + 120;
-export const S02: React.FC<{dur: number}> = ({dur}) => {
+export const S02: React.FC<{dur: number; bare?: boolean}> = ({dur, bare = false}) => {
   const f = useF();
   const done = STEPS.filter(([t]) => f >= t);
   const tab = [...done].reverse().find(([, a]) => a === 'tab')?.[2] ?? 0;
@@ -29,11 +29,11 @@ export const S02: React.FC<{dur: number}> = ({dur}) => {
   const win = (k: number, at: number) => spr(f, at, S.snap);
   return (
     <AbsoluteFill>
-      <Ground kind="whitegrid" />
+      {!bare && <Ground kind="whitegrid" />}
       <Drift dur={dur} push={0.05} origin="1300px 520px">
-        {[['GA4_export (3).csv', 52], ['linkedin_analytics_oct.xlsx', 74]].map(([n, at], k) => {
+        {(bare ? [['facebook_insights_oct.xlsx', 4], ['GA4_export (3).csv', 10], ['linkedin_analytics_oct.xlsx', 16], ['search_console_q4.csv', 52], ['email_stats_FINAL.xlsx', 74]] : [['GA4_export (3).csv', 52], ['linkedin_analytics_oct.xlsx', 74]]).map(([n, at], k) => {
           const p = win(k, at as number);
-          return <div key={k} style={{position: 'absolute', left: WX - 70 + k * 40, top: WY - 70 + k * 30, width: WW, height: 120, borderRadius: 16, background: '#fff', border: '1px solid #dfe7e8', boxShadow: '0 20px 50px -20px rgba(5,60,63,.3)', opacity: Math.min(1, p), transform: `scale(${0.9 + Math.min(1, p) * 0.1})`, padding: '12px 16px', fontFamily: F.text, fontSize: 15, fontWeight: 600, color: C.ink2}}>
+          return <div key={k} style={{position: 'absolute', left: WX - 70 - (bare ? 200 : 0) + k * (bare ? 90 : 40), top: WY - 70 - (bare ? 60 : 0) + k * (bare ? 26 : 30), width: WW, height: 120, borderRadius: 16, background: '#fff', border: '1px solid #dfe7e8', boxShadow: '0 20px 50px -20px rgba(5,60,63,.3)', opacity: Math.min(1, p), transform: `scale(${0.9 + Math.min(1, p) * 0.1})`, padding: '12px 16px', fontFamily: F.text, fontSize: 15, fontWeight: 600, color: C.ink2}}>
             <span style={{display: 'inline-flex', gap: 7, marginRight: 14}}>{['#ff6058', '#ffbd2e', '#28c940'].map((c) => <span key={c} style={{width: 11, height: 11, borderRadius: 99, background: c, display: 'inline-block'}} />)}</span>{n}</div>;
         })}
         <div style={{position: 'absolute', left: WX, top: WY, width: WW, height: WH, background: '#fff', borderRadius: 18, border: '1px solid #dfe7e8', boxShadow: '0 40px 100px -30px rgba(5,60,63,.35)', overflow: 'hidden', fontFamily: F.text, color: C.ink2}}>
@@ -76,10 +76,10 @@ export const S02: React.FC<{dur: number}> = ({dur}) => {
           <div><div style={{fontSize: 18, fontWeight: 700, color: C.ink}}>Totals don’t match last month</div><div style={{fontSize: 15, color: C.ink3}}>Instagram figure pasted over Facebook</div></div>
         </div>}
       </Drift>
-      <Headline on="white" a="Copy. Switch. Paste. Repeat." size={68} style={{left: 110, top: 380, width: 640}} at={2} />
+      {!bare && <><Headline on="white" a="Copy. Switch. Paste. Repeat." size={68} style={{left: 110, top: 380, width: 640}} at={2} />
       <div style={{position: 'absolute', left: 110, top: 560, width: 640, fontFamily: F.display, fontWeight: 700, fontSize: 52, lineHeight: 1.05, letterSpacing: '-0.035em'}}>
         <Words text="One wrong cell breaks the report." at={ERR + 2} size={52} grad style={{}} />
-      </div>
+      </div></>}
     </AbsoluteFill>
   );
 };
