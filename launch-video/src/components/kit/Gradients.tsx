@@ -5,8 +5,8 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 // Variety comes from pattern and texture, never from new colours or dark grounds (Dat, 5 Nov).
 export type GradKind =
   | 'silk' | 'fluted' | 'mesh' | 'waves' | 'dots' | 'topo' | 'grain' | 'grid3d' | 'bokeh' | 'lines' | 'glass' | 'rings' // on the gradient
-  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings' | 'glow' | 'field'; // on white (field is the brand field)
-const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings', 'glow'];
+  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings' | 'glow' | 'field' | 'ai'; // on white (field is the brand field)
+const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings', 'glow', 'ai'];
 export const textOn = (k: GradKind): 'grad' | 'white' => (WHITE.includes(k) ? 'white' : 'grad');
 
 const G = '#7fbc42', CY = '#00b9ef', SK = '#70cbf3';
@@ -150,6 +150,15 @@ export const Ground: React.FC<{kind: GradKind; t?: number}> = ({kind, t: tt}) =>
         <AbsoluteFill style={{background: '#ffffff'}}>
           <AbsoluteFill style={{background: `${b(108 + s(t * .3) * 4, 105, 900, 700, 'rgba(0,185,239,.55)', 65)}, ${b(-6, 110 + c(t * .25) * 4, 800, 600, 'rgba(127,188,66,.45)', 65)}, ${b(104, -8, 700, 500, 'rgba(112,203,243,.45)', 65)}`}} />
           <svg width="1920" height="1080" style={{position: 'absolute', opacity: 0.35}}><circle cx={300 + s(t * .2) * 40} cy={-200} r={900} fill="none" stroke="rgba(0,150,200,.18)" strokeWidth="1.2" /><circle cx={1900} cy={1300 + c(t * .2) * 40} r={1000} fill="none" stroke="rgba(0,150,200,.15)" strokeWidth="1.2" /></svg>
+        </AbsoluteFill>
+      );
+    case 'ai': // AI moment: soft orbs of the brand ramp drifting and breathing, a few sparkles
+      return (
+        <AbsoluteFill style={{background: '#f8fcfd', overflow: 'hidden'}}>
+          {[[22, 30, 620, G, 0], [78, 26, 560, CY, 1.7], [62, 82, 680, SK, 3.1], [12, 86, 480, CY, 4.4], [90, 70, 420, G, 5.2]].map(([x, y, r, col, ph], i) => (
+            <div key={i} style={{position: 'absolute', left: `${(x as number) + s(t * 0.5 + (ph as number)) * 7}%`, top: `${(y as number) + c(t * 0.42 + (ph as number)) * 7}%`, width: r as number, height: r as number, marginLeft: -(r as number) / 2, marginTop: -(r as number) / 2, borderRadius: '50%', background: `radial-gradient(circle at 35% 35%, #ffffff 0%, ${col} 45%, transparent 72%)`, filter: 'blur(30px)', opacity: 0.55 + s(t * 0.9 + (ph as number)) * 0.15, transform: `scale(${1 + s(t * 0.7 + (ph as number)) * 0.08})`}} />
+          ))}
+          {Array.from({length: 14}).map((_, i) => {const tw = (s(t * 2 + i * 1.3) + 1) / 2; return <div key={`s${i}`} style={{position: 'absolute', left: (i * 277) % 1920, top: (i * 163 + 80) % 1080, width: 6, height: 6, borderRadius: 9, background: '#fff', boxShadow: '0 0 12px 4px rgba(0,185,239,.6)', opacity: tw * 0.8}} />;})}
         </AbsoluteFill>
       );
     case 'field': // full brand field, light at the top, saturated below (the reference's reveal ground)

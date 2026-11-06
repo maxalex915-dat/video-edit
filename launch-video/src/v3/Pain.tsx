@@ -21,7 +21,7 @@ export const P1: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Ground kind="glow" />
-      <Typewriter ops={[[4, 'type', 'Seven platforms. Seven logins.']]} size={64} cps={24} style={TOP} />
+      <Typewriter ops={[[4, 'type', 'Still logging in to multiple accounts for analytics?']]} size={60} cps={30} style={TOP} />
       <div style={{position: 'absolute', left: 0, top: 380, width: 1920, height: 700, perspective: 1800, transform: `translateY(${-drift}px)`}}>
         {PS.map((p, i) => {
           const k = i - 3, z = -Math.abs(k) * 170, q = prog(f, 6 + i * 4, 22, E.snappy);

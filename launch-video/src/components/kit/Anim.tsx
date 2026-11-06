@@ -73,15 +73,31 @@ export const cursorPos = (f: number, path: Way[]) => {
   const l = path[path.length - 1];
   return {x: l.x, y: l.y};
 };
-export const Cursor: React.FC<{path: Way[]; clicks?: number[]; show?: number; s?: number}> = ({path, clicks = [], show = 0, s = 1.5}) => {
+// Paper-plane cursor (rounded black triangle, white outline) that turns to face where it flies.
+const heading = (f: number, path: Way[]) => {
+  for (let k = 2; k < 24; k++) {
+    const a = cursorPos(f - k, path), b = cursorPos(f + 2, path);
+    const dx = b.x - a.x, dy = b.y - a.y;
+    if (Math.hypot(dx, dy) > 3) return Math.atan2(dy, dx);
+  }
+  return -Math.PI * 0.75; // at rest it points up-left, like a normal cursor
+};
+export const Cursor: React.FC<{path: Way[]; clicks?: number[]; show?: number; s?: number}> = ({path, clicks = [], show = 0, s = 1.4}) => {
   const f = useCurrentFrame();
   const {x, y} = cursorPos(f, path);
+  // smooth the heading over a few frames so turns bank like a plane
+  let sx = 0, sy = 0;
+  for (let k = -3; k <= 3; k++) {const h = heading(f + k, path); sx += Math.cos(h); sy += Math.sin(h);}
+  const ang = (Math.atan2(sy, sx) * 180) / Math.PI;
   const press = clicks.reduce((m, c) => Math.max(m, f >= c && f < c + 6 ? 1 - Math.abs(f - c - 2) / 4 : 0), 0);
   const o = prog(f, show, 8);
+  // the tip of the triangle sits at (0,0) and points along +x before rotation
   return (
-    <svg style={{position: 'absolute', left: x, top: y, opacity: o, transform: `scale(${s * (1 - press * 0.15)})`, transformOrigin: 'top left', filter: 'drop-shadow(0 4px 6px rgba(5,40,44,.3))', zIndex: 30}} width="22" height="28" viewBox="0 0 20 24">
-      <path d="M2 1.5v18l5-4.6 3.2 7.2 3-1.3-3.1-7h6.6z" fill="#10242a" stroke="#fff" strokeWidth="1.3" strokeLinejoin="round" />
-    </svg>
+    <div style={{position: 'absolute', left: x, top: y, width: 0, height: 0, opacity: o, zIndex: 30, transform: `rotate(${ang}deg) scale(${s * (1 - press * 0.15)})`}}>
+      <svg width="44" height="44" viewBox="-40 -22 44 44" style={{position: 'absolute', left: -40, top: -22, overflow: 'visible', filter: 'drop-shadow(0 6px 8px rgba(5,40,44,.3))'}}>
+        <path d="M0,0 L-30,-14 Q-34,-16 -33,-11 L-27,0 L-33,11 Q-34,16 -30,14 Z" fill="#1a1a1a" stroke="#fff" strokeWidth="4" strokeLinejoin="round" />
+      </svg>
+    </div>
   );
 };
 export const Ripple: React.FC<{x: number; y: number; at: number}> = ({x, y, at}) => {
