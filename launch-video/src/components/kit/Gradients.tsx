@@ -5,8 +5,8 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 // Variety comes from pattern and texture, never from new colours or dark grounds (Dat, 5 Nov).
 export type GradKind =
   | 'silk' | 'fluted' | 'mesh' | 'waves' | 'dots' | 'topo' | 'grain' | 'grid3d' | 'bokeh' | 'lines' | 'glass' | 'rings' // on the gradient
-  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings'; // on white
-const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings'];
+  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings' | 'glow' | 'field'; // on white (field is the brand field)
+const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings', 'glow'];
 export const textOn = (k: GradKind): 'grad' | 'white' => (WHITE.includes(k) ? 'white' : 'grad');
 
 const G = '#7fbc42', CY = '#00b9ef', SK = '#70cbf3';
@@ -143,6 +143,19 @@ export const Ground: React.FC<{kind: GradKind; t?: number}> = ({kind, t: tt}) =>
           {base(145)}
           {Array.from({length: 10}).map((_, i) => {const r = ((i * 150 + t * 70) % 1500) + 60; return <div key={i} style={{position: 'absolute', left: 960 - r, top: 540 - r, width: r * 2, height: r * 2, borderRadius: '50%', border: `2px solid ${W(0.4 * (1 - r / 1560))}`}} />;})}
           <AbsoluteFill style={{background: b(50, 50, 900, 700, W(0.3))}} />
+        </AbsoluteFill>
+      );
+    case 'glow': // the reference's ground: white, with brand light breathing in from the edges
+      return (
+        <AbsoluteFill style={{background: '#ffffff'}}>
+          <AbsoluteFill style={{background: `${b(108 + s(t * .3) * 4, 105, 900, 700, 'rgba(0,185,239,.55)', 65)}, ${b(-6, 110 + c(t * .25) * 4, 800, 600, 'rgba(127,188,66,.45)', 65)}, ${b(104, -8, 700, 500, 'rgba(112,203,243,.45)', 65)}`}} />
+          <svg width="1920" height="1080" style={{position: 'absolute', opacity: 0.35}}><circle cx={300 + s(t * .2) * 40} cy={-200} r={900} fill="none" stroke="rgba(0,150,200,.18)" strokeWidth="1.2" /><circle cx={1900} cy={1300 + c(t * .2) * 40} r={1000} fill="none" stroke="rgba(0,150,200,.15)" strokeWidth="1.2" /></svg>
+        </AbsoluteFill>
+      );
+    case 'field': // full brand field, light at the top, saturated below (the reference's reveal ground)
+      return (
+        <AbsoluteFill style={{background: `linear-gradient(180deg, #4fc2ef 0%, #12b4ec 40%, #00a9e6 70%, #2f9fdc 100%)`}}>
+          <AbsoluteFill style={{background: `${b(18 + s(t * .4) * 8, 85, 1100, 700, 'rgba(127,188,66,.75)', 70)}, ${b(85, 0, 900, 500, 'rgba(255,255,255,.35)', 70)}, ${b(60 + c(t * .3) * 10, 110, 1200, 600, 'rgba(0,140,220,.6)', 70)}`}} />
         </AbsoluteFill>
       );
     case 'pearl':
