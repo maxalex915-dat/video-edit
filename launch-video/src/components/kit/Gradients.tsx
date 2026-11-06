@@ -4,7 +4,7 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 // One palette only: the Archetype brand gradient (green #7fbc42, cyan #00b9ef, light blue #70cbf3) and white.
 // Variety comes from pattern and texture, never from new colours or dark grounds (Dat, 5 Nov).
 export type GradKind =
-  | 'fluted' | 'mesh' | 'waves' | 'dots' | 'topo' | 'grain' | 'grid3d' | 'bokeh' | 'lines' | 'glass' | 'rings' // on the gradient
+  | 'silk' | 'fluted' | 'mesh' | 'waves' | 'dots' | 'topo' | 'grain' | 'grid3d' | 'bokeh' | 'lines' | 'glass' | 'rings' // on the gradient
   | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings'; // on white
 const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings'];
 export const textOn = (k: GradKind): 'grad' | 'white' => (WHITE.includes(k) ? 'white' : 'grad');
@@ -28,6 +28,29 @@ export const Ground: React.FC<{kind: GradKind; t?: number}> = ({kind, t: tt}) =>
   const base = (deg: number) => <AbsoluteFill style={{background: ramp(deg + s(t * 0.3) * 6)}} />;
   const W = (o: number) => `rgba(255,255,255,${o})`;
   switch (kind) {
+    case 'silk': { // satin ribbons of light folding slowly over the ramp
+      const rib = (i: number) => {
+        const y0 = 260 + i * 210, a = 140 + i * 30, ph = t * (0.35 + i * 0.07) + i * 1.7;
+        let top = '', bot = '';
+        for (let x = -100; x <= 2020; x += 60) {
+          const y = y0 + Math.sin(x / 420 + ph) * a + Math.cos(x / 900 - ph * 0.6) * 60;
+          const th = 70 + Math.sin(x / 300 + ph * 1.3) * 55;
+          top += `${x === -100 ? 'M' : 'L'}${x},${y - th} `; bot = `L${x},${y + th} ` + bot;
+        }
+        return top + bot.replace(/^L/, 'L') + 'Z';
+      };
+      return (
+        <AbsoluteFill style={{overflow: 'hidden'}}>
+          {base(125)}
+          <svg width="1920" height="1080" style={{position: 'absolute', filter: 'blur(26px)'}}>
+            <defs>{[0, 1, 2].map((i) => <linearGradient key={i} id={`rb${i}`} x1="0" x2="1" y1="0" y2="0.3"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset=".45" stopColor="#fff" stopOpacity={0.42 - i * 0.08} /><stop offset="1" stopColor="#fff" stopOpacity="0.05" /></linearGradient>)}</defs>
+            {[0, 1, 2].map((i) => <path key={i} d={rib(i)} fill={`url(#rb${i})`} />)}
+          </svg>
+          <AbsoluteFill style={{background: `radial-gradient(1200px 700px at 50% 0%, ${W(0.25)}, transparent 70%)`}} />
+          <Grain o={0.035} />
+        </AbsoluteFill>
+      );
+    }
     case 'fluted': // reeded glass: vertical flutes refracting the ramp
       return (
         <AbsoluteFill>

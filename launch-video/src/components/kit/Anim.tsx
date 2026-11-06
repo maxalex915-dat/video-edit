@@ -1,5 +1,6 @@
 import React from 'react';
-import {interpolate, useCurrentFrame} from 'remotion';
+import {interpolate} from 'remotion';
+import {useF as useCurrentFrame} from '../../frame';
 import {C} from '../../theme/tokens';
 import {F} from '../../theme/fonts';
 import {E, prog, spr, S} from '../../theme/motion';
@@ -8,23 +9,43 @@ export const GRAD_TEXT = 'linear-gradient(95deg, #7fbc42 0%, #00b9ef 55%, #45b8e
 export type On = 'white' | 'grad';
 const cl = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
-// Headline: each line slides up from behind a mask (no blur, no fade), lines staggered.
-export const Headline: React.FC<{a: string; b?: string; on: On; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'; at?: number; out?: number}> = ({a, b, on, size = 96, style, align = 'left', at = 0, out}) => {
+// Headline: each word slides in from the left out of a blur, staggered, then the whole line keeps gliding.
+const RAMP: [number, [number, number, number]][] = [[0, [127, 188, 66]], [0.55, [0, 185, 239]], [1, [69, 184, 238]]];
+const rampAt = (t: number) => {
+  for (let i = 1; i < RAMP.length; i++) if (t <= RAMP[i][0]) {
+    const [a, ca] = RAMP[i - 1], [b, cb] = RAMP[i]; const k = (t - a) / (b - a);
+    return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(',')})`;
+  }
+  return 'rgb(69,184,238)';
+};
+export const Words: React.FC<{text: string; at: number; style: React.CSSProperties; grad?: boolean; stagger?: number; size: number; drift?: number}> = ({text, at, style, grad, stagger = 3, size, drift = 26}) => {
   const f = useCurrentFrame();
-  const line = (txt: string, i: number, css: React.CSSProperties) => {
-    const p = prog(f, at + i * 5, 18, E.snappy);
-    const q = out === undefined ? 0 : prog(f, out + i * 2, 8, E.expoIn);
-    return (
-      <div style={{overflow: 'hidden', paddingBottom: '0.08em', marginBottom: '-0.08em'}}>
-        <div style={{transform: `translateY(${(1 - p) * 110 - q * 110}%)`, ...css}}>{txt}</div>
-      </div>
-    );
-  };
+  const words = text.split(' ');
+  const total = text.length;
+  let pos = 0;
+  const glide = interpolate(f, [at, at + 220], [0, drift], {...cl, easing: E.glide});
+  return (
+    <div style={{display: 'flex', flexWrap: 'wrap', gap: `0 ${size * 0.25}px`, transform: `translateX(${glide}px)`, ...style}}>
+      {words.map((w, i) => {
+        const p = prog(f, at + i * stagger, 20, E.snappy);
+        const t0 = pos / total, t1 = (pos + w.length) / total;
+        pos += w.length + 1;
+        const g = grad ? {backgroundImage: `linear-gradient(90deg, ${rampAt(t0)}, ${rampAt(t1)})`, WebkitBackgroundClip: 'text' as const, color: 'transparent', paddingBottom: '0.08em'} : {};
+        return (
+          <span key={i} style={{display: 'inline-block', opacity: p, filter: `blur(${(1 - p) * 14}px)`, transform: `translateX(${(1 - p) * -size * 0.7}px)`, ...g}}>{w}</span>
+        );
+      })}
+    </div>
+  );
+};
+export const Headline: React.FC<{a: string; b?: string; on: On; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'; at?: number; out?: number}> = ({a, b, on, size = 96, style, align = 'left', at = 0}) => {
   const white = {color: '#fff', textShadow: '0 2px 18px rgba(0,50,70,.3)'};
+  const n = a.split(' ').length;
+  const just = align === 'center' ? 'center' : 'flex-start';
   return (
     <div style={{position: 'absolute', fontFamily: F.display, fontWeight: 700, fontSize: size, lineHeight: 1.03, letterSpacing: '-0.04em', textAlign: align, ...style}}>
-      {line(a, 0, on === 'grad' ? white : {color: C.ink})}
-      {b && line(b, 1, on === 'grad' ? {...white, color: 'rgba(255,255,255,.93)'} : {backgroundImage: GRAD_TEXT, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.06em'})}
+      <Words text={a} at={at} size={size} style={{justifyContent: just, ...(on === 'grad' ? white : {color: C.ink})}} />
+      {b && <Words text={b} at={at + n * 3 + 2} size={size} grad={on === 'white'} style={{justifyContent: just, ...(on === 'grad' ? {...white, color: 'rgba(255,255,255,.93)'} : {})}} />}
     </div>
   );
 };

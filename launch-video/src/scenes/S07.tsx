@@ -1,29 +1,35 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Ground, Headline, Float, Cursor, Ripple, prog, spr, S, E, C, F, useF, Cue, typed} from './common';
-import {SearchScreen} from '../components/ui/Screens';
+import {Ground, Headline, prog, spr, S, E, C, F, useF, Cue} from './common';
+import {PlatformIcon, Platform} from '../components/ui/Primitives';
 
-// Value: client intent. Click the search box, type "factory", the table filters live.
-const CLICK = 30, TYPE = 36, WORD = 'factory';
-export const sfx: Cue[] = [{at: 0, s: 'swoosh', v: 0.4}, {at: CLICK, s: 'click', v: 0.45}, ...WORD.split('').map((_, i) => ({at: TYPE + Math.round(i * 30 / 11), s: `key${i % 4}`, v: 0.45})), {at: 66, s: 'swoosh_soft', v: 0.2}];
+// Value: hours back. Seven sources check in one per beat, numbers roll up on their own.
+const PS: Platform[] = ['li', 'fb', 'ig', 'yt', 'web', 'search', 'email'];
+const NAMES = ['LinkedIn', 'Facebook', 'Instagram', 'YouTube', 'Website', 'Search', 'Email'];
+const VALS = [14210, 13980, 1120, 2640, 7930, 29870, 3412];
+const DONE = (i: number) => 26 + i * 7;
+export const sfx: Cue[] = [{at: 0, s: 'swoosh', v: 0.4}, ...PS.map((_, i) => ({at: DONE(i), s: 'tick', v: 0.35})), {at: 76, s: 'success', v: 0.35}];
 export const S07: React.FC = () => {
   const f = useF();
-  const q = typed(f, WORD, TYPE, 11);
-  const up = prog(f, 4, 22, E.snappy);
-  const pill = spr(f, 18, S.snap);
   return (
     <AbsoluteFill>
-      <Ground kind="dots" />
-      <Headline on="grad" a="Find what clients" b="search for." size={100} style={{left: 110, top: 100}} at={2} />
-      <div style={{position: 'absolute', inset: 0, opacity: up, transform: `translateY(${(1 - up) * 160}px)`}}>
-        <Float x={600} y={380} w={1240} h={760} tilt="perspective(2200px) rotateX(14deg) rotateY(-10deg)" inner="scale(1.3) translate(-640px, -60px)"><SearchScreen hl={q.length >= 7 ? 1 : -1} query={q} rows={prog(f, 6, 30)} /></Float>
+      <Ground kind="waves" />
+      <Headline on="grad" a="Updates itself." b="Your hours go back to marketing." size={84} style={{left: 110, top: 120}} at={2} />
+      <div style={{position: 'absolute', left: 110, top: 400, transform: `translateX(${-prog(f, 0, 100, E.glide) * 24}px)`, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 22, width: 1700}}>
+        {PS.map((p, i) => {
+          const q = prog(f, 4 + i * 3, 16, E.snappy), d = f >= DONE(i), ck = spr(f, DONE(i), S.pop);
+          const v = Math.round(VALS[i] * prog(f, 8 + i * 3, DONE(i) - 8 - i * 3, E.glide));
+          return (
+            <div key={p} style={{background: '#fff', borderRadius: 24, padding: 24, fontFamily: F.text, boxShadow: '0 30px 60px -25px rgba(0,40,60,.45)', opacity: q, filter: `blur(${(1 - q) * 10}px)`, transform: `translateX(${(1 - q) * -60}px)`}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: 12}}><PlatformIcon p={p} size={44} /><span style={{fontSize: 21, fontWeight: 650, color: C.ink}}>{NAMES[i]}</span>
+                <span style={{marginLeft: 'auto', width: 32, height: 32, borderRadius: 99, background: d ? C.up : 'none', border: d ? 'none' : `3px solid ${C.inset}`, borderTopColor: d ? undefined : C.cyan, color: '#fff', display: 'grid', placeItems: 'center', fontSize: 18, transform: d ? `scale(${ck})` : `rotate(${f * 14}deg)`}}>{d ? '✓' : ''}</span></div>
+              <div style={{fontSize: 40, fontWeight: 750, color: C.ink, marginTop: 14, fontVariantNumeric: 'tabular-nums'}}>{v.toLocaleString('en-US')}</div>
+              <div style={{fontSize: 15, color: C.ink3}}>{d ? 'updated just now' : 'updating…'}</div>
+            </div>
+          );
+        })}
+        <div style={{borderRadius: 24, border: '2px dashed rgba(255,255,255,.55)', display: 'grid', placeItems: 'center', fontFamily: F.text, color: '#fff', fontSize: 24, fontWeight: 650, opacity: prog(f, 74, 10), transform: `scale(${0.9 + prog(f, 74, 14, E.snappy) * 0.1})`}}>No one typed this.</div>
       </div>
-      <div style={{position: 'absolute', left: 700, top: 330, width: 620, display: 'flex', alignItems: 'center', gap: 14, background: '#fff', borderRadius: 99, padding: '18px 26px', fontFamily: F.text, fontSize: 28, color: C.ink, boxShadow: `0 20px 50px -15px rgba(0,40,60,.5), 0 0 0 ${f >= CLICK ? 4 : 0}px rgba(0,185,239,.35)`, zIndex: 5, opacity: Math.min(1, pill), transform: `scale(${0.9 + Math.min(1, pill) * 0.1})`}}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.teal} strokeWidth="2.6" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 5 5" /></svg>
-        {q || <span style={{color: C.ink4}}>Search top queries</span>}{f >= CLICK && Math.floor(f / 8) % 2 === 0 && <span style={{width: 3, height: 32, background: C.cyan}} />}
-      </div>
-      <Ripple x={920} y={366} at={CLICK} />
-      <Cursor path={[{f: 10, x: 1300, y: 760}, {f: 27, x: 910, y: 352}, {f: 60, x: 1000, y: 420}]} clicks={[CLICK]} show={10} />
     </AbsoluteFill>
   );
 };

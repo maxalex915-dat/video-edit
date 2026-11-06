@@ -1,31 +1,26 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Ground, Headline, Shot, Cursor, Ripple, prog, spr, S, E, C, F, useF, Cue} from './common';
-import {InquiriesScreen} from '../components/ui/Screens';
+import {Ground, Headline, Cursor, Ripple, Tip, Drift, prog, E, useF, Cue} from './common';
+import {ReportPage, SharePanel} from '../components/ui/Screens';
 
-// Value: no lead lost. Open the status menu, mark the lead Won, the month's total ticks up.
-const C1 = 58, C2 = 82;
-export const sfx: Cue[] = [{at: 0, s: 'swoosh', v: 0.4}, {at: C1, s: 'click', v: 0.45}, {at: C1 + 2, s: 'pop_hi', v: 0.25}, {at: C2, s: 'click', v: 0.5}, {at: C2 + 4, s: 'success', v: 0.4}];
-export const S16: React.FC = () => {
+// Value: everyone informed. Pick 30 days, copy the link.
+const C1 = 42, C2 = 68;
+export const sfx: Cue[] = [{at: 8, s: 'swoosh_soft', v: 0.25}, {at: C1, s: 'click', v: 0.45}, {at: C2, s: 'click', v: 0.5}, {at: C2 + 4, s: 'success', v: 0.35}];
+export const S16: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
-  const up = prog(f, 0, 24, E.snappy);
-  const menu = f >= C1 && f < C2 + 6 ? spr(f, C1, S.snap) : 0;
-  const won = f >= C2;
+  const a = prog(f, 0, 20, E.snappy), b = prog(f, 6, 20, E.snappy);
   return (
     <AbsoluteFill>
-      <Ground kind="liquid" />
-      <div style={{position: 'absolute', inset: 0, opacity: up, transform: `translateX(${(1 - up) * 220}px)`}}>
-        <Shot w={1600} h={1000} focus={[1000, 360]} at={[1300, 560]} scale={1.45} rx={10} ry={-14} dof={{rx: 640, ry: 380, blur: 4}} fade={{side: 'left', at: 820, soft: 200}}><InquiriesScreen hl={2} draw={prog(f, 10, 40, E.snappy)} won={won} total={won ? 24 : Math.round(23 * prog(f, 10, 40, E.snappy))} /></Shot>
-      </div>
-      {menu > 0 && (
-        <div style={{position: 'absolute', left: 960, top: 512, width: 220, background: '#fff', borderRadius: 16, padding: 8, fontFamily: F.text, fontSize: 19, boxShadow: '0 24px 50px -16px rgba(5,60,63,.45)', zIndex: 5, opacity: Math.min(1, menu), transform: `translateY(${(1 - Math.min(1, menu)) * -12}px) scale(${0.95 + Math.min(1, menu) * 0.05})`, transformOrigin: 'top'}}>
-          {['New', 'Quoted', 'Won', 'Lost'].map((x) => <div key={x} style={{padding: '10px 14px', borderRadius: 10, background: x === 'Won' && f >= 70 ? C.teal : 'none', color: x === 'Won' && f >= 70 ? '#fff' : C.ink, fontWeight: x === 'Won' ? 650 : 450}}>{x}</div>)}
-        </div>
-      )}
-      <Ripple x={990} y={486} at={C1} />
-      <Ripple x={1030} y={624} at={C2} />
-      <Headline on="white" a="Every business lead," b="tracked. None lost." size={86} style={{left: 110, top: 400}} at={2} />
-      <Cursor path={[{f: 30, x: 1300, y: 960}, {f: 54, x: 980, y: 474}, {f: 76, x: 1020, y: 612}]} clicks={[C1, C2]} show={30} />
+      <Ground kind="sunrise" />
+      <Drift dur={dur} push={0.04} origin="1400px 640px">
+        <div style={{position: 'absolute', left: 1290, top: 110, opacity: a, filter: `blur(${(1 - a) * 8}px)`, transform: `translateX(${(1 - a) * 100}px) rotate(3deg) scale(.6)`, transformOrigin: '0 0', borderRadius: 8, boxShadow: '0 50px 100px -40px rgba(5,60,63,.4)'}}><ReportPage /></div>
+        <div style={{position: 'absolute', left: 760, top: 470, opacity: b, filter: `blur(${(1 - b) * 8}px)`, transform: `translateX(${(1 - b) * 100}px) perspective(2000px) rotateY(-10deg) rotateX(6deg) scale(1.3)`, transformOrigin: 'top left'}}><SharePanel days={f >= C1 ? 1 : 0} copied={f >= C2} /></div>
+        <Ripple x={1524} y={660} at={C1} />
+        <Ripple x={1700} y={754} at={C2} />
+        <Tip x={1700} y={712} at={C2 + 3}>Link copied</Tip>
+        <Cursor path={[{f: 22, x: 1200, y: 1000}, {f: 38, x: 1514, y: 648}, {f: 64, x: 1690, y: 742}]} clicks={[C1, C2]} show={22} />
+      </Drift>
+      <Headline on="white" a="One link." b="The whole team informed." size={88} style={{left: 110, top: 90}} at={2} />
     </AbsoluteFill>
   );
 };

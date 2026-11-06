@@ -1,24 +1,22 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {Ground, Headline, Shot, Cursor, Tip, prog, E, useF, Cue, lerp} from './common';
-import {WebsiteScreen} from '../components/ui/Screens';
+import {Ground, Headline, prog, E, useF, Cue} from './common';
+import {MomentumPanel} from '../components/ui/Panels';
 
-// Value: know where visitors come from. City bars grow, the cursor hovers the top city.
-const HOVER = 78;
-export const sfx: Cue[] = [{at: 0, s: 'swoosh', v: 0.4}, {at: HOVER, s: 'pop_hi', v: 0.3}];
+// Value: the bigger picture. Every channel on one timeline; one LinkedIn post ripples through the website, search and inquiries.
+const BAND = 44, SPIKE = 54;
+export const sfx: Cue[] = [{at: 6, s: 'swoosh_soft', v: 0.25}, {at: BAND, s: 'shimmer', v: 0.3}, ...[0, 1, 2, 3].map((i) => ({at: SPIKE + Math.round(i * 6.5), s: 'pop_hi', v: 0.3}))];
 export const S06: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
+  const zoom = prog(f, BAND, dur - BAND, E.inOut);
   const up = prog(f, 0, 22, E.snappy);
-  const drift = prog(f, 0, dur, E.glide);
   return (
     <AbsoluteFill>
-      <Ground kind="liquid" />
-      <div style={{position: 'absolute', inset: 0, opacity: up, transform: `translateX(${(1 - up) * 200}px)`}}>
-        <Shot w={1600} h={1000} focus={[1180, 300]} at={[1340, 520]} scale={lerp(drift, 1.85, 2.05)} rx={10} ry={lerp(drift, -18, -12)} dof={{rx: 380, ry: 140, blur: 5}} fade={{side: 'left', at: 860, soft: 200}}><WebsiteScreen hl={0} grow={prog(f, 12, 46, E.snappy)} draw={prog(f, 8, 50, E.snappy)} lit={f >= HOVER ? 1 : 0} /></Shot>
+      <Ground kind="glass" />
+      <Headline on="grad" a="See the bigger picture." b="Every channel, connected." size={76} align="center" style={{left: 0, width: 1920, top: 48}} at={2} />
+      <div style={{position: 'absolute', left: 210, top: 300, opacity: up, transform: `translateY(${(1 - up) * 80}px) scale(${1 + zoom * 0.07})`, transformOrigin: '950px 700px'}}>
+        <MomentumPanel draw={prog(f, 6, 36, E.snappy)} band={prog(f, BAND, 10)} spike={prog(f, SPIKE, 30)} />
       </div>
-      <Headline on="white" a="Know where" b="visitors come from." size={88} style={{left: 110, top: 400}} at={2} />
-      <Tip x={1470} y={470} at={HOVER + 2}>1,196 visitors, +18%</Tip>
-      <Cursor path={[{f: 48, x: 1750, y: 860}, {f: HOVER, x: 1460, y: 500}, {f: dur, x: 1480, y: 510}]} show={48} />
     </AbsoluteFill>
   );
 };
