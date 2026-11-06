@@ -9,6 +9,7 @@ import * as SA from './Audit';
 import * as Cc from '../v3/C';
 import * as D from '../v3/D';
 import * as En from './End';
+import * as In from '../v5/Intro';
 import * as S15 from '../scenes/S15';
 import * as S16 from '../scenes/S16';
 import * as S17 from '../scenes/S17';
@@ -18,7 +19,7 @@ import * as S19 from '../scenes/S19';
 type Cue = {at: number; s: string; v?: number};
 // Two minutes on the original music (drop at 9.2 s; the middle repeats 14 bars; the track's own ending closes).
 const BEATS: [number, number, React.FC<{dur: number}>, Cue[], string][] = [
-  [0, 3.4, O.P1, O.p1sfx, 'logins'], [3.4, 7.9, O.P2, O.p2sfx, 'spreadsheets'], [7.9, 9.2, A.B3, A.b3sfx, 'stop'], [9.2, 12.4, A.B4, A.b4sfx, 'meet'],
+  [0, 3.4, In.I1, In.i1sfx, 'data everywhere'], [3.4, 6.4, In.I2, In.i2sfx, 'spreadsheet sprawl'], [6.4, 7.9, In.I3, In.i3sfx, 'separate logins'], [7.9, 9.2, In.I4, In.i4sfx, 'all disconnected'], [9.2, 12.4, A.B4, A.b4sfx, 'meet'],
   [12.4, 15.6, M.M1, M.m1sfx, 'all in one place'], [15.6, 21.0, A.B6, A.b6sfx, 'home'], [21.0, 28.6, M.M2, M.m2sfx, 'trends'], [28.6, 35.0, M.M3, M.m3sfx, 'live'],
   [35.0, 39.0, M.M4, M.m4sfx, 'decisions'], [39.0, 46.0, M2.A1, M2.a1sfx, 'ai report'], [46.0, 53.0, M2.A2, M2.a2sfx, 'double down'], [53.0, 61.0, M2.A3, M2.a3sfx, 'keywords'],
   [61.0, 63.0, SA.SA1, SA.sa1sfx, 'audit intro'], [63.0, 67.4, SA.SA2, SA.sa2sfx, 'semrush'], [67.4, 74.6, SA.SA3, SA.sa3sfx, 'audit dashboard'], [74.6, 79.0, SA.SA4, SA.sa4sfx, 'audit features'],
