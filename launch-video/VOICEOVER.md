@@ -44,6 +44,45 @@ Site health, press, competitors and leads. Always live. <break time="0.8s" />
 The Marketing Dashboard. Less time collecting, more time deciding.
 ```
 
+## Or, with emotion: Eleven v3 (recommended)
+
+v3 reads bracketed audio tags for tone, but it ignores the `<break>` tags above, so this version uses `[pause]` and new lines instead.
+Tags are kept light on purpose; too many make it sound acted. If a tag gets read aloud, delete it.
+
+```
+[confident] Every week, our marketing data... lives on seven different platforms. [pause]
+
+[thoughtful] What should be simple has become fragmented. [sighs] And manual. [pause]
+
+[matter-of-fact] Sign in. Export. Copy it all by hand. Every single week. [pause]
+
+[knowingly] Sounds familiar? It takes hours. [pause]
+
+[warmly] So we made it simpler. Everything, in one place. [pause]
+
+[excited] Introducing the Marketing Dashboard. [pause]
+
+[upbeat] Every channel, in one dashboard. Updated automatically. No more copy and paste. [pause]
+
+[confident] Now, we can turn insights into decisions. [pause]
+
+[upbeat] Trends, AI reports, keyword strategy, site audits... and a lot more. [pause]
+
+[curious] Spot a spike on one channel, and see how it lifts all the others. [pause]
+
+[warmly] Every week, AI reads the numbers, and tells us what to do next. [pause]
+
+[proud] And with our own site audit, we save over two thousand dollars a year on SEMrush. [pause]
+
+[confident] All of it, in one dashboard. [pause]
+
+[upbeat] Site health, press, competitors and leads. Always live. [pause]
+
+[warmly] The Marketing Dashboard. [pause] Less time collecting, more time deciding.
+```
+
+For v3, set Stability to "Natural" (the middle setting). "Creative" adds more emotion but can drift between takes.
+
 ## Settings for ElevenLabs
 
 - Voice: warm, confident, conversational, as if explaining it to a colleague. Not a radio announcer, not salesy.
