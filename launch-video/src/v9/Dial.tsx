@@ -15,7 +15,7 @@ export const Dial: React.FC<{v: number; p: number; size: number; label: string; 
   const [hx, hy] = pt(end);
   return (
     <div style={{position: 'relative', width: size, height: size}}>
-      <svg width={size} height={size} style={{position: 'absolute', overflow: 'visible'}}>
+      <svg width={size} height={size} style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
         <defs>
           <linearGradient id={`dg${id}`} x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor={SKY} /></linearGradient>
           <filter id={`dgl${id}`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14" /></filter>
