@@ -62,7 +62,7 @@ export const Dials: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   const p = prog(f, 12, 50, E.inOut);
   const turn = prog(f, 0, dur, (q) => q);
-  const D: [number, string, string, number][] = [[72, 'Site health', 'Errors and warnings across 114 checks', -1], [58, 'AI search health', 'How easily ChatGPT and Google AI can quote our pages', 1]];
+  const D: [number, string, string, number][] = [[72, 'Site health', '114 checks, every two weeks', -1], [58, 'AI search health', 'How quotable we are in AI search', 1]];
   return (
     <AbsoluteFill>
       <Mist lift={0.7} />
@@ -73,7 +73,7 @@ export const Dials: React.FC<{dur: number}> = ({dur}) => {
             <div key={label} style={{position: 'absolute', inset: 0, perspective: 2000}}>
               <div style={{position: 'absolute', left: 960 + side * 430 - 290, top: 150, width: 580, transform: `rotateY(${side * -lerp(turn, 18, 10)}deg) translateY(${(1 - Math.min(1, q)) * 200}px)`, opacity: Math.min(1, q), textAlign: 'center'}}>
                 <Dial v={v} p={p} size={580} label={label} id={`d${i}`} />
-                <div style={{fontFamily: F.text, fontSize: 26, color: MUTE, marginTop: -40, opacity: prog(f, 50 + i * 6, 14)}}>{sub}</div>
+                <div style={{fontFamily: F.text, fontSize: 28, fontWeight: 500, color: MUTE, marginTop: -30, whiteSpace: 'nowrap', opacity: prog(f, 50 + i * 6, 14)}}>{sub}</div>
               </div>
             </div>
           );

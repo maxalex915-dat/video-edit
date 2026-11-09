@@ -35,8 +35,8 @@ export const Dial: React.FC<{v: number; p: number; size: number; label: string; 
         </>}
       </svg>
       <div style={{position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: F.display, color: INK}}>
-        <div style={{fontSize: size * 0.3, fontWeight: 650, letterSpacing: '-0.05em', lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}>{Math.round(v * p)}</div>
-        <div style={{fontSize: size * 0.055, fontWeight: 600, color: '#5b6f74', marginTop: size * 0.03, letterSpacing: '-0.01em'}}>{label}</div>
+        <div style={{fontSize: size * 0.28, fontWeight: 600, letterSpacing: '-0.05em', lineHeight: 1.05, fontVariantNumeric: 'tabular-nums', backgroundImage: `linear-gradient(135deg, ${GR} 0%, ${CY} 55%, ${SKY} 100%)`, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.04em'}}>{Math.round(v * p)}</div>
+        <div style={{fontSize: size * 0.052, fontWeight: 600, color: '#3d5359', marginTop: size * 0.01, letterSpacing: '-0.01em'}}>{label}</div>
       </div>
     </div>
   );
