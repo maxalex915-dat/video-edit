@@ -1,6 +1,10 @@
 import React from 'react';
 import {Img, staticFile} from 'remotion';
-import {useF, prog, E, lerp, C, F, GLASS_BG} from './Kit';
+import {useF} from '../frame';
+import {prog, E, lerp} from '../theme/motion';
+import {C} from '../theme/tokens';
+import {F} from '../theme/fonts';
+const GLASS_BG = 'radial-gradient(700px 480px at 88% 6%, rgba(0,185,239,.22), transparent 70%), radial-gradient(640px 460px at 6% 96%, rgba(127,188,66,.2), transparent 70%), linear-gradient(150deg, rgba(255,255,255,.62), rgba(235,248,253,.38))';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
 // (marketing-dashboard-clone/docs/mockups/home-redesign/v3.html). Native size 1600 x 900; figures are the mockup's.

@@ -4,3 +4,6 @@ import {useCurrentFrame} from 'remotion';
 // so each scene reads its frame through this offset: frame 0 is still the bar line.
 export const FrameOffset = createContext(0);
 export const useF = () => useCurrentFrame() - useContext(FrameOffset);
+// used by the v6 to v8 experiments (kept so their files still build)
+export const Bare = createContext(false);
+export const NoGround = createContext(false);
