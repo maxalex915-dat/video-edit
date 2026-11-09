@@ -1,7 +1,7 @@
 # Voice-over script (v9 storyboard)
 
-One clip per line. Save each as its own file, named by number (`01.mp3`, `02.mp3` ...), so each one can be placed on its scene.
-The scene times are a guide. The film will be stretched to fit the voice, not the other way round.
+Generate it as one single MP3. I find the pauses between lines and cut it into the scenes myself.
+The table is the plan; the block under it is what to paste into ElevenLabs.
 
 | # | Scene | Line to generate | Fits in |
 |---|---|---|---|
@@ -22,6 +22,28 @@ The scene times are a guide. The film will be stretched to fit the voice, not th
 | 15 | Live tiles | Site health, press, competitors and leads. Always live. | 3.6 s |
 | 16 | Bento, then logo | The Marketing Dashboard. Less time collecting, more time deciding. | 5 to 6 s |
 
+## Paste this into ElevenLabs (one generation)
+
+The `<break time="0.8s" />` tags give a clear pause between lines, which is where I cut. Keep them.
+
+```
+Every week, our marketing data... lives on seven different platforms. <break time="0.8s" />
+What should be simple has become fragmented. And manual. <break time="0.8s" />
+Sign in. Export. Copy it all by hand. Every single week. <break time="0.8s" />
+Sounds familiar? It takes hours. <break time="0.8s" />
+So we made it simpler. Everything, in one place. <break time="0.8s" />
+Introducing the Marketing Dashboard. <break time="0.8s" />
+Every channel, in one dashboard. Updated automatically. No more copy and paste. <break time="0.8s" />
+Now, we can turn insights into decisions. <break time="0.8s" />
+Trends, AI reports, keyword strategy, site audits... and a lot more. <break time="0.8s" />
+Spot a spike on one channel, and see how it lifts all the others. <break time="0.8s" />
+Every week, AI reads the numbers, and tells us what to do next. <break time="0.8s" />
+And with our own site audit, we save over two thousand dollars a year on SEMrush. <break time="0.8s" />
+All of it, in one dashboard. <break time="0.8s" />
+Site health, press, competitors and leads. Always live. <break time="0.8s" />
+The Marketing Dashboard. Less time collecting, more time deciding.
+```
+
 ## Settings for ElevenLabs
 
 - Voice: warm, confident, conversational, as if explaining it to a colleague. Not a radio announcer, not salesy.
@@ -29,5 +51,6 @@ The scene times are a guide. The film will be stretched to fit the voice, not th
 - Stability about 50, Similarity about 75, Style about 20, Speaker boost on, speed 1.0.
 - Format: MP3, 44.1 kHz, 128 kbps or better.
 - Pronunciation: "SEMrush" is "SEM-rush". If a word comes out wrong, spell it the way it sounds in the box (for example "Sem rush").
-- Keep the "..." at the end of line 01 and the start of line 02: it makes the two clips sound like one sentence carried across the cut.
-- Generate a few takes of lines 01, 07 and 16 and keep the best; they carry the film.
+- Lines 01 and 02 are one sentence, so they are spoken together; I split them at the "...".
+- If one line comes out badly, regenerate the whole file rather than patching a single line, so the voice stays the same throughout.
+- If the model reads the break tags aloud, delete them and press Enter twice between lines instead.
