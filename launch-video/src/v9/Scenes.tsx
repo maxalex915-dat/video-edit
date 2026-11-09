@@ -7,7 +7,7 @@ import {PlatformIcon, Platform} from '../components/ui/Primitives';
 import {MomentumPanel, SiteHealthPanel} from '../components/ui/Panels';
 import {Cursor} from '../components/kit/Anim';
 import {RealHome} from './RealHome';
-import {BrandField, Mist, Pillar, Words, Center, Drift, glow, BRAND, CY, GR, INK} from './Look';
+import {BrandField, Mist, Pillar, Words, Center, Drift, glow, BRAND, CY, GR, INK, Pop, Swish} from './Look';
 
 const PS: [Platform, string][] = [['li', 'LinkedIn'], ['fb', 'Facebook'], ['ig', 'Instagram'], ['yt', 'YouTube'], ['web', 'Google Analytics'], ['search', 'Search Console'], ['email', 'GetResponse']];
 const MUTE = '#6b7f84';
@@ -45,6 +45,7 @@ export const Platforms: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.25 + prog(f, 20, 60) * 0.35} />
+      {PS.map((_, i) => <Pop key={i} at={30 + i * 3} k={i} v={0.18} />)}
       <Drift dur={dur} z={0.08}>
         {FILES.map(([n, x, y], i) => {
           const q = prog(f, 44 + i * 3, 20, E.snappy);
@@ -74,6 +75,7 @@ export const Fragmented: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.55} />
+      <Swish at={0} /><Swish at={44} k={1} />
       <Drift dur={dur} z={0.05}>
         <Pillar rise={prog(f, 0, 30, E.snappy)} split={prog(f, 44, 40, E.inOut)} />
         <Center>
@@ -94,6 +96,7 @@ export const Routine: React.FC<{dur: number}> = () => {
   return (
     <AbsoluteFill>
       <BrandField seed={1} />
+      {ROWS.map((_, i) => <Pop key={i} at={6 + i * 6} k={i} v={0.15} />)}<Swish at={80} />
       <Tilt rx={lerp(prog(f, 0, 80), 16, 8)} ry={-6} cy={600}>
         <div style={{position: 'absolute', inset: 0, opacity: 1 - back, filter: `blur(${back * 16}px)`, transform: `translateZ(${-back * 400}px)`}}>
           <div style={{position: 'absolute', left: 170, right: 170, top: 150, display: 'grid', gridTemplateColumns: '1.2fr 1.3fr .7fr 1.2fr', fontFamily: F.text, fontSize: 15, letterSpacing: '.14em', color: 'rgba(255,255,255,.8)', fontWeight: 600}}>
@@ -160,6 +163,7 @@ export const Simpler: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.75} />
+      <Pop at={2} v={0.2} /><Swish at={40} />
       <Drift dur={dur} z={0.05}>
         <Tilt rx={lerp(g, 0, 14)} ry={lerp(g, 0, -8)}>
           <div style={{position: 'absolute', left: 960 - w / 2, top: 540 - h / 2, width: w, height: h, borderRadius: 32, background: 'linear-gradient(160deg, rgba(255,255,255,.6), rgba(255,255,255,.25))', border: '2px solid rgba(255,255,255,.95)', boxShadow: '0 40px 90px -40px rgba(0,90,120,.35)', transform: `scale(${Math.min(1, card)})`, overflow: 'hidden'}}>
@@ -184,6 +188,7 @@ export const Intro: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.3} />
+      <Swish at={34} /><Pop at={38} v={0.24} k={1} />
       <Drift dur={dur} z={0.07}>
         <Center>
           {f < 34 ? <Words parts={[['Introducing', true]]} at={2} size={110} out={28} /> : (
@@ -213,7 +218,8 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={1} />
-      <div style={{position: 'absolute', left: 0, right: 0, top: 60, zIndex: 10}}><Words parts={[['Every channel.'], ['One dashboard.', true]]} at={2} size={60} /></div>
+      <Swish at={4} /><Swish at={40} k={1} /><Pop at={56} v={0.22} /><Pop at={72} v={0.22} k={1} />
+      <div style={{position: 'absolute', left: 0, right: 0, top: 60, zIndex: 10}}><Words parts={[['All platforms.'], ['One dashboard.', true]]} at={2} size={60} /></div>
       <Tilt rx={lerp(turn, 26, 18)} ry={lerp(turn, -16, -6)} rz={lerp(turn, 3, 1)} cy={620}>
         <div style={{position: 'absolute', left: 240, top: 210, width: 1600, height: 900, transform: `translateY(${(1 - p) * 160}px) scale(0.9)`, transformOrigin: '0 0', transformStyle: 'preserve-3d', ...glow(1)}}>
           <RealHome at={10} lift={lift} />
@@ -235,28 +241,32 @@ export const Decide: React.FC<{dur: number}> = ({dur}) => {
       <BrandField seed={2} />
       <Drift dur={dur} z={0.08}>
         <Center y={lerp(k, 0, -50)}><div style={{transform: `scale(${lerp(k, 1, 0.5)})`}}><Words parts={[['Turn insights']]} at={2} size={190} color={W} stagger={5} /></div></Center>
-        <Center y={70}><Words parts={[['into decisions']]} at={30} size={92} color={W} weight={500} /></Center>
+        <Center y={70}><Words parts={[['into an action plan']]} at={30} size={92} color={W} weight={500} /></Center>
       </Drift>
     </AbsoluteFill>
   );
 };
 
 // 10. Feature carousel: frosted cards turned in 3D, sliding past; the centre one faces us.
-const FEAT: [string, string][] = [['Spot trends', 'M4 40 L16 28 L26 34 L44 12'], ['Weekly AI reports', 'M10 6 h22 l8 8 v28 h-30 z M16 20 h18 M16 28 h18'], ['Keyword strategy', 'M20 32 a12 12 0 1 1 0.1 0 M29 29 l12 12'], ['Site audit', 'M24 6 l16 6 v12 c0 10 -7 16 -16 20 c-9 -4 -16 -10 -16 -20 v-12 z M17 24 l5 5 l9 -10'], ['Competitor reports', 'M8 40 V22 M20 40 V12 M32 40 V26 M44 40 V8'], ['PR tracking', 'M10 30 h6 l16 10 V8 L16 18 h-6 z'], ['Business inquiries', 'M6 12 h36 v24 h-36 z M6 12 l18 14 l18 -14'], ['Approvals', 'M8 26 l10 10 l22 -24']];
+const FEAT: [string, string][] = [['Trends', 'M4 40 L16 28 L26 34 L44 12'], ['AI insights', 'M10 6 h22 l8 8 v28 h-30 z M16 20 h18 M16 28 h18'], ['Keyword strategy', 'M20 32 a12 12 0 1 1 0.1 0 M29 29 l12 12'], ['Site audit', 'M24 6 l16 6 v12 c0 10 -7 16 -16 20 c-9 -4 -16 -10 -16 -20 v-12 z M17 24 l5 5 l9 -10'], ['Competitor reports', 'M8 40 V22 M20 40 V12 M32 40 V26 M44 40 V8'], ['PR tracking', 'M10 30 h6 l16 10 V8 L16 18 h-6 z'], ['Business inquiries', 'M6 12 h36 v24 h-36 z M6 12 l18 14 l18 -14'], ['Approvals', 'M8 26 l10 10 l22 -24']];
 export const Carousel: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
-  const pos = interpolate(f, [0, dur], [-0.3, FEAT.length - 0.7]);
+  // centred card follows the voice: "Trends" ... "AI insight" ... "keyword strategy" ... "and a lot more"
+  const KEY: [number, number][] = [[0, -0.15], [0.2, 0], [0.95, 0], [1.2, 1], [2.0, 1], [2.25, 2], [3.2, 2], [dur / 30, FEAT.length - 1]];
+  const pos = interpolate(f / 30, KEY.map((k) => k[0]), KEY.map((k) => k[1]), {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: E.inOut});
   return (
     <AbsoluteFill>
       <Mist lift={0.8} />
-      <div style={{position: 'absolute', inset: 0, perspective: 1800}}>
+      {[0.0, 0.95, 2.0].map((t, i) => <Swish key={i} at={Math.round(t * 30) - 4} k={i} v={0.12} />)}
+      {[0, 1, 2, 3, 4].map((i) => <Pop key={i} at={Math.round((3.2 + i * 0.36) * 30)} k={i} v={0.12} />)}
+      <div style={{position: 'absolute', inset: 0, perspective: 2000}}>
         {FEAT.map(([n, d], i) => {
           const o = i - pos, ao = Math.abs(o);
-          const sc = Math.max(0.6, 1.25 - ao * 0.3);
+          const sc = Math.max(0.55, 1.12 - ao * 0.26);
           return (
-            <div key={n} style={{position: 'absolute', left: 960 + o * 430 - 170, top: 540 - 150, width: 340, height: 300, borderRadius: 28, background: 'rgba(255,255,255,.85)', border: '2px solid #fff', ...glow(0.8), transform: `translateZ(${-ao * 160}px) rotateY(${Math.max(-40, Math.min(40, -o * 22))}deg) scale(${sc})`, opacity: Math.max(0, 1 - ao * 0.3), filter: `blur(${Math.max(0, ao - 0.5) * 3}px)`, padding: 34, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-              <svg width="96" height="96" viewBox="0 0 48 48"><defs><linearGradient id={`fi${i}`} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor="#70cbf3" /></linearGradient></defs><path d={d} fill="none" stroke={`url(#fi${i})`} strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <div style={{fontFamily: F.display, fontSize: 32, fontWeight: 600, letterSpacing: '-0.02em', color: INK}}>{n}</div>
+            <div key={n} style={{position: 'absolute', left: 960 + o * 640 - 280, top: 540 - 230, width: 560, height: 460, borderRadius: 34, background: 'rgba(255,255,255,.88)', border: '2px solid #fff', ...glow(0.9), transform: `translateZ(${-ao * 200}px) rotateY(${Math.max(-40, Math.min(40, -o * 24))}deg) scale(${sc})`, opacity: Math.max(0, 1 - ao * 0.32), filter: `blur(${Math.max(0, ao - 0.5) * 3}px)`, padding: 48, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+              <svg width="150" height="150" viewBox="0 0 48 48"><defs><linearGradient id={`fi${i}`} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor="#70cbf3" /></linearGradient></defs><path d={d} fill="none" stroke={`url(#fi${i})`} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <div style={{fontFamily: F.display, fontSize: 50, fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, color: INK}}>{n}</div>
             </div>
           );
         })}
@@ -272,6 +282,7 @@ export const Trends: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.6} />
+      <Swish at={2} /><Pop at={70} v={0.22} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 70, zIndex: 5}}><Words parts={[['Spot trends and'], ['make connections.', true]]} at={2} size={60} /></div>
       <Tilt rx={lerp(turn, 22, 12)} ry={lerp(turn, 12, 4)} cy={640}>
         <div style={{position: 'absolute', left: 210, top: 260, borderRadius: 30, ...glow(1), transform: `translateY(${(1 - spr(f, 2, S.soft)) * 140}px)`}}><MomentumPanel draw={prog(f, 6, 50)} band={prog(f, 60, 20)} spike={prog(f, 70, 20)} w={1500} /></div>
@@ -289,6 +300,7 @@ export const Report: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <BrandField seed={3} />
+      <Swish at={6} /><Swish at={40} k={1} v={0.12} /><Pop at={44} v={0.2} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 90, zIndex: 5}}><Words parts={[['Weekly AI reports']]} at={2} size={64} color={W} /></div>
       <Tilt rx={lerp(turn, 18, 10)} ry={lerp(turn, -14, -6)} cy={600}>
         <div style={{position: 'absolute', left: 300, top: 260, width: 1320, borderRadius: 30, background: 'rgba(255,255,255,.97)', padding: '36px 46px', boxSizing: 'border-box', fontFamily: F.text, color: INK, ...glow(1.2), transform: `translateY(${(1 - p) * 120}px)`, opacity: Math.min(1, p), transformStyle: 'preserve-3d'}}>
@@ -336,6 +348,7 @@ export const AllInOne: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.2} />
+      <Swish at={2} />
       <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 1000, background: `linear-gradient(100deg, ${GR} 0%, ${CY} 45%, #70cbf3 75%, rgba(112,203,243,0) 100%)`}} />
       <div style={{position: 'absolute', left: 140, top: 400}}><Words parts={[['All in one\ndashboard']]} at={2} size={96} color={W} align="left" /></div>
       <Tilt rx={6} ry={-22} cx={1360} cy={540}>
@@ -356,6 +369,7 @@ export const AllInOne: React.FC<{dur: number}> = ({dur}) => {
 };
 
 // 15. Brand field, four live tiles in a row, turned in 3D and floating up one by one (reference 0:46).
+const TT = [14, 38, 65, 104]; // "site health", "press mentions", "competitors analysis", "leads tracking"
 const TILES: [string, string, string][] = [['Site health', '78', 'score, 7 up since last crawl'], ['PR articles', '14', 'this month, 3 new'], ['Competitor report', '8 of 13', 'competitors in the news'], ['Business requests', '23', 'this month']];
 export const Tiles: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
@@ -363,9 +377,10 @@ export const Tiles: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <BrandField seed={4} />
+      {TT.map((t, i) => <Pop key={i} at={t} k={i} v={0.22} />)}
       <Tilt rx={lerp(turn, 20, 10)} ry={lerp(turn, 18, 6)} cy={560}>
         {TILES.map(([a, b, c], i) => {
-          const q = spr(f, 4 + i * 4, S.soft);
+          const q = spr(f, TT[i], S.soft);
           return (
             <div key={a} style={{position: 'absolute', left: 180 + i * 400, top: 380, width: 360, height: 320, borderRadius: 26, background: 'rgba(255,255,255,.96)', ...glow(1), padding: 30, boxSizing: 'border-box', fontFamily: F.text, color: INK, transform: `translateY(${(1 - Math.min(1, q)) * 120}px) translateZ(${Math.sin(f / 20 + i) * 20}px)`, opacity: Math.min(1, q)}}>
               <div style={{fontSize: 21, fontWeight: 700}}>{a}</div>

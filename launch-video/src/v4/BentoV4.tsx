@@ -34,7 +34,7 @@ const tiles = (f: number, i: number): React.ReactNode => {
           <div style={{position: 'absolute', top: 40, textAlign: 'center'}}><div style={{fontSize: 40, fontWeight: 750, color: C.teal}}>{Math.round(65 * g)}</div><div style={{fontSize: 13, color: C.ink3, letterSpacing: '.08em'}}>HEALTH</div></div>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, fontSize: 24, color: C.ink2, marginTop: 6}}>Replaced <span style={{background: '#fde9e3', color: '#ff642d', borderRadius: 99, padding: '4px 14px', fontWeight: 700}}>SEMrush</span></div>
-        <div style={{fontFamily: F.display, fontSize: 74, fontWeight: 800, ...gradText, marginTop: 10, fontVariantNumeric: 'tabular-nums'}}>${fmt(Math.round(1200 * k(36, 10)))}</div>
+        <div style={{fontFamily: F.display, fontSize: 74, fontWeight: 800, ...gradText, marginTop: 10, fontVariantNumeric: 'tabular-nums'}}>${fmt(Math.round(2000 * k(36, 10)))}+</div>
         <div style={{fontSize: 26, color: C.ink2}}>saved every year</div></>);
     }
     case 2: return (<><T style={{textAlign: 'center'}}>All marketing channels in 1 place</T>

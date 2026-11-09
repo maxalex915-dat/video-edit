@@ -159,3 +159,15 @@ def mpop(k):
     save(f'mpop{k}', y)
 for k in range(3):
     mpop(k)
+
+# muffled swoosh for slides, morphs and camera moves: air through a low band, no hiss on top
+def mswoosh(k, d=0.42):
+    kr = np.random.default_rng(400 + k)
+    n = int(SR * d); x = kr.standard_normal(n)
+    y = bandsweep(x, 180 + k * 40, 700 + k * 80, q=1.4)
+    y *= np.sin(np.linspace(0, np.pi, n)) ** 2.4
+    y = np.convolve(y, np.ones(32) / 32, mode='same')
+    p = np.linspace(0.35, 0.65, n)
+    save(f'mswoosh{k}', y * np.cos(p * np.pi / 2), y * np.sin(p * np.pi / 2))
+for k in range(2):
+    mswoosh(k)

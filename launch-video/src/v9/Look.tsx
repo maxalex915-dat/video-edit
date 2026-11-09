@@ -1,6 +1,6 @@
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {useF} from '../frame';
+import {AbsoluteFill, useCurrentFrame, Sequence, Html5Audio, staticFile} from 'remotion';
+import {useF, FrameOffset} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog} from '../theme/motion';
 
@@ -74,15 +74,27 @@ export const Pillar: React.FC<{rise: number; split: number}> = ({rise, split}) =
   );
 };
 
+// A sound placed on a scene frame (the scene's own clock, so it lands exactly on the animation).
+export const Sfx: React.FC<{at: number; s: string; v?: number}> = ({at, s: name, v = 0.2}) => {
+  const off = React.useContext(FrameOffset);
+  if (at + off < 0) return null;
+  return <Sequence from={Math.round(at + off)} durationInFrames={30} layout="none"><Html5Audio src={staticFile(`sfx/${name}.wav`)} volume={v} /></Sequence>;
+};
+export const Pop: React.FC<{at: number; v?: number; k?: number}> = ({at, v = 0.22, k = 0}) => <Sfx at={at} s={`mpop${k % 3}`} v={v} />;
+export const Swish: React.FC<{at: number; v?: number; k?: number}> = ({at, v = 0.16, k = 0}) => <Sfx at={at} s={`mswoosh${k % 2}`} v={v} />;
+
 // Text, word by word: each word slides in from the left out of a blur (the earlier versions' reveal).
 // parts: [text, gradient?]. out: frame where the whole line blurs away.
 export type Part = [string, boolean?];
-export const Words: React.FC<{parts: Part[]; at: number; size: number; color?: string; weight?: number; out?: number; stagger?: number; align?: 'center' | 'left'; style?: React.CSSProperties}> = ({parts, at, size, color = INK, weight = 600, out, stagger = 3, align = 'center', style}) => {
+export const Words: React.FC<{parts: Part[]; at: number; size: number; color?: string; weight?: number; out?: number; stagger?: number; align?: 'center' | 'left'; style?: React.CSSProperties; quiet?: boolean}> = ({parts, at, size, color = INK, weight = 600, out, stagger = 3, align = 'center', style, quiet}) => {
   const f = useF();
   const o = out === undefined ? 0 : prog(f, out, 9, E.expoIn);
   let k = 0;
   const lines = parts.flatMap(([t, g]) => t.split('\n').map((ln, j) => ({ln, g, br: j > 0})));
+  const nWords = lines.reduce((m, l) => m + l.ln.split(' ').filter(Boolean).length, 0);
   return (
+    <>
+    {!quiet && Array.from({length: nWords}).map((_, j) => <Pop key={`p${j}`} at={at + j * stagger} k={j} v={0.13} />)}
     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: align === 'center' ? 'center' : 'flex-start', columnGap: size * 0.26, fontFamily: F.display, fontSize: size, fontWeight: weight, letterSpacing: '-0.035em', lineHeight: 1.12, opacity: 1 - o, filter: o > 0 ? `blur(${o * 14}px)` : undefined, transform: `translateY(${-o * 20}px)`, ...style}}>
       {lines.map(({ln, g, br}, li) => (
         <React.Fragment key={li}>
@@ -95,6 +107,7 @@ export const Words: React.FC<{parts: Part[]; at: number; size: number; color?: s
         </React.Fragment>
       ))}
     </div>
+    </>
   );
 };
 export const Center: React.FC<{children: React.ReactNode; y?: number}> = ({children, y = 0}) => (

@@ -9,12 +9,12 @@ import * as En from '../v4/End';
 // v9 film: the animation keeps its own timing; the voice-over is placed on it afterwards (outside Remotion).
 export const BEATS9: [number, React.FC<{dur: number}>, string, number[]][] = [
   // [seconds, scene, name, frames where a muffled pop marks something appearing]
-  [2.6, V.Stat, 'statistic', [4, 34]], [4.4, V.Platforms, '7 platforms', [2, 30, 36, 42, 48]], [3.4, V.Fragmented, 'fragmented', [6, 46]], [4.6, V.Routine, 'by hand', [6, 18, 30, 42, 96]],
-  [3.0, V.Outlines, 'consuming time', [20]], [3.4, V.Simpler, 'simpler', [4, 46]], [3.6, V.Intro, 'introducing', [2, 36]], [4.4, V.Home, 'home', [4, 44, 56, 72]],
+  [2.6, V.Stat, 'statistic', []], [4.4, V.Platforms, '7 platforms', []], [3.4, V.Fragmented, 'fragmented', []], [4.6, V.Routine, 'by hand', []],
+  [3.0, V.Outlines, 'consuming time', []], [3.4, V.Simpler, 'simpler', []], [3.6, V.Intro, 'introducing', []], [4.4, V.Home, 'home', []],
   // site audit, the second key feature
-  [3.4, A.AuditOpen, 'audit tool', [2, 18]], [4.2, A.Dials, 'dials', [2, 7, 50]], [4.0, A.Issues, 'issues', [6, 10, 14, 24, 44]], [4.6, A.Review, 'expert review', [2, 8, 92]], [3.6, A.Cancel, 'saving', [2, 40, 52]],
-  [2.6, V.Decide, 'decisions', [2, 30]], [4.4, V.Carousel, 'features', [10, 26, 42, 58, 74, 90, 106, 122]], [5.0, V.Trends, 'trends', [2, 70]], [5.0, V.Report, 'ai report', [6, 40]],
-  [4.0, V.AllInOne, 'all in one', [2, 30, 60, 90]], [3.6, V.Tiles, 'tiles', [4, 8, 12, 16]], [11.4, En.End, 'bento and logo', []],
+  [3.4, A.AuditOpen, 'audit tool', []], [4.2, A.Dials, 'dials', []], [4.0, A.Issues, 'issues', []], [4.6, A.Review, 'expert review', []], [3.6, A.Cancel, 'saving', []],
+  [2.6, V.Decide, 'decisions', []], [5.0, V.Carousel, 'features', []], [5.0, V.Trends, 'trends', []], [5.0, V.Report, 'ai report', []],
+  [4.0, V.AllInOne, 'all in one', []], [5.4, V.Tiles, 'tiles', []], [11.4, En.End, 'bento and logo', []],
 ];
 // camera moves between scenes, mixed: push in, pan, pull out, rise...
 type K = 'pushIn' | 'pullOut' | 'left' | 'right' | 'up' | 'down';
@@ -54,7 +54,7 @@ export const Film9: React.FC<{sfx?: boolean}> = ({sfx = true}) => (
         </Sequence>
       );
     })}
-    {sfx && BEATS9.flatMap(([, , , pops], i) => pops.map((at, k) => <Sequence key={`${i}-${k}`} from={STARTS9[i] + at} durationInFrames={20} layout="none"><Html5Audio src={staticFile(`sfx/mpop${(i + k) % 3}.wav`)} volume={0.32} /></Sequence>))}
+    {sfx && STARTS9.slice(1).map((a, i) => <Sequence key={`cut${i}`} from={a - 9} durationInFrames={30} layout="none"><Html5Audio src={staticFile(`sfx/mswoosh${i % 2}.wav`)} volume={0.14} /></Sequence>)}
     {sfx && En.endsfx.filter((c) => c.s === 'pop').map((c, k) => <Sequence key={`e${k}`} from={STARTS9[BEATS9.length - 1] + c.at} durationInFrames={20} layout="none"><Html5Audio src={staticFile(`sfx/mpop${k % 3}.wav`)} volume={0.22} /></Sequence>)}
   </AbsoluteFill>
 );

@@ -4,7 +4,7 @@ import {useF} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog, spr, S, lerp} from '../theme/motion';
 import {Cursor, Ripple} from '../components/kit/Anim';
-import {BrandField, Mist, Words, Center, Drift, glow, BRAND, GR, CY, SKY, INK} from './Look';
+import {BrandField, Mist, Words, Center, Drift, glow, BRAND, GR, CY, SKY, INK, Pop, Swish} from './Look';
 import {Dial} from './Dial';
 
 // The Site Audit section: the second key feature after "everything in one place".
@@ -25,6 +25,7 @@ export const AuditOpen: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <BrandField seed={5} />
+      <Swish at={4} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 90, zIndex: 5}}>
         <Words parts={[['Our own'], ['site audit tool.', false]]} at={2} size={84} color={W} />
         <div style={{height: 10}} />
@@ -66,6 +67,7 @@ export const Dials: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.7} />
+      <Swish at={2} /><Swish at={10} k={1} v={0.12} /><Pop at={62} v={0.2} /><Pop at={66} k={1} v={0.2} />
       <Drift dur={dur} z={0.05}>
         {D.map(([v, label, sub, side], i) => {
           const q = spr(f, 2 + i * 5, S.soft);
@@ -92,6 +94,7 @@ export const Issues: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.5} />
+      {[6, 10, 14].map((t, i) => <Pop key={i} at={t} k={i} v={0.2} />)}{CATS.map((_, i) => <Pop key={`c${i}`} at={24 + i * 5} k={i} v={0.12} />)}
       <div style={{position: 'absolute', left: 0, right: 0, top: 70, zIndex: 5}}><Words parts={[['Every issue,'], ['sorted and explained.', true]]} at={2} size={64} /></div>
       <Tilt rx={lerp(turn, 22, 14)} ry={lerp(turn, 14, 6)} cy={640}>
         <div style={{position: 'absolute', left: 200, top: 230, display: 'flex', flexDirection: 'column', gap: 18}}>
@@ -139,6 +142,7 @@ export const Review: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <BrandField seed={6} />
+      <Swish at={8} /><Swish at={30} k={1} v={0.12} /><Swish at={60} v={0.12} /><Pop at={CT} v={0.26} />
       <div style={{position: 'absolute', left: 120, top: 330, width: 640, zIndex: 5}}>
         <Words parts={[['An AI expert\nreview, every month.']]} at={2} size={74} color={W} align="left" />
         <div style={{height: 22}} />
@@ -180,6 +184,7 @@ export const Cancel: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.6} />
+      <Swish at={6} /><Swish at={40} k={1} v={0.12} /><Pop at={54} v={0.26} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 130, zIndex: 5}}>
         <Words parts={[['Save'], ['$2,000+', true], ['a year']]} at={2} size={120} />
         <div style={{height: 8}} />
