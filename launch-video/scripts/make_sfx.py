@@ -145,3 +145,17 @@ def cash():
     save('cash', y)
 cash()
 print('ok', sorted(os.listdir(OUT)))
+
+# muffled pop (Dat, 9 Nov): soft, low and dull, like a tap through felt; three variants
+def mpop(k):
+    kr = np.random.default_rng(300 + k)
+    tt = t(0.16); n = len(tt)
+    f0 = 150 + k * 18
+    ph = 2 * np.pi * np.cumsum(f0 * (0.6 + 0.4 * np.exp(-tt * 70))) / SR
+    body = np.sin(ph) * np.exp(-tt * 38)
+    air = bandsweep(kr.standard_normal(n) * np.exp(-tt * 260), 520, 520, q=0.7) * 0.35
+    y = np.tanh((body + air) * 1.2) * np.minimum(1, np.linspace(0, 60, n))
+    y = np.convolve(y, np.ones(24) / 24, mode='same')  # dull the top end
+    save(f'mpop{k}', y)
+for k in range(3):
+    mpop(k)

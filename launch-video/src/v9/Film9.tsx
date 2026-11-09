@@ -1,46 +1,57 @@
 import React from 'react';
-import {AbsoluteFill, Html5Audio, Sequence, staticFile, useCurrentFrame, interpolate} from 'remotion';
+import {AbsoluteFill, Html5Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {FrameOffset} from '../frame';
+import {E} from '../theme/motion';
 import * as V from './Scenes';
 import * as En from '../v4/End';
 
-// v9 draft order (storyboard): problem, introduction, solution, value, all in one, close.
-export const BEATS9: [number, React.FC<{dur: number}>, string][] = [
-  [2.6, V.Stat, 'statistic'], [4.4, V.Platforms, '7 platforms'], [3.4, V.Fragmented, 'fragmented'], [4.6, V.Routine, 'by hand'],
-  [3.0, V.Outlines, 'consuming time'], [3.4, V.Simpler, 'simpler'], [3.6, V.Intro, 'introducing'], [4.4, V.Home, 'home'],
-  [2.6, V.Decide, 'decisions'], [4.4, V.Carousel, 'features'], [5.0, V.Trends, 'trends'], [5.0, V.Report, 'ai report'],
-  [4.6, V.Saving, 'saving'], [4.0, V.AllInOne, 'all in one'], [3.6, V.Tiles, 'tiles'], [11.4, En.End, 'bento and logo'],
+// v9 film: the animation keeps its own timing; the voice-over is placed on it afterwards (outside Remotion).
+export const BEATS9: [number, React.FC<{dur: number}>, string, number[]][] = [
+  // [seconds, scene, name, frames where a muffled pop marks something appearing]
+  [2.6, V.Stat, 'statistic', [4, 34]], [4.4, V.Platforms, '7 platforms', [2, 30, 36, 42, 48]], [3.4, V.Fragmented, 'fragmented', [6, 46]], [4.6, V.Routine, 'by hand', [6, 18, 30, 42, 96]],
+  [3.0, V.Outlines, 'consuming time', [20]], [3.4, V.Simpler, 'simpler', [4, 46]], [3.6, V.Intro, 'introducing', [2, 36]], [4.4, V.Home, 'home', [4, 44, 56, 72]],
+  [2.6, V.Decide, 'decisions', [2, 30]], [4.4, V.Carousel, 'features', [10, 26, 42, 58, 74, 90, 106, 122]], [5.0, V.Trends, 'trends', [2, 70]], [5.0, V.Report, 'ai report', [6, 40]],
+  [4.6, V.Saving, 'saving', [2, 42]], [4.0, V.AllInOne, 'all in one', [2, 30, 60, 90]], [3.6, V.Tiles, 'tiles', [4, 8, 12, 16]], [11.4, En.End, 'bento and logo', []],
 ];
-const X = 8; // soft dissolve frames at each cut
-const Fade: React.FC<{len: number; first: boolean; children: React.ReactNode}> = ({len, first, children}) => {
-  const f = useCurrentFrame();
-  const i = first ? 1 : interpolate(f, [0, X], [0, 1], {extrapolateRight: 'clamp'});
-  const o = interpolate(f, [len - X, len], [1, 0], {extrapolateLeft: 'clamp'});
-  return <AbsoluteFill style={{opacity: Math.min(i, o), filter: i < 1 || o < 1 ? `blur(${(1 - Math.min(i, o)) * 12}px)` : undefined}}>{children}</AbsoluteFill>;
-};
+// camera moves between scenes, mixed: push in, pan, pull out, rise...
+type K = 'pushIn' | 'pullOut' | 'left' | 'right' | 'up' | 'down';
+const KINDS: K[] = ['pushIn', 'left', 'up', 'pullOut', 'right', 'pushIn', 'pushIn', 'up', 'left', 'pushIn', 'right', 'down', 'pullOut', 'left', 'pushIn'];
+const P = 8; // frames each side of a cut
 let acc = 0;
 export const STARTS9 = BEATS9.map(([d]) => {const a = acc; acc += Math.round(d * 30); return a;});
 export const TOTAL9 = acc;
-type Cue = {at: number; s: string; v?: number};
-// sound effects only; voice and music are mixed outside Remotion
-const CUES: Record<string, Cue[]> = {
-  '7 platforms': [0, 3, 6, 9, 12, 15, 18].map((d) => ({at: 30 + d, s: 'pop_hi', v: 0.12})),
-  'by hand': [0, 6, 12, 18, 24, 30, 36].map((d) => ({at: 6 + d, s: 'tick', v: 0.1})),
-  simpler: [{at: 40, s: 'shimmer', v: 0.18}], introducing: [{at: 36, s: 'pop', v: 0.2}],
-  trends: [{at: 70, s: 'pop_hi', v: 0.15}], 'ai report': [{at: 40, s: 'shimmer', v: 0.18}], saving: [{at: 40, s: 'pop', v: 0.15}],
-  tiles: [4, 8, 12, 16].map((at) => ({at, s: 'pop', v: 0.15})), 'bento and logo': En.endsfx,
+const ease = (x: number) => E.inOut(Math.max(0, Math.min(1, x)));
+const Move: React.FC<{len: number; inK: K | null; outK: K | null; children: React.ReactNode}> = ({len, inK, outK, children}) => {
+  const f = useCurrentFrame();
+  const i = inK ? 1 - ease(f / (2 * P)) : 0; // 1 at the start of the arrival, 0 once settled
+  const o = outK ? ease((f - (len - 2 * P)) / (2 * P)) : 0;
+  let tx = 0, ty = 0, sc = 1, op = 1, bl = 0;
+  const apply = (k: K, e: number, leaving: boolean) => {
+    const d = leaving ? -1 : 1;
+    if (k === 'pushIn') {sc *= leaving ? 1 + e * 1.3 : 1 - e * 0.4; op *= 1 - e * (leaving ? 1 : 0.6); bl += e * 16;}
+    if (k === 'pullOut') {sc *= leaving ? 1 - e * 0.45 : 1 + e * 0.9; op *= 1 - e * (leaving ? 1 : 0.6); bl += e * 16;}
+    if (k === 'left') {tx += d * e * 1500; bl += e * 22; op *= 1 - e * 0.35;}
+    if (k === 'right') {tx -= d * e * 1500; bl += e * 22; op *= 1 - e * 0.35;}
+    if (k === 'up') {ty += d * e * 1000; bl += e * 18; op *= 1 - e * 0.35;}
+    if (k === 'down') {ty -= d * e * 1000; bl += e * 18; op *= 1 - e * 0.35;}
+  };
+  if (inK) apply(inK, i, false);
+  if (outK) apply(outK, o, true);
+  return <AbsoluteFill style={{transform: `translate(${tx}px, ${ty}px) scale(${sc})`, opacity: op, filter: bl > 0.4 ? `blur(${bl}px)` : undefined}}>{children}</AbsoluteFill>;
 };
 export const Film9: React.FC<{sfx?: boolean}> = ({sfx = true}) => (
   <AbsoluteFill style={{background: '#f3f6f6'}}>
     {BEATS9.map(([d, C, n], i) => {
       const dur = Math.round(d * 30);
+      const pre = i ? P : 0, post = i < BEATS9.length - 1 ? P : 0;
+      const len = dur + pre + post;
       return (
-        <Sequence key={i} name={n} from={STARTS9[i]} durationInFrames={dur + X}>
-          <Fade len={dur + X} first={i === 0}><FrameOffset.Provider value={0}><C dur={dur} /></FrameOffset.Provider></Fade>
+        <Sequence key={i} name={n} from={STARTS9[i] - pre} durationInFrames={len}>
+          <Move len={len} inK={i ? KINDS[i - 1] : null} outK={post ? KINDS[i] : null}><FrameOffset.Provider value={pre}><C dur={dur} /></FrameOffset.Provider></Move>
         </Sequence>
       );
     })}
-    {sfx && STARTS9.slice(1).map((a, i) => <Sequence key={`c${i}`} from={a - 6} durationInFrames={40} layout="none"><Html5Audio src={staticFile('sfx/swoosh_soft.wav')} volume={0.1} /></Sequence>)}
-    {sfx && BEATS9.flatMap(([, , n], i) => (CUES[n] ?? []).map((c, k) => <Sequence key={`${i}-${k}`} from={STARTS9[i] + c.at} durationInFrames={90} layout="none"><Html5Audio src={staticFile(`sfx/${c.s}.wav`)} volume={(c.v ?? 0.3) * 0.6} /></Sequence>))}
+    {sfx && BEATS9.flatMap(([, , , pops], i) => pops.map((at, k) => <Sequence key={`${i}-${k}`} from={STARTS9[i] + at} durationInFrames={20} layout="none"><Html5Audio src={staticFile(`sfx/mpop${(i + k) % 3}.wav`)} volume={0.32} /></Sequence>))}
+    {sfx && En.endsfx.filter((c) => c.s === 'pop').map((c, k) => <Sequence key={`e${k}`} from={STARTS9[15] + c.at} durationInFrames={20} layout="none"><Html5Audio src={staticFile(`sfx/mpop${k % 3}.wav`)} volume={0.22} /></Sequence>)}
   </AbsoluteFill>
 );

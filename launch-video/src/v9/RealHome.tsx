@@ -4,7 +4,7 @@ import {useF} from '../frame';
 import {prog, E, lerp} from '../theme/motion';
 import {C} from '../theme/tokens';
 import {F} from '../theme/fonts';
-const GLASS_BG = 'radial-gradient(700px 480px at 88% 6%, rgba(0,185,239,.22), transparent 70%), radial-gradient(640px 460px at 6% 96%, rgba(127,188,66,.2), transparent 70%), linear-gradient(150deg, rgba(255,255,255,.62), rgba(235,248,253,.38))';
+const GLASS_BG = 'linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.42)), linear-gradient(135deg, rgba(127,188,66,.22) 0%, rgba(0,185,239,.22) 45%, rgba(112,203,243,.22) 100%)';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
 // (marketing-dashboard-clone/docs/mockups/home-redesign/v3.html). Native size 1600 x 900; figures are the mockup's.
@@ -13,10 +13,12 @@ const TEAL = '#055e63', INK = '#10242a', MUTE = '#6b7f84', LINE = '#e6eef0', GRE
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 const Pill: React.FC<{up: boolean; v: string}> = ({up, v}) => <span style={{fontSize: 12, fontWeight: 700, color: up ? GREEN : RED, background: up ? 'rgba(127,188,66,.16)' : 'rgba(179,38,30,.1)', borderRadius: 99, padding: '3px 8px', whiteSpace: 'nowrap'}}>{up ? '▲' : '▼'} {v}</span>;
 const Arrow = () => <span style={{width: 26, height: 26, borderRadius: 99, border: `1px solid ${LINE}`, display: 'grid', placeItems: 'center', color: MUTE, fontSize: 14}}>→</span>;
-const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; bg?: string}> = ({x, y, w, h, children, at, bg = 'linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.62))'}) => {
+const LiftCtx = React.createContext(0);
+const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; z?: number; bg?: string}> = ({x, y, w, h, children, at, z = 60, bg = 'linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.62))'}) => {
   const f = useF();
   const p = prog(f, at, 18, E.snappy);
-  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: '0 0 0 1.5px rgba(255,255,255,.95), 0 14px 34px -16px rgba(0,110,150,.3)', backdropFilter: 'blur(14px)', padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px)`}}>{children}</div>;
+  const lift = React.useContext(LiftCtx);
+  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: `0 0 0 1.5px rgba(255,255,255,.95), 0 ${14 + lift * z * 0.5}px ${34 + lift * z}px -16px rgba(0,110,150,${0.3 + lift * 0.15})`, padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px) translateZ(${lift * z}px)`}}>{children}</div>;
 };
 const NAV: [string, [string, boolean?, string?][]][] = [
   ['OVERVIEW', [['Home', true], ['Insights']]],
@@ -29,7 +31,7 @@ const NAV: [string, [string, boolean?, string?][]][] = [
 const IMP = [62, 58, 70, 64, 76, 60, 55, 66, 72, 58, 64, 60, 70, 82, 230, 120, 66, 60, 72, 64, 58, 62, 68, 60, 64, 70, 42, 36, 38, 40];
 const ENG = [44, 52, 40, 58, 46, 54, 60, 50, 64, 48, 70, 56, 100, 62, 58, 66];
 
-export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
+export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift = 0}) => {
   const f = useF() - at;
   const n = prog(f, 14, 40, E.snappy);
   const draw = prog(f, 12, 46, E.inOut);
@@ -37,9 +39,9 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
   const solid = IMP.slice(0, 27).map((v, i) => `${i ? 'L' : 'M'}${hx(i)},${hy(v)}`).join(' ');
   const dotted = IMP.slice(26).map((v, i) => `${i ? 'L' : 'M'}${hx(26 + i)},${hy(v)}`).join(' ');
   return (
-    <div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, background: GLASS_BG, fontFamily: F.text, color: INK, overflow: 'hidden'}}>
+    <LiftCtx.Provider value={lift}><div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, borderRadius: 26, background: GLASS_BG, fontFamily: F.text, color: INK, transformStyle: 'preserve-3d', boxShadow: '0 0 0 2px rgba(255,255,255,.95)'}}>
       {/* sidebar */}
-      <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 244, background: 'rgba(255,255,255,.42)', borderRight: '1px solid rgba(255,255,255,.9)', padding: '16px 10px'}}>
+      <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 244, borderRadius: '26px 0 0 26px', background: 'rgba(255,255,255,.5)', borderRight: '1px solid rgba(255,255,255,.9)', padding: '16px 10px'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 8, padding: '0 6px 14px'}}>
           <Img src={staticFile('logo_loop.svg')} style={{width: 24, height: 24, objectFit: 'contain'}} />
           <div><div style={{fontSize: 14, fontWeight: 700}}>Archetype</div><div style={{fontSize: 11, color: MUTE}}>Marketing Dashboard</div></div>
@@ -68,7 +70,7 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       <div style={{position: 'absolute', left: 278, top: 82, fontSize: 12.5, fontWeight: 600, color: MUTE}}>Key numbers</div>
 
       {/* hero: total impressions */}
-      <Card x={274} y={110} w={640} h={640} at={4} bg={LOOP}>
+      <Card x={274} y={110} w={640} h={640} at={4} z={170} bg={LOOP}>
         <div style={{display: 'flex', justifyContent: 'space-between', color: '#fff'}}><span style={{fontSize: 19, fontWeight: 700}}>Total impressions</span><span style={{width: 26, height: 26, borderRadius: 99, background: 'rgba(255,255,255,.25)', display: 'grid', placeItems: 'center'}}>→</span></div>
         <div style={{fontFamily: F.display, fontSize: 66, fontWeight: 750, color: '#fff', letterSpacing: '-0.03em', marginTop: 14, fontVariantNumeric: 'tabular-nums'}}>{fmt(164715 * n)}</div>
         <span style={{display: 'inline-block', marginTop: 6, fontSize: 12.5, fontWeight: 700, color: '#fff', background: 'rgba(255,255,255,.22)', borderRadius: 99, padding: '4px 10px'}}>▼ 5.9% vs previous 30 days</span>
@@ -88,7 +90,7 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       </Card>
 
       {/* total engagements */}
-      <Card x={930} y={110} w={316} h={312} at={9}>
+      <Card x={930} y={110} w={316} h={312} at={9} z={110}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>Total engagements</span><Arrow /></div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{fmt(4916 * n)}</span><Pill up v="32.0%" /></div>
         <div style={{fontSize: 12, color: MUTE}}>vs previous 30 days</div>
@@ -99,7 +101,7 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       </Card>
 
       {/* social followers */}
-      <Card x={1262} y={110} w={316} h={312} at={13}>
+      <Card x={1262} y={110} w={316} h={312} at={13} z={140}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>Social followers</span><Arrow /></div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{fmt(60318 * n)}</span><Pill up v="1.2%" /></div>
         <div style={{fontSize: 12, color: MUTE}}>vs previous 30 days</div>
@@ -117,7 +119,7 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       </Card>
 
       {/* PR articles */}
-      <Card x={930} y={438} w={316} h={312} at={17}>
+      <Card x={930} y={438} w={316} h={312} at={17} z={130}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>PR articles</span><Arrow /></div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{Math.round(14 * n)}</span><Pill up v="55.6%" /></div>
         <div style={{fontSize: 12, color: MUTE}}>vs 9 in the previous 30 days</div>
@@ -129,7 +131,7 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       </Card>
 
       {/* this week */}
-      <Card x={1262} y={438} w={316} h={312} at={21}>
+      <Card x={1262} y={438} w={316} h={312} at={21} z={95}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{display: 'flex', alignItems: 'center', gap: 8, fontSize: 17, fontWeight: 700}}><span style={{width: 26, height: 26, borderRadius: 99, background: LOOP}} />This week</span><Arrow /></div>
         <div style={{fontSize: 14, fontWeight: 700, lineHeight: 1.35, marginTop: 14}}>Website traffic nearly doubled, Thursday 8 Oct was the standout day</div>
         <div style={{position: 'absolute', left: 22, right: 22, top: 176, display: 'flex', gap: 8}}>
@@ -139,13 +141,13 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
       </Card>
 
       {/* start of the Every platform section, below the fold */}
-      <Card x={274} y={770} w={1304} h={200} at={26}>
+      <Card x={274} y={770} w={1304} h={112} at={26} z={60}>
         <div style={{display: 'flex', alignItems: 'baseline', gap: 10}}><span style={{fontSize: 17, fontWeight: 700}}>Every platform</span><span style={{fontSize: 12, color: MUTE}}>the last 30 days · each platform in its own words</span></div>
         <div style={{display: 'flex', gap: 12, marginTop: 14}}>
           {[['LinkedIn', '47,415', '#0a66c2'], ['Facebook', '37,951', '#1877f2'], ['Instagram', '401', '#e1306c'], ['YouTube', '2,342', '#ff0000'], ['Website', '13,246', TEAL], ['Search', '77,699', '#00768f']].map(([a, b, c]) => <div key={a} style={{flex: 1, borderRadius: 14, boxShadow: `0 0 0 1px ${LINE}`, padding: '12px 14px'}}><div style={{display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, fontWeight: 700}}><span style={{width: 24, height: 24, borderRadius: 7, background: c}} />{a}</div><div style={{fontSize: 22, fontWeight: 750, marginTop: 10}}>{b}</div></div>)}
         </div>
       </Card>
       <span style={{display: 'none'}}>{lerp(0, 0, 0)}{C.ink}</span>
-    </div>
+    </div></LiftCtx.Provider>
   );
 };
