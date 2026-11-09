@@ -1,11 +1,12 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {Bare} from '../../frame';
 
 // One palette only: the Archetype brand gradient (green #7fbc42, cyan #00b9ef, light blue #70cbf3) and white.
 // Variety comes from pattern and texture, never from new colours or dark grounds (Dat, 5 Nov).
 export type GradKind =
   | 'silk' | 'fluted' | 'mesh' | 'waves' | 'dots' | 'topo' | 'grain' | 'grid3d' | 'bokeh' | 'lines' | 'glass' | 'rings' // on the gradient
-  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings' | 'glow' | 'field' | 'ai'; // on white (field is the brand field)
+  | 'pearl' | 'sunrise' | 'liquid' | 'whitegrid' | 'whiterings' | 'glow' | 'field' | 'ai' | 'haze' | 'haze2' | 'haze3' | 'night' | 'horizon'; // on white (field is the brand field)
 const WHITE: GradKind[] = ['pearl', 'sunrise', 'liquid', 'whitegrid', 'whiterings', 'glow', 'ai'];
 export const textOn = (k: GradKind): 'grad' | 'white' => (WHITE.includes(k) ? 'white' : 'grad');
 
@@ -22,7 +23,28 @@ const Grain: React.FC<{o: number; freq?: number}> = ({o, freq = 0.85}) => {
   );
 };
 
-export const Ground: React.FC<{kind: GradKind; t?: number}> = ({kind, t: tt}) => {
+// v6 look (second reference): every ground becomes either a light grainy haze or a deep night lit by brand aurora.
+const REMAP: Partial<Record<GradKind, GradKind>> = {
+  glow: 'haze', pearl: 'haze2', sunrise: 'haze3', liquid: 'haze2', whitegrid: 'haze', whiterings: 'haze3',
+  field: 'night', dots: 'night', topo: 'night', grain: 'night', grid3d: 'night', bokeh: 'night', lines: 'night', waves: 'night', mesh: 'night', silk: 'night', fluted: 'night', glass: 'night', rings: 'night',
+};
+// four-point sparkles that twinkle, placed deterministically
+export const Sparkles: React.FC<{t: number; n: number; dark: boolean}> = ({t, n, dark}) => (
+  <AbsoluteFill>
+    {Array.from({length: n}).map((_, i) => {
+      const tw = Math.max(0, Math.sin(t * 1.4 + i * 2.1));
+      const x = (i * 337 + 140) % 1820 + 50, y = (i * 211 + 90) % 980 + 40, sz = 10 + (i % 3) * 7;
+      return (
+        <svg key={i} width={sz * 2} height={sz * 2} viewBox="-1 -1 2 2" style={{position: 'absolute', left: x, top: y, opacity: tw * (dark ? 0.9 : 0.55), transform: `rotate(${(i % 2) * 45}deg) scale(${0.6 + tw * 0.5})`}}>
+          <path d="M0,-1 Q0.08,-0.08 1,0 Q0.08,0.08 0,1 Q-0.08,0.08 -1,0 Q-0.08,-0.08 0,-1Z" fill={dark ? (i % 2 ? '#a8e4ff' : '#c6f0a0') : (i % 2 ? '#00b9ef' : '#7fbc42')} />
+        </svg>
+      );
+    })}
+  </AbsoluteFill>
+);
+export const Ground: React.FC<{kind: GradKind; t?: number}> = (p) => (React.useContext(Bare) ? null : <Ground0 {...p} />);
+const Ground0: React.FC<{kind: GradKind; t?: number}> = ({kind: k0, t: tt}) => {
+  const kind = REMAP[k0] ?? k0;
   const f = useCurrentFrame();
   const t = (tt ?? f) / 30, s = Math.sin, c = Math.cos;
   const base = (deg: number) => <AbsoluteFill style={{background: ramp(deg + s(t * 0.3) * 6)}} />;
@@ -167,6 +189,31 @@ export const Ground: React.FC<{kind: GradKind; t?: number}> = ({kind, t: tt}) =>
           <AbsoluteFill style={{background: `${b(18 + s(t * .4) * 8, 85, 1100, 700, 'rgba(127,188,66,.75)', 70)}, ${b(85, 0, 900, 500, 'rgba(255,255,255,.35)', 70)}, ${b(60 + c(t * .3) * 10, 110, 1200, 600, 'rgba(0,140,220,.6)', 70)}`}} />
         </AbsoluteFill>
       );
+    case 'haze': case 'haze2': case 'haze3': { // light: white, grainy, pastel brand haze breathing at the edges, a slow sheen
+      const v = kind === 'haze' ? 0 : kind === 'haze2' ? 1 : 2;
+      const sweep = ((t * 0.06 + v * 0.3) % 1.4) - 0.2;
+      return (
+        <AbsoluteFill style={{background: '#fdfeff', overflow: 'hidden'}}>
+          <AbsoluteFill style={{background: `${b([88, 12, 80][v] + s(t * .25) * 5, [-5, 105, 110][v], 1100, 750, 'rgba(0,185,239,.30)', 65)}, ${b([5, 95, 10][v], [100, 0, 105][v] + c(t * .2) * 5, 1000, 700, 'rgba(127,188,66,.22)', 65)}, ${b(50 + s(t * .18) * 15, 50, 1300, 800, 'rgba(112,203,243,.16)', 70)}`}} />
+          <AbsoluteFill style={{background: `linear-gradient(115deg, transparent ${sweep * 100 - 12}%, rgba(255,255,255,.55) ${sweep * 100}%, transparent ${sweep * 100 + 12}%)`}} />
+          <Sparkles t={t} n={6} dark={false} />
+          <Grain o={0.05} freq={0.9} />
+        </AbsoluteFill>
+      );
+    }
+    case 'night': case 'horizon': { // dark: deep teal night, aurora of the brand colours drifting, a green light streak, sparkles
+      return (
+        <AbsoluteFill style={{background: 'linear-gradient(180deg, #021015 0%, #04212a 55%, #062f3a 100%)', overflow: 'hidden'}}>
+          <AbsoluteFill style={{background: `${b(-5 + s(t * .3) * 6, 15, 900, 900, 'rgba(0,185,239,.55)', 65)}, ${b(105 + c(t * .25) * 5, 30, 900, 1000, 'rgba(112,203,243,.4)', 65)}, ${b(55 + s(t * .2) * 10, 115, 1400, 600, 'rgba(10,139,132,.55)', 65)}`}} />
+          <div style={{position: 'absolute', left: `${30 + s(t * .22) * 10}%`, top: '-20%', width: 260, height: 1500, background: 'linear-gradient(180deg, transparent, rgba(127,188,66,.55), rgba(0,185,239,.25), transparent)', filter: 'blur(50px)', transform: `rotate(${32 + s(t * .3) * 6}deg)`}} />
+          {kind === 'horizon' && <>
+            <div style={{position: 'absolute', left: -480, top: 620, width: 2880, height: 2880, borderRadius: '50%', background: 'radial-gradient(circle at 50% 4%, #0a3a44 0%, #021015 25%)', boxShadow: '0 -30px 120px 10px rgba(0,185,239,.55), 0 -6px 30px 2px rgba(127,188,66,.6), inset 0 6px 14px rgba(112,203,243,.9)'}} />
+          </>}
+          <Sparkles t={t} n={10} dark />
+          <Grain o={0.1} freq={0.9} />
+        </AbsoluteFill>
+      );
+    }
     case 'pearl':
       return <AbsoluteFill style={{background: `${b(100, 0, 1200, 900, 'rgba(0,185,239,.45)')}, ${b(0, 100, 1100, 900, 'rgba(127,188,66,.42)')}, #fbfdfd`}}><Grain o={0.03} /></AbsoluteFill>;
     case 'sunrise':
