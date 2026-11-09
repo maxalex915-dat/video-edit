@@ -10,7 +10,7 @@ import {FIXES, PORTFOLIO, REQ_MONTHS, SERIES, SITE} from '../../data/demo';
 const hair = `1px solid ${C.rule}`;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 export const Card: React.FC<{w: number; h?: number; children: React.ReactNode; style?: React.CSSProperties; pad?: number}> = ({w, h, children, style, pad = 28}) => (
-  <div style={{width: w, height: h, background: 'linear-gradient(160deg, rgba(255,255,255,.88), rgba(255,255,255,.7))', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderRadius: 26, border: '1.5px solid rgba(255,255,255,.95)', padding: pad, boxSizing: 'border-box', fontFamily: F.text, color: C.ink, boxShadow: '0 0 0 1.5px rgba(255,255,255,.85), 0 2px 4px rgba(5,60,63,.05), 0 30px 70px -24px rgba(0,120,160,.35), 0 0 60px -10px rgba(0,185,239,.18)', ...style}}>{children}</div>
+  <div style={{width: w, height: h, background: '#fff', borderRadius: 26, border: hair, padding: pad, boxSizing: 'border-box', fontFamily: F.text, color: C.ink, boxShadow: '0 2px 4px rgba(5,60,63,.05), 0 30px 70px -24px rgba(5,60,63,.28)', ...style}}>{children}</div>
 );
 const Title: React.FC<{children: React.ReactNode; sub?: string; icon?: React.ReactNode}> = ({children, sub, icon}) => (
   <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18}}>{icon}<div><div style={{fontSize: 22, fontWeight: 700}}>{children}</div>{sub && <div style={{fontSize: 14.5, color: C.ink3, marginTop: 2}}>{sub}</div>}</div></div>

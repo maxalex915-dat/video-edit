@@ -1,6 +1,6 @@
 import React from 'react';
 import {interpolate} from 'remotion';
-import {useF as useCurrentFrame, Bare} from '../../frame';
+import {useF as useCurrentFrame} from '../../frame';
 import {C} from '../../theme/tokens';
 import {F} from '../../theme/fonts';
 import {E, prog, spr, S} from '../../theme/motion';
@@ -38,22 +38,14 @@ export const Words: React.FC<{text: string; at: number; style: React.CSSProperti
     </div>
   );
 };
-type HP = {a: string; b?: string; on: On; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'; at?: number; out?: number};
-export const Headline: React.FC<HP> = (p) => (React.useContext(Bare) ? null : <Headline0 {...p} />);
-const Headline0: React.FC<HP> = ({a, b, on, size = 96, style, align = 'left', at = 0}) => {
-  // v6: typed with a caret, second line in the brand ramp
-  const f = useCurrentFrame();
-  const shown = Math.max(0, Math.floor(((f - at) / 30) * 24));
-  const la = a.slice(0, shown), lb = b ? b.slice(0, Math.max(0, shown - a.length)) : '';
-  const done = shown >= a.length + (b ? b.length : 0);
-  const caret = (!done || f - at - ((a.length + (b?.length ?? 0)) / 24) * 30 < 22) && Math.floor(f / 8) % 2 === 0;
-  const white = {color: '#fff', textShadow: '0 2px 18px rgba(0,30,40,.35)'};
-  const night = {backgroundImage: 'linear-gradient(95deg, #a6e35f 0%, #3fd0ff 55%, #a8e4ff 100%)', WebkitBackgroundClip: 'text' as const, color: 'transparent', paddingBottom: '0.06em'};
-  const Caret = () => <span style={{display: 'inline-block', width: Math.max(3, size * 0.045), height: size * 0.95, marginLeft: 4, verticalAlign: 'middle', background: on === 'grad' ? '#fff' : C.ink, opacity: caret ? 1 : 0}} />;
+export const Headline: React.FC<{a: string; b?: string; on: On; size?: number; style?: React.CSSProperties; align?: 'left' | 'center'; at?: number; out?: number}> = ({a, b, on, size = 96, style, align = 'left', at = 0}) => {
+  const white = {color: '#fff', textShadow: '0 2px 18px rgba(0,50,70,.3)'};
+  const n = a.split(' ').length;
+  const just = align === 'center' ? 'center' : 'flex-start';
   return (
-    <div style={{position: 'absolute', fontFamily: F.display, fontWeight: 600, fontSize: size, lineHeight: 1.05, letterSpacing: '-0.035em', textAlign: align, ...style}}>
-      <div style={on === 'grad' ? white : {color: C.ink}}>{la}{(!b || shown <= a.length) && f >= at && <Caret />}</div>
-      {b && <div style={{minHeight: size * 1.05}}><span style={on === 'grad' ? night : {backgroundImage: GRAD_TEXT, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.06em'}}>{lb}</span>{shown > a.length && <Caret />}</div>}
+    <div style={{position: 'absolute', fontFamily: F.display, fontWeight: 700, fontSize: size, lineHeight: 1.03, letterSpacing: '-0.04em', textAlign: align, ...style}}>
+      <Words text={a} at={at} size={size} style={{justifyContent: just, ...(on === 'grad' ? white : {color: C.ink})}} />
+      {b && <Words text={b} at={at + n * 3 + 2} size={size} grad={on === 'white'} style={{justifyContent: just, ...(on === 'grad' ? {...white, color: 'rgba(255,255,255,.93)'} : {})}} />}
     </div>
   );
 };

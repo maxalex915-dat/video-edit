@@ -21,9 +21,9 @@ export const Globe: React.FC<{lon0: number; lat0?: number; R: number; arcs?: num
   const order = [...OFFICES].sort((a, b) => a[2] - b[2]).map((o) => o[0]);
   return (
     <svg width={R * 2 + 600} height={R * 2 + 200} viewBox={`${-R - 300} ${-R - 100} ${R * 2 + 600} ${R * 2 + 200}`}>
-      <defs><radialGradient id="glb" cx="38%" cy="32%"><stop offset="0" stopColor="#ffffff" stopOpacity=".9" /><stop offset="1" stopColor="#bfeafa" stopOpacity=".55" /></radialGradient></defs>
-      <circle r={R} fill="url(#glb)" stroke="rgba(0,160,210,.55)" strokeWidth="2" />
-      {grat.map((d, i) => <path key={i} d={d} fill="none" stroke="rgba(0,120,160,.18)" strokeWidth="1.2" />)}
+      <defs><radialGradient id="glb" cx="38%" cy="32%"><stop offset="0" stopColor="#fff" stopOpacity=".3" /><stop offset="1" stopColor="#fff" stopOpacity=".06" /></radialGradient></defs>
+      <circle r={R} fill="url(#glb)" stroke="rgba(255,255,255,.85)" strokeWidth="2" />
+      {grat.map((d, i) => <path key={i} d={d} fill="none" stroke="rgba(255,255,255,.32)" strokeWidth="1.2" />)}
       {OFFICES.map(([n, la, lo]) => {
         const p = proj(la, lo, lat0, lon0, R);
         const lit = order.indexOf(n) < pins;
@@ -32,9 +32,9 @@ export const Globe: React.FC<{lon0: number; lat0?: number; R: number; arcs?: num
         const big = n === 'Vietnam' || n === hl;
         return (
           <g key={n}>
-            {n !== 'Vietnam' && arcs > 0 && <path d={`M${p.x},${p.y} Q${mx},${my} ${vn.x},${vn.y}`} fill="none" stroke="#00b9ef" strokeWidth="2.2" strokeDasharray={`${arcs * 700} 3000`} opacity=".85" />}
-            <circle cx={p.x} cy={p.y} r={big ? 10 : 6} fill={big ? C.teal : '#7fbc42'} stroke="#fff" strokeWidth="2.5" />
-            {(labels.includes(n) || n === hl) && <text x={p.x + 14} y={p.y + 6} fontFamily="Inter" fontSize="19" fontWeight="650" fill="#10242a">{n}</text>}
+            {n !== 'Vietnam' && arcs > 0 && <path d={`M${p.x},${p.y} Q${mx},${my} ${vn.x},${vn.y}`} fill="none" stroke="#fff" strokeWidth="2.2" strokeDasharray={`${arcs * 700} 3000`} opacity=".85" />}
+            <circle cx={p.x} cy={p.y} r={big ? 10 : 6} fill={big ? C.teal : '#fff'} stroke="#fff" strokeWidth="2.5" />
+            {(labels.includes(n) || n === hl) && <text x={p.x + 14} y={p.y + 6} fontFamily="Inter" fontSize="19" fontWeight="650" fill="#fff">{n}</text>}
           </g>
         );
       })}

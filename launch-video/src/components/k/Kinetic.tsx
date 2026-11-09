@@ -1,13 +1,12 @@
 import React from 'react';
 import {AbsoluteFill, interpolate} from 'remotion';
-import {useF, Bare} from '../../frame';
+import {useF} from '../../frame';
 import {C} from '../../theme/tokens';
 import {F} from '../../theme/fonts';
 import {E, prog} from '../../theme/motion';
 
 // Kinetic type, modelled on the reference film: centred, medium weight, one accent word in the brand ramp.
 const cl = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
-export const ACCENT_NIGHT: React.CSSProperties = {backgroundImage: 'linear-gradient(95deg, #a6e35f 0%, #3fd0ff 55%, #a8e4ff 100%)', WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.08em'};
 export const ACCENT: React.CSSProperties = {backgroundImage: 'linear-gradient(95deg, #6cb434 0%, #00aee6 60%, #3fb3ea 100%)', WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.08em'};
 export type Tone = 'ink' | 'white';
 export const TYPE = (size = 72, tone: Tone = 'ink'): React.CSSProperties => ({fontFamily: F.display, fontWeight: 500, fontSize: size, letterSpacing: '-0.025em', lineHeight: 1.1, color: tone === 'ink' ? C.ink : '#fff', whiteSpace: 'nowrap', textShadow: tone === 'white' ? '0 2px 20px rgba(0,60,80,.25)' : 'none'});
@@ -15,33 +14,9 @@ export const TYPE = (size = 72, tone: Tone = 'ink'): React.CSSProperties => ({fo
 // A word list: [text, accent?]. Words arrive spaced out and gather, blurring into focus, about 0.3 s apart.
 export type W = [string, boolean?];
 export const words = (s: string): W[] => s.split(' ').map((w) => (w.startsWith('*') ? [w.slice(1), true] : [w]));
-export const Line: React.FC<LineP> = (p) => (React.useContext(Bare) ? null : <Line0 {...p} />);
-type LineP = {w: W[]; at: number; size?: number; tone?: Tone; gap?: number; stagger?: number; gather?: number; style?: React.CSSProperties; out?: number; spreadOut?: number; keep?: number; typed?: boolean};
-const Line0: React.FC<LineP> = ({w, at, size = 72, tone = 'ink', stagger = 7, gather = 1, style, out, spreadOut, keep = -1, typed}) => {
+export const Line: React.FC<{w: W[]; at: number; size?: number; tone?: Tone; gap?: number; stagger?: number; gather?: number; style?: React.CSSProperties; out?: number; spreadOut?: number; keep?: number}> = ({w, at, size = 72, tone = 'ink', stagger = 7, gather = 1, style, out, spreadOut, keep = -1}) => {
   const f = useF();
   const n = w.length;
-  // v6: lines are typed, like the reference (about 22 characters a second), with a caret
-  if (spreadOut === undefined && typed !== false) {
-    const total = w.reduce((m, [t]) => m + t.length + 1, 0) - 1;
-    const shown = Math.max(0, Math.floor(((f - at) / 30) * 24));
-    const o = out === undefined ? 0 : prog(f, out, 12, E.expoIn);
-    let used = 0;
-    const done = shown >= total;
-    const caretOn = (!done || f - at - (total / 24) * 30 < 22) && Math.floor(f / 8) % 2 === 0;
-    return (
-      <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', ...style}}>
-        <div style={{display: 'flex', alignItems: 'center', ...TYPE(size, tone), whiteSpace: 'pre', opacity: 1 - o, filter: `blur(${o * 12}px)`}}>
-          {w.map(([t, acc], i) => {
-            const start = used; used += t.length + 1;
-            const k = Math.max(0, Math.min(t.length, shown - start));
-            if (k <= 0) return null;
-            return <span key={i} style={acc ? (tone === 'white' ? ACCENT_NIGHT : ACCENT) : {}}>{(i ? ' ' : '') + t.slice(0, k)}</span>;
-          })}
-          {f >= at && <span style={{display: 'inline-block', width: Math.max(3, size * 0.045), height: size * 1.0, marginLeft: 4, background: tone === 'ink' ? C.ink : '#fff', opacity: caretOn ? 1 : 0}} />}
-        </div>
-      </div>
-    );
-  }
   return (
     <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', ...style}}>
       <div style={{display: 'flex', alignItems: 'baseline', ...TYPE(size, tone)}}>
