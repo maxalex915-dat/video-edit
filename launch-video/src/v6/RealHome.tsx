@@ -1,6 +1,6 @@
 import React from 'react';
 import {Img, staticFile} from 'remotion';
-import {useF, prog, E, lerp, C, F} from './Kit';
+import {useF, prog, E, lerp, C, F, GLASS_BG} from './Kit';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
 // (marketing-dashboard-clone/docs/mockups/home-redesign/v3.html). Native size 1600 x 900; figures are the mockup's.
@@ -9,10 +9,10 @@ const TEAL = '#055e63', INK = '#10242a', MUTE = '#6b7f84', LINE = '#e6eef0', GRE
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 const Pill: React.FC<{up: boolean; v: string}> = ({up, v}) => <span style={{fontSize: 12, fontWeight: 700, color: up ? GREEN : RED, background: up ? 'rgba(127,188,66,.16)' : 'rgba(179,38,30,.1)', borderRadius: 99, padding: '3px 8px', whiteSpace: 'nowrap'}}>{up ? '▲' : '▼'} {v}</span>;
 const Arrow = () => <span style={{width: 26, height: 26, borderRadius: 99, border: `1px solid ${LINE}`, display: 'grid', placeItems: 'center', color: MUTE, fontSize: 14}}>→</span>;
-const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; bg?: string}> = ({x, y, w, h, children, at, bg = '#fff'}) => {
+const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; bg?: string}> = ({x, y, w, h, children, at, bg = 'linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.62))'}) => {
   const f = useF();
   const p = prog(f, at, 18, E.snappy);
-  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: '0 0 0 1px rgba(5,60,63,.06), 0 10px 30px -14px rgba(5,60,63,.18)', padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px)`}}>{children}</div>;
+  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: '0 0 0 1.5px rgba(255,255,255,.95), 0 14px 34px -16px rgba(0,110,150,.3)', backdropFilter: 'blur(14px)', padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px)`}}>{children}</div>;
 };
 const NAV: [string, [string, boolean?, string?][]][] = [
   ['OVERVIEW', [['Home', true], ['Insights']]],
@@ -33,9 +33,9 @@ export const RealHome: React.FC<{at?: number}> = ({at = 0}) => {
   const solid = IMP.slice(0, 27).map((v, i) => `${i ? 'L' : 'M'}${hx(i)},${hy(v)}`).join(' ');
   const dotted = IMP.slice(26).map((v, i) => `${i ? 'L' : 'M'}${hx(26 + i)},${hy(v)}`).join(' ');
   return (
-    <div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, background: '#f3f6f6', fontFamily: F.text, color: INK, overflow: 'hidden'}}>
+    <div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, background: GLASS_BG, fontFamily: F.text, color: INK, overflow: 'hidden'}}>
       {/* sidebar */}
-      <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 244, background: '#fff', borderRight: `1px solid ${LINE}`, padding: '16px 10px'}}>
+      <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 244, background: 'rgba(255,255,255,.42)', borderRight: '1px solid rgba(255,255,255,.9)', padding: '16px 10px'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 8, padding: '0 6px 14px'}}>
           <Img src={staticFile('logo_loop.svg')} style={{width: 24, height: 24, objectFit: 'contain'}} />
           <div><div style={{fontSize: 14, fontWeight: 700}}>Archetype</div><div style={{fontSize: 11, color: MUTE}}>Marketing Dashboard</div></div>

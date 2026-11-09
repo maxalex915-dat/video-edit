@@ -28,10 +28,10 @@ export const Meet: React.FC<{dur: number}> = ({dur}) => {
   const ICON: [number, number][] = [[560, 300], [1340, 270], [470, 690], [1430, 720], [780, 860], [1150, 880], [960, 180]];
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <Out dur={dur}>
-        <div style={{position: 'absolute', left: 960 - r, top: 540 - r, width: r * 2, height: r * 2, borderRadius: '50%', background: 'radial-gradient(circle at 50% 50%, #ffffff 55%, #f2fbff 80%, #e2f5fd 100%)', boxShadow: '0 0 120px 10px rgba(0,185,239,.35)'}} />
-        <div style={{position: 'absolute', left: 960 - r - 40, top: 540 - r - 40, width: (r + 40) * 2, height: (r + 40) * 2, borderRadius: '50%', border: '2px solid rgba(120,220,255,.6)', opacity: ring}} />
+        <div style={{position: 'absolute', left: 960 - r, top: 540 - r, width: r * 2, height: r * 2, borderRadius: '50%', background: 'radial-gradient(circle at 50% 50%, #ffffff 58%, #eef9fe 82%, #d6f1fc 100%)', boxShadow: '0 0 0 3px rgba(0,185,239,.35), 0 40px 140px -20px rgba(0,140,190,.45)'}} />
+        <div style={{position: 'absolute', left: 960 - r - 40, top: 540 - r - 40, width: (r + 40) * 2, height: (r + 40) * 2, borderRadius: '50%', border: '2px solid rgba(0,185,239,.45)', opacity: ring}} />
         <LoopGlow s={190} glow={0.9} style={{left: 865, top: 440, opacity: 0.5 * prog(f, 10, 20)}} />
         {ICON.map(([x, y], i) => {
           const p = spr(f, 34 + i * 3, S.pop);
@@ -55,12 +55,12 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
   const KP: [string, string, string, Platform][] = [['LinkedIn impressions', '14,210', '12%', 'li'], ['Website sessions', '7,930', '8%', 'web'], ['Search clicks', '3,480', '15%', 'search'], ['Facebook views', '9,120', '5%', 'fb']];
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <div style={{position: 'absolute', left: 0, right: 0, top: 70, display: 'flex', justifyContent: 'center'}}>
-        <Typed parts={[['Every channel. '], ['One dashboard.', true], [' Zero copy-paste.']]} at={2} size={60} dark />
+        <Typed parts={[['Every channel. '], ['One dashboard.', true], [' Zero copy-paste.']]} at={2} size={60} dark={false} />
       </div>
       <TiltIn t={t} at={26} dur={dur} cx={960} cy={640}>
-        <div style={{position: 'absolute', left: 240, top: 200, width: 1600, height: 900, transform: 'scale(0.9)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(120,220,255,.85), 0 0 50px -6px rgba(0,185,239,.55), 0 70px 150px -30px rgba(0,10,20,.8)'}}><RealHome at={26} /></div>
+        <div style={{position: 'absolute', left: 240, top: 200, width: 1600, height: 900, transform: 'scale(0.9)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(255,255,255,.95), 0 0 50px -6px rgba(0,185,239,.35), 0 70px 150px -30px rgba(0,80,110,.4)', backdropFilter: 'blur(28px) saturate(160%)'}}><RealHome at={26} /></div>
       </TiltIn>
     </AbsoluteFill>
   );
@@ -80,7 +80,7 @@ const winScene = (p: WinP): React.FC<{dur: number}> => ({dur}) => {
           <Host C={p.Old} dur={dur} scale={p.host[0]} x={p.host[1]} y={p.host[2]} from={p.from ?? 0} />
         </AppWin>
       </TiltIn>
-      {(p.call ?? []).map((c, i) => <Callout key={i} {...c} dark={p.dark} />)}
+      {(p.call ?? []).map((c, i) => <Callout key={i} {...c} dark={false} />)}
       <div style={{position: 'absolute', left: p.hx, top: p.hy, width: p.hw, textAlign: p.align ?? 'left', opacity: 1 - prog(f, dur - 8, 8)}}>
         <Typed parts={p.head} at={p.hat ?? 4} size={p.hs ?? 60} dark={p.dark} />
       </div>
@@ -90,7 +90,7 @@ const winScene = (p: WinP): React.FC<{dur: number}> => ({dur}) => {
 
 // Trends: the window on the right, the line on the left (reference 0:38).
 export const trendsSfx: Cue[] = [{at: 0, s: 'whoosh_long', v: 0.3}, ...M.m2sfx];
-export const Trends = winScene({Old: M.M2, dark: true, win: [600, 230, 1250, 600], host: [0.76, -140, -102], tilt: {ry0: 34, rx0: 6, x0: 600, y0: 0, ry1: -7, rx1: 3}, head: [['Spot trends and\n'], ['make connections.', true]], hx: 80, hy: 420, hw: 520, hs: 58, hat: 120,
+export const Trends = winScene({Old: M.M2, dark: false, win: [600, 230, 1250, 600], host: [0.76, -140, -102], tilt: {ry0: 34, rx0: 6, x0: 600, y0: 0, ry1: -7, rx1: 3}, head: [['Spot trends and\n'], ['make connections.', true]], hx: 80, hy: 420, hw: 520, hs: 58, hat: 120,
   call: [{d: 'M 80 690 L 380 690 Q 410 690 410 720 L 410 740 Q 410 770 440 770 L 620 770', at: 140, label: 'One post. Every channel lifts.', lx: 80, ly: 640}]});
 
 // ---------- Live data: platforms flow into a glowing hub; fresh numbers flow out ----------
@@ -102,13 +102,13 @@ export const Live: React.FC<{dur: number}> = ({dur}) => {
   const OUTS: [string, number, Platform][] = [['LinkedIn impressions', 14210, 'li'], ['Website sessions', 7930, 'web'], ['Search clicks', 3480, 'search'], ['Facebook views', 9120, 'fb']];
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <Out dur={dur}>
         {/* faint guide lines through the hub */}
         <svg width="1920" height="1080" style={{position: 'absolute'}}>
-          {[HX - 230, HX + HS + 230].map((x) => <line key={x} x1={x} y1={0} x2={x} y2={1080} stroke="rgba(150,220,255,.12)" />)}
-          {[HY - HS / 2 - 90, HY + HS / 2 + 90].map((y) => <line key={y} x1={0} y1={y} x2={1920} y2={y} stroke="rgba(150,220,255,.12)" />)}
-          <line x1={0} y1={HY} x2={HX - HS / 2} y2={HY} stroke="rgba(150,220,255,.35)" strokeDasharray="4 8" />
+          {[HX - 230, HX + HS + 230].map((x) => <line key={x} x1={x} y1={0} x2={x} y2={1080} stroke="rgba(0,120,160,.10)" />)}
+          {[HY - HS / 2 - 90, HY + HS / 2 + 90].map((y) => <line key={y} x1={0} y1={y} x2={1920} y2={y} stroke="rgba(0,120,160,.10)" />)}
+          <line x1={0} y1={HY} x2={HX - HS / 2} y2={HY} stroke="rgba(0,150,200,.4)" strokeDasharray="4 8" />
         </svg>
         {PS.map((p, i) => {
           const k = prog(f, 26 + i * 9, 34, E.inOut);
@@ -116,9 +116,9 @@ export const Live: React.FC<{dur: number}> = ({dur}) => {
           return <div key={p} style={{position: 'absolute', left: x - 34, top: y - 34, opacity: k >= 1 ? 0 : 1, transform: `scale(${1 - Math.max(0, k - 0.8) * 4})`}}><div style={{width: 68, height: 68, borderRadius: 99, background: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 0 30px rgba(120,220,255,.5)'}}><PlatformIcon p={p} size={46} style={{borderRadius: 99}} /></div></div>;
         })}
         {/* the hub */}
-        <div style={{position: 'absolute', left: HX - HS / 2, top: HY - HS / 2, width: HS, height: HS, borderRadius: 28, background: 'linear-gradient(160deg, rgba(40,110,130,.45), rgba(10,40,50,.55))', border: '1.5px solid rgba(140,225,255,.55)', boxShadow: `0 0 ${60 + pulse * 60}px rgba(0,185,239,${0.25 + pulse * 0.3}), inset 0 1px 0 rgba(255,255,255,.25)`, backdropFilter: 'blur(14px)', transform: `scale(${spr(f, 4, S.soft) * (1 + pulse * 0.03)})`}}>
+        <div style={{position: 'absolute', left: HX - HS / 2, top: HY - HS / 2, width: HS, height: HS, borderRadius: 28, background: 'linear-gradient(160deg, rgba(255,255,255,.9), rgba(225,245,252,.75))', border: '1.5px solid rgba(140,225,255,.9)', boxShadow: `0 0 ${60 + pulse * 60}px rgba(0,185,239,${0.25 + pulse * 0.3}), inset 0 1px 0 rgba(255,255,255,.25)`, backdropFilter: 'blur(14px)', transform: `scale(${spr(f, 4, S.soft) * (1 + pulse * 0.03)})`}}>
           <div style={{position: 'absolute', left: HS / 2 - 95, top: HS / 2 - 95, width: 190, height: 190, borderRadius: '50%', background: `conic-gradient(from ${f * 4}deg, #7fbc42, #00b9ef, #70cbf3, #7fbc42)`, filter: 'blur(1px)', opacity: 0.9}} />
-          <div style={{position: 'absolute', left: HS / 2 - 86, top: HS / 2 - 86, width: 172, height: 172, borderRadius: '50%', background: '#0b2229'}} />
+          <div style={{position: 'absolute', left: HS / 2 - 86, top: HS / 2 - 86, width: 172, height: 172, borderRadius: '50%', background: '#fff'}} />
           <LoopGlow s={110} glow={0.6 + pulse * 0.5} style={{left: HS / 2 - 55, top: HS / 2 - 55}} />
         </div>
         {/* fresh numbers out */}
@@ -128,7 +128,7 @@ export const Live: React.FC<{dur: number}> = ({dur}) => {
           const tick = Math.floor(Math.max(0, f - at - 20) / 14);
           return (
             <React.Fragment key={l}>
-              <Callout d={`M ${HX + HS / 2} ${HY} L ${HX + HS / 2 + 120} ${HY} Q ${HX + HS / 2 + 150} ${HY} ${HX + HS / 2 + 150} ${HY + (y - HY) * 0.2} L ${HX + HS / 2 + 150} ${y - Math.sign(y - HY) * 30} Q ${HX + HS / 2 + 150} ${y} ${HX + HS / 2 + 180} ${y} L 1340 ${y}`} at={at - 12} len={16} dark />
+              <Callout d={`M ${HX + HS / 2} ${HY} L ${HX + HS / 2 + 120} ${HY} Q ${HX + HS / 2 + 150} ${HY} ${HX + HS / 2 + 150} ${HY + (y - HY) * 0.2} L ${HX + HS / 2 + 150} ${y - Math.sign(y - HY) * 30} Q ${HX + HS / 2 + 150} ${y} ${HX + HS / 2 + 180} ${y} L 1340 ${y}`} at={at - 12} len={16} dark={false} />
               <div style={{position: 'absolute', left: 1340, top: y - 52, width: 470, height: 104, borderRadius: 20, background: 'rgba(255,255,255,.93)', boxShadow: '0 0 0 1.5px rgba(120,220,255,.8), 0 30px 60px -20px rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', gap: 16, padding: '0 22px', opacity: q, transform: `translateX(${(1 - q) * 40}px)`, fontFamily: F.text}}>
                 <PlatformIcon p={p} size={46} />
                 <div style={{flex: 1}}><div style={{fontSize: 16, color: C.ink3}}>{l}</div><div style={{fontSize: 34, fontWeight: 750, color: C.ink, fontVariantNumeric: 'tabular-nums'}}>{(v + tick * (7 + i * 3)).toLocaleString('en-US')}</div></div>
@@ -138,7 +138,7 @@ export const Live: React.FC<{dur: number}> = ({dur}) => {
           );
         })}
         <div style={{position: 'absolute', left: 0, right: 0, top: 80, display: 'flex', justifyContent: 'center'}}>
-          <Typed parts={[['Always up to date. '], ['Automatically.', true]]} at={2} size={64} dark />
+          <Typed parts={[['Always up to date. '], ['Automatically.', true]]} at={2} size={64} dark={false} />
         </div>
       </Out>
     </AbsoluteFill>
@@ -152,14 +152,14 @@ export const Decisions: React.FC<{dur: number}> = ({dur}) => {
   const up = prog(f, 34, 14, E.inOut);
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <AbsoluteFill style={{background: `radial-gradient(900px 260px at ${40 + f * 0.2}% 100%, rgba(0,185,239,.45), transparent 70%), radial-gradient(500px 200px at ${70 - f * 0.15}% 0%, rgba(127,188,66,.35), transparent 70%)`}} />
       <Out dur={dur}>
         <div style={{position: 'absolute', left: 0, right: 0, top: 500 - up * 70, display: 'flex', justifyContent: 'center'}}>
-          <Typed parts={[['Turning insights']]} at={2} size={lerp(up, 76, 56)} dark weight={500} caretHold={0} />
+          <Typed parts={[['Turning insights']]} at={2} size={lerp(up, 76, 56)} dark={false} weight={500} caretHold={0} />
         </div>
         <div style={{position: 'absolute', left: 0, right: 0, top: 520, display: 'flex', justifyContent: 'center'}}>
-          {f >= 38 && <Typed parts={[['into decisions.', true]]} at={40} size={132} dark />}
+          {f >= 38 && <Typed parts={[['into decisions.', true]]} at={40} size={132} dark={false} />}
         </div>
       </Out>
     </AbsoluteFill>
@@ -270,13 +270,13 @@ export const AuditIntro: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <AbsoluteFill style={{background: 'radial-gradient(700px 300px at 62% 52%, rgba(127,188,66,.35), transparent 70%)'}} />
       <TiltIn t={{ry0: -6, rx0: 52, x0: 0, y0: 500, ry1: -6, rx1: 26, rz1: 2}} at={6} len={28} dur={dur} cx={960} cy={760} out={false}>
         <div style={{position: 'absolute', left: 560, top: 420}}><SiteHealthPanel gauge={prog(f, 14, 40)} w={820} /></div>
       </TiltIn>
       <div style={{position: 'absolute', left: 0, right: 0, top: 110, display: 'flex', justifyContent: 'center'}}>
-        <Typed parts={[['In-house '], ['site audit tool', true]]} at={2} size={104} dark cps={30} />
+        <Typed parts={[['In-house '], ['site audit tool', true]]} at={2} size={104} dark={false} cps={30} />
       </div>
     </AbsoluteFill>
   );
@@ -304,7 +304,7 @@ export const Saving: React.FC<{dur: number}> = ({dur}) => {
 
 // Site health dashboard in the window, the headline left, callouts (reference 0:38).
 export const sa3Sfx: Cue[] = [{at: 0, s: 'whoosh_long', v: 0.3}, ...SA.sa3sfx];
-export const AuditDash = winScene({Old: SA.SA3, dark: true, win: [620, 240, 1240, 600], host: [0.66, -78, -100], tilt: {ry0: 30, rx0: 8, x0: 500, y0: 60, ry1: -8, rx1: 3}, head: [['Site health and\n'], ['AI search health.', true]], hx: 80, hy: 330, hw: 500, hs: 64, active: 2,
+export const AuditDash = winScene({Old: SA.SA3, dark: false, win: [620, 240, 1240, 600], host: [0.66, -78, -100], tilt: {ry0: 30, rx0: 8, x0: 500, y0: 60, ry1: -8, rx1: 3}, head: [['Site health and\n'], ['AI search health.', true]], hx: 80, hy: 330, hw: 500, hs: 64, active: 2,
   call: [{d: 'M 90 720 L 420 720 Q 450 720 450 750 L 450 830 Q 450 860 480 860 L 660 860', at: 100, label: 'Issues sorted by category', lx: 90, ly: 670}]});
 
 // Audit features: words orbit the logo, then gather into the line.
@@ -316,7 +316,7 @@ export const Features: React.FC<{dur: number}> = ({dur}) => {
   const g = prog(f, GATHER, 14, E.expoIn);
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <Out dur={dur}>
         <LoopGlow s={170} glow={0.9 + g} style={{left: 875, top: 455 - prog(f, GATHER + 4, 16, E.inOut) * 200, transform: `scale(${spr(f, 0, S.soft) * (1 - prog(f, GATHER + 4, 16, E.inOut) * 0.4)})`}} />
         {FEAT.map(([w, acc], i) => {
@@ -324,9 +324,9 @@ export const Features: React.FC<{dur: number}> = ({dur}) => {
           const R = 330 + (i % 3) * 60;
           const q = prog(f, i * FP, 14, E.snappy);
           const x = lerp(g, 960 + Math.cos(a) * R * 1.75, 960), y = lerp(g, 540 + Math.sin(a) * R * 0.95, 540);
-          return <div key={w} style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${(0.85 + q * 0.15) * (1 - g * 0.8)})`, opacity: q * (1 - g), filter: `blur(${(1 - q) * 12 + g * 10}px)`, fontFamily: F.display, fontSize: 46, fontWeight: 500, letterSpacing: '-0.025em', whiteSpace: 'nowrap', ...(acc ? gradText(true) : {color: '#fff'})}}>{w}</div>;
+          return <div key={w} style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) scale(${(0.85 + q * 0.15) * (1 - g * 0.8)})`, opacity: q * (1 - g), filter: `blur(${(1 - q) * 12 + g * 10}px)`, fontFamily: F.display, fontSize: 46, fontWeight: 500, letterSpacing: '-0.025em', whiteSpace: 'nowrap', ...(acc ? gradText(false) : {color: C.ink})}}>{w}</div>;
         })}
-        {f >= GATHER + 6 && <div style={{position: 'absolute', left: 0, right: 0, top: 560, display: 'flex', justifyContent: 'center'}}><Typed parts={[['All in-house. '], ['All yours.', true]]} at={GATHER + 8} size={104} dark /></div>}
+        {f >= GATHER + 6 && <div style={{position: 'absolute', left: 0, right: 0, top: 560, display: 'flex', justifyContent: 'center'}}><Typed parts={[['All in-house. '], ['All yours.', true]]} at={GATHER + 8} size={104} dark={false} /></div>}
       </Out>
     </AbsoluteFill>
   );
@@ -340,13 +340,13 @@ export const Competitors: React.FC<{dur: number}> = ({dur}) => {
   const dl = prog(f, DL + 2, 16, E.inOut);
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <AbsoluteFill style={{background: 'radial-gradient(600px 400px at 70% 40%, rgba(0,185,239,.3), transparent 70%)'}} />
       <TiltIn t={{ry0: -42, rx0: 14, x0: 600, y0: 120, ry1: -16, rx1: 6, rz1: 2, s0: 0.85, s1: 1}} at={2} dur={dur} cx={1290} cy={560}>
         <div style={{position: 'absolute', left: 1290 - 900 * 0.36, top: 560 - 1270 * 0.36, width: 900, height: 1270, transform: 'scale(0.72)', transformOrigin: '0 0', borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(120,220,255,.8), 0 0 50px rgba(0,185,239,.4), 0 80px 160px -40px rgba(0,0,0,.8)'}}><ReportPage fill={prog(f, 18, 30)} /></div>
       </TiltIn>
       <div style={{position: 'absolute', left: 100, top: 400, width: 640}}>
-        <Typed parts={[['Competitor moves, '], ['every month.', true]]} at={4} size={76} dark />
+        <Typed parts={[['Competitor moves, '], ['every month.', true]]} at={4} size={76} dark={false} />
       </div>
       <div style={{position: 'absolute', left: 100, top: 640, overflow: 'hidden', background: '#fff', color: C.ink, borderRadius: 99, padding: '16px 30px', fontFamily: F.text, fontSize: 24, fontWeight: 700, opacity: prog(f, 40, 12), boxShadow: '0 0 0 1.5px rgba(120,220,255,.9), 0 0 30px rgba(0,185,239,.35)'}}>
         <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${dl * 100}%`, background: 'linear-gradient(90deg,#7fbc42,#00b9ef)'}} />
@@ -362,9 +362,9 @@ export const Competitors: React.FC<{dur: number}> = ({dur}) => {
 export const offSfx: Cue[] = [{at: 0, s: 'whoosh_long', v: 0.3}, ...S15.sfx];
 export const Offices: React.FC<{dur: number}> = ({dur}) => (
   <AbsoluteFill>
-    <Sky dark />
+    <Sky dark={false} />
     <Host C={S15.S15 as React.FC<{dur: number}>} dur={dur} scale={1} x={120} y={30} />
-    <div style={{position: 'absolute', left: 100, top: 380, width: 700}}><Typed parts={[['Local intelligence '], ['for all 22 offices.', true]]} at={4} size={80} dark /></div>
+    <div style={{position: 'absolute', left: 100, top: 380, width: 700}}><Typed parts={[['Local intelligence '], ['for all 22 offices.', true]]} at={4} size={80} dark={false} /></div>
   </AbsoluteFill>
 );
 
@@ -372,12 +372,12 @@ export const Offices: React.FC<{dur: number}> = ({dur}) => (
 export const shareSfx: Cue[] = [{at: 0, s: 'swoosh_soft', v: 0.3}, ...S16.sfx];
 export const Share = winScene({Old: S16.S16, dark: false, alt: 1, win: [330, 190, 1260, 840], host: [1.0, -700, -47], tilt: {ry0: 0, rx0: 30, x0: 0, y0: 300, ry1: 0, rx1: 4}, head: [['One link. '], ['The whole team informed.', true]], hx: 0, hy: 80, hw: 1920, hs: 64, align: 'center', streams: true, active: 4});
 export const prSfx: Cue[] = [{at: 0, s: 'whoosh_long', v: 0.3}, ...S17.sfx];
-export const Press = winScene({Old: S17.S17, dark: true, win: [80, 150, 1200, 800], host: [0.95, -702, -85], tilt: {ry0: -32, rx0: 6, x0: -500, y0: 0, ry1: 9, rx1: 3}, head: [['Never miss\n'], ['a press mention.', true]], hx: 1360, hy: 380, hw: 520, hs: 70, active: 1,
+export const Press = winScene({Old: S17.S17, dark: false, win: [80, 150, 1200, 800], host: [0.95, -702, -85], tilt: {ry0: -32, rx0: 6, x0: -500, y0: 0, ry1: 9, rx1: 3}, head: [['Never miss\n'], ['a press mention.', true]], hx: 1360, hy: 380, hw: 520, hs: 70, active: 1,
   call: [{d: 'M 1830 700 L 1500 700 Q 1470 700 1470 730 L 1470 790 Q 1470 820 1440 820 L 1270 820', at: 70, label: 'Every mention, as it lands', lx: 1830, ly: 650, anchor: 'end'}]});
 export const inqSfx: Cue[] = [{at: 0, s: 'swoosh_soft', v: 0.3}, ...S18.sfx];
 export const Inquiries = winScene({Old: S18.S18, dark: false, alt: 2, win: [640, 120, 1220, 840], host: [0.9, -653, -148], tilt: {ry0: 26, rx0: 14, x0: 300, y0: 200, ry1: -6, rx1: 4}, head: [['Every business lead,\n'], ['tracked. None lost.', true]], hx: 80, hy: 410, hw: 560, hs: 58, active: 3});
 export const apSfx: Cue[] = [{at: 0, s: 'whoosh_long', v: 0.3}, ...S19.sfx];
-export const Approvals = winScene({Old: S19.S19, dark: true, win: [300, 290, 1320, 760], host: [1.15, -947, -221], tilt: {ry0: -4, rx0: 40, x0: 0, y0: 400, ry1: -3, rx1: 14, rz1: 1}, head: [['Approvals move faster. '], ['Nothing stuck in inboxes.', true]], hx: 0, hy: 90, hw: 1920, hs: 66, align: 'center', active: 5});
+export const Approvals = winScene({Old: S19.S19, dark: false, win: [300, 290, 1320, 760], host: [1.15, -947, -221], tilt: {ry0: -4, rx0: 40, x0: 0, y0: 400, ry1: -3, rx1: 14, rz1: 1}, head: [['Approvals move faster. '], ['Nothing stuck in inboxes.', true]], hx: 0, hy: 90, hw: 1920, hs: 66, align: 'center', active: 5});
 
 export const _keep = [Img, staticFile, gradText];
 
@@ -388,13 +388,13 @@ export const Recap: React.FC<{dur: number}> = ({dur}) => {
   const KP: [string, string, string, Platform][] = [['LinkedIn impressions', '14,210', '12%', 'li'], ['Website sessions', '7,930', '8%', 'web'], ['Search clicks', '3,480', '15%', 'search'], ['Facebook views', '9,120', '5%', 'fb']];
   return (
     <AbsoluteFill>
-      <Sky dark />
+      <Sky dark={false} />
       <AbsoluteFill style={{background: 'radial-gradient(800px 320px at 55% 62%, rgba(0,185,239,.35), transparent 70%)'}} />
       <TiltIn t={{ry0: -10, rx0: 50, x0: 0, y0: 500, ry1: -8, rx1: 24, rz1: 2}} at={4} len={30} dur={dur} cx={960} cy={800}>
-        <div style={{position: 'absolute', left: 280, top: 430, width: 1600, height: 900, transform: 'scale(0.85)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(120,220,255,.85), 0 0 50px -6px rgba(0,185,239,.55), 0 70px 150px -30px rgba(0,10,20,.8)'}}><RealHome at={-60} /></div>
+        <div style={{position: 'absolute', left: 280, top: 430, width: 1600, height: 900, transform: 'scale(0.85)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(255,255,255,.95), 0 0 50px -6px rgba(0,185,239,.35), 0 70px 150px -30px rgba(0,80,110,.4)', backdropFilter: 'blur(28px) saturate(160%)'}}><RealHome at={-60} /></div>
       </TiltIn>
       <div style={{position: 'absolute', left: 0, right: 0, top: 110, textAlign: 'center'}}>
-        <Typed parts={[['Less time collecting. '], ['More time deciding.', true]]} at={4} size={92} dark />
+        <Typed parts={[['Less time collecting. '], ['More time deciding.', true]]} at={4} size={92} dark={false} />
       </div>
     </AbsoluteFill>
   );

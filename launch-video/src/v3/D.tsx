@@ -10,7 +10,7 @@ export const B20: React.FC = () => {
     <AbsoluteFill>
       <Ground kind={f < 32 ? 'glow' : 'field'} />
       {f < 32 && <div style={{opacity: 1 - prog(f, 26, 6)}}><Line w={words('Others juggle spreadsheets.')} at={0} stagger={5} size={84} /></div>}
-      {f >= 32 && <Line w={[['We'], ['connect'], ['everything.']]} at={32} stagger={5} size={96} tone="white" />}
+      {f >= 32 && <Line w={[['We'], ['connect'], ['everything.']]} at={32} stagger={5} size={96} />}
     </AbsoluteFill>
   );
 };

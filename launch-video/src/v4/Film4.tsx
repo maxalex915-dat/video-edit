@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Html5Audio, Sequence, staticFile} from 'remotion';
-import {FrameOffset} from '../frame';
+import {FrameOffset, NoGround} from '../frame';
+import {Tx, TxOverlay, Sky, P, TxKind} from '../v6/Transitions';
 import * as D from '../v3/D';
 import * as En from './End';
 import * as In from '../v5/Intro';
@@ -26,14 +27,29 @@ const BEATS: [number, number, React.FC<{dur: number}>, Cue[], string][] = [
 ];
 const fr = (s: number) => Math.round(s * 30);
 export const BEATS4 = BEATS.map(([a, b, , , n]) => ({from: fr(a), dur: fr(b) - fr(a), n}));
+// a transition at every cut, mixed; pushes alternate direction so the camera stays in the same space
+const KINDS: TxKind[] = ['zoom', 'circle', 'push', 'shapes', 'pushV', 'pill', 'push', 'zoom', 'shapes', 'pushV', 'circle', 'push', 'pill', 'zoom', 'push', 'shapes', 'pushV', 'circle', 'push', 'pill', 'pushV', 'shapes', 'push', 'zoom', 'circle'];
+const CUTS = BEATS.slice(1).map(([a], i) => ({at: fr(a), k: KINDS[i % KINDS.length], d: 1}));
+{let p = 0, v = 0; for (const c of CUTS) {if (c.k === 'push') c.d = p++ % 2 ? -1 : 1; if (c.k === 'pushV') c.d = v++ % 2 ? -1 : 1;}}
+const TXSFX: Record<TxKind, string> = {push: 'swoosh', pushV: 'swoosh', zoom: 'swoosh_soft', circle: 'whoosh_long', shapes: 'whoosh_long', pill: 'swoosh'};
+const LAST = BEATS.length - 1;
 export const Film4: React.FC<{music?: boolean; sfx?: boolean}> = ({music = true, sfx = true}) => (
-  <AbsoluteFill style={{background: '#fff'}}>
-    {BEATS.map(([a, b, Comp], i) => (
-      <Sequence key={i} name={BEATS[i][4]} from={fr(a)} durationInFrames={fr(b) - fr(a)} premountFor={30}>
-        <FrameOffset.Provider value={0}><Comp dur={fr(b) - fr(a)} /></FrameOffset.Provider>
-      </Sequence>
-    ))}
+  <AbsoluteFill style={{background: '#fbfeff'}}>
+    <Sky cuts={CUTS} />
+    {BEATS.map(([a, b, Comp], i) => {
+      const pre = i ? P : 0, post = i < LAST ? P : 0;
+      const len = fr(b) - fr(a) + pre + post;
+      return (
+        <Sequence key={i} name={BEATS[i][4]} from={fr(a) - pre} durationInFrames={len} premountFor={30}>
+          <Tx len={len} inK={i ? CUTS[i - 1].k : null} outK={i < LAST ? CUTS[i].k : null} inD={i ? CUTS[i - 1].d : 1} outD={i < LAST ? CUTS[i].d : 1}>
+            <NoGround.Provider value={i < LAST}><FrameOffset.Provider value={pre}><Comp dur={fr(b) - fr(a)} /></FrameOffset.Provider></NoGround.Provider>
+          </Tx>
+        </Sequence>
+      );
+    })}
+    {CUTS.map((c, i) => <Sequence key={`t${i}`} from={c.at - P} durationInFrames={2 * P} layout="none"><TxOverlay k={c.k} /></Sequence>)}
     {music && <Html5Audio src={staticFile('music_ref2.m4a')} volume={0.75} />}
+    {sfx && CUTS.map((c, i) => <Sequence key={`ts${i}`} from={c.at - 6} durationInFrames={60} layout="none"><Html5Audio src={staticFile(`sfx/${TXSFX[c.k]}.wav`)} volume={0.12} /></Sequence>)}
     {sfx && BEATS.flatMap(([a, , , cues], i) => cues.map((c, k) => (
       <Sequence key={`${i}-${k}`} from={fr(a) + c.at} durationInFrames={90} layout="none"><Html5Audio src={staticFile(`sfx/${c.s}.wav`)} volume={(c.v ?? 0.4) * 0.55} /></Sequence>
     )))}

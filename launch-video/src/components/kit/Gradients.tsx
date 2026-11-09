@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {Bare} from '../../frame';
+import {Bare, NoGround} from '../../frame';
 
 // One palette only: the Archetype brand gradient (green #7fbc42, cyan #00b9ef, light blue #70cbf3) and white.
 // Variety comes from pattern and texture, never from new colours or dark grounds (Dat, 5 Nov).
@@ -26,7 +26,7 @@ const Grain: React.FC<{o: number; freq?: number}> = ({o, freq = 0.85}) => {
 // v6 look (second reference): every ground becomes either a light grainy haze or a deep night lit by brand aurora.
 const REMAP: Partial<Record<GradKind, GradKind>> = {
   glow: 'haze', pearl: 'haze2', sunrise: 'haze3', liquid: 'haze2', whitegrid: 'haze', whiterings: 'haze3',
-  field: 'night', dots: 'night', topo: 'night', grain: 'night', grid3d: 'night', bokeh: 'night', lines: 'night', waves: 'night', mesh: 'night', silk: 'night', fluted: 'night', glass: 'night', rings: 'night',
+  field: 'haze2', dots: 'haze', topo: 'haze3', grain: 'haze', grid3d: 'haze2', bokeh: 'haze3', lines: 'haze', waves: 'haze2', mesh: 'haze3', silk: 'haze', fluted: 'haze2', glass: 'haze3', rings: 'haze', night: 'haze2', horizon: 'haze',
 };
 // four-point sparkles that twinkle, placed deterministically
 export const Sparkles: React.FC<{t: number; n: number; dark: boolean}> = ({t, n, dark}) => (
@@ -42,7 +42,8 @@ export const Sparkles: React.FC<{t: number; n: number; dark: boolean}> = ({t, n,
     })}
   </AbsoluteFill>
 );
-export const Ground: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = (p) => (React.useContext(Bare) ? null : <Ground0 {...p} />);
+export const Ground: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = (p) => (React.useContext(Bare) || React.useContext(NoGround) ? null : <Ground0 {...p} />);
+export const GroundRaw: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = (p) => <Ground0 {...p} />;
 const Ground0: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = ({kind: k0, t: tt, behind}) => {
   const kind = REMAP[k0] ?? k0;
   const f = useCurrentFrame();

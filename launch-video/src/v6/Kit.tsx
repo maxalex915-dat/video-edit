@@ -42,13 +42,13 @@ export const LoopGlow: React.FC<{s: number; glow?: number; style?: React.CSSProp
 // App window: dark rail on the left with a cyan edge, light content, like the reference's product windows.
 const RAIL = ['grid', 'chat', 'signal', 'star', 'share', 'box'];
 export const AppWin: React.FC<{w: number; h: number; active?: number; children?: React.ReactNode; style?: React.CSSProperties; title?: string; dark?: boolean}> = ({w, h, active = 2, children, style, title, dark = true}) => (
-  <div style={{position: 'absolute', width: w, height: h, borderRadius: 22, overflow: 'hidden', display: 'flex', background: 'linear-gradient(160deg, #ffffff 0%, #f6fbfd 55%, #e6f5fb 100%)',
-    boxShadow: `0 0 0 1.5px rgba(120,220,255,.85), 0 0 40px -6px rgba(0,185,239,${dark ? 0.55 : 0.3}), 0 60px 140px -30px rgba(0,10,20,${dark ? 0.8 : 0.35})`, ...style}}>
-    <div style={{width: 70, flex: 'none', background: '#0c1a1f', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, paddingTop: 22, borderRight: '2px solid #34c6f4'}}>
+  <div style={{position: 'absolute', width: w, height: h, borderRadius: 22, overflow: 'hidden', display: 'flex', background: 'radial-gradient(700px 480px at 88% 6%, rgba(0,185,239,.22), transparent 70%), radial-gradient(640px 460px at 6% 96%, rgba(127,188,66,.2), transparent 70%), linear-gradient(150deg, rgba(255,255,255,.62), rgba(235,248,253,.38))', backdropFilter: 'blur(28px) saturate(160%)', WebkitBackdropFilter: 'blur(28px) saturate(160%)', border: '1.5px solid rgba(255,255,255,.95)',
+    boxShadow: '0 0 0 1.5px rgba(120,220,255,.85), 0 0 40px -6px rgba(0,185,239,.3), 0 60px 140px -30px rgba(0,60,80,.35)', ...style}}>
+    <div style={{width: 70, flex: 'none', background: 'rgba(255,255,255,.45)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, paddingTop: 20, borderRight: '1px solid rgba(255,255,255,.9)'}}>
       <Img src={staticFile('logo_loop.svg')} style={{width: 34, height: 34, objectFit: 'contain', marginBottom: 10}} />
       {RAIL.map((r, i) => (
-        <div key={r} style={{width: 38, height: 38, borderRadius: 11, display: 'grid', placeItems: 'center', background: i === active ? '#fff' : 'transparent'}}>
-          <div style={{width: 18, height: 18, borderRadius: i % 2 ? 9 : 4, border: `2.5px solid ${i === active ? '#0c1a1f' : '#8aa0a6'}`}} />
+        <div key={r} style={{width: 42, height: 42, borderRadius: 99, display: 'grid', placeItems: 'center', background: i === active ? 'linear-gradient(135deg,#0a6b5f,#055e63 50%,#0b6d86)' : 'transparent'}}>
+          <div style={{width: 17, height: 17, borderRadius: i % 2 ? 9 : 4, border: `2px solid ${i === active ? '#fff' : '#536a70'}`}} />
         </div>
       ))}
     </div>
@@ -136,7 +136,7 @@ export const IconPill: React.FC<{ps: Platform[]; at: number; morph: number; labe
 };
 
 // Ground switch for the new scenes.
-export const Sky: React.FC<{dark: boolean; alt?: 0 | 1 | 2}> = ({dark, alt = 0}) => <Ground kind={dark ? 'night' : (['haze', 'haze2', 'haze3'] as const)[alt]} />;
+export const Sky: React.FC<{dark: boolean; alt?: 0 | 1 | 2}> = ({alt = 0}) => <Ground kind={(['haze', 'haze2', 'haze3'] as const)[alt]} />;
 
 // A scene's way out: a quick push forward and blur on the last frames.
 export const Out: React.FC<{dur: number; children: React.ReactNode; k?: number}> = ({dur, children, k = 8}) => {
@@ -147,3 +147,5 @@ export const Out: React.FC<{dur: number; children: React.ReactNode; k?: number}>
 };
 export {cl, useF, prog, spr, S, E, lerp, C, F, PlatformIcon};
 export type {Platform};
+
+export const GLASS_BG = 'radial-gradient(700px 480px at 88% 6%, rgba(0,185,239,.22), transparent 70%), radial-gradient(640px 460px at 6% 96%, rgba(127,188,66,.2), transparent 70%), linear-gradient(150deg, rgba(255,255,255,.62), rgba(235,248,253,.38))';
