@@ -59,12 +59,23 @@ def click():
     save('click', y)
 click()
 
-# key: typing tick, several variants
-for k in range(4):
-    tt = t(0.045); f = 1800 + k * 260
-    x = rng.standard_normal(len(tt)) * np.exp(-tt * 700)
-    y = bandsweep(x, f * 1.6, f * 1.6, q=1.0) + np.sin(2 * np.pi * f * 0.5 * tt) * np.exp(-tt * 260) * 0.25
+# key: deep mechanical keyboard "thock" (Dat, 9 Nov): low thump with a pitch drop, a soft switch click on top,
+# a small case knock and the bottom-out tap. Own generator so the other sounds stay identical.
+def thock(k):
+    kr = np.random.default_rng(100 + k)
+    tt = t(0.14); n = len(tt)
+    f0 = 165 + k * 12
+    ph = 2 * np.pi * np.cumsum(f0 * (0.72 + 0.28 * np.exp(-tt * 60))) / SR
+    body = np.sin(ph) * np.exp(-tt * 42)
+    knock = np.sin(2 * np.pi * (560 + k * 40) * tt) * np.exp(-tt * 130) * 0.28
+    click = bandsweep(kr.standard_normal(n) * np.exp(-tt * 1300), 2600 + k * 180, 2600 + k * 180, q=0.9) * 0.9
+    tap = np.zeros(n); d = int(0.011 * SR)
+    tap[d:] = bandsweep(kr.standard_normal(n - d) * np.exp(-tt[:n - d] * 700), 1100, 1100, q=0.8) * 0.5
+    y = np.tanh((body + knock + click + tap) * 1.4)
+    y *= np.minimum(1, np.linspace(0, 40, n))  # no click at the very start
     save(f'key{k}', y)
+for k in range(4):
+    thock(k)
 
 # pop: soft bubble for cards and chips landing
 def pop(name, f0=880, f1=420, d=0.12):
