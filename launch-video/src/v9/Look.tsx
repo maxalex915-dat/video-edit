@@ -28,19 +28,16 @@ export const BoldField: React.FC<{corner?: 0 | 1 | 2; bloom?: number}> = ({corne
   const f = useF();
   const t = f / 30;
   const v = prog(f, 0, 50, E.inOut);
-  const VC: [number, number][] = [[-8, 112], [112, 60], [105, -10]];
+  // one hue in three depths, like the reference: strong cyan, a pale cyan wash with no edges, a near-black teal corner
+  const VC: [number, number][] = [[0, 100], [100, 55], [100, 0]];
   const [vx, vy] = VC[corner];
-  // the white U bloom
-  const ux = 960 + s(t * 0.5) * 120, uy = 330 + c(t * 0.4) * 40;
+  const wx = 50 + s(t * 0.35) * 8, wy = 62 + c(t * 0.3) * 5;
   return (
-    <AbsoluteFill style={{background: `linear-gradient(160deg, ${CY} 0%, ${CYD} 100%)`, overflow: 'hidden'}}>
-      <Blob x={1500 + s(t * 0.3) * 120} y={900} w={1100} h={700} color={GR} blur={160} o={0.55} />
-      <svg width="1920" height="1080" style={{position: 'absolute', filter: 'blur(70px)', opacity: 0.85 * bloom}}>
-        <path d={`M ${ux - 520} ${uy - 260} Q ${ux - 470} ${uy + 420} ${ux} ${uy + 430} Q ${ux + 470} ${uy + 420} ${ux + 520} ${uy - 260}`} fill="none" stroke="#fff" strokeWidth={230} strokeLinecap="round" />
-      </svg>
-      <Blob x={960 + c(t * 0.35) * 200} y={-60} w={900} h={360} color={CY} blur={80} o={0.9} />
-      <AbsoluteFill style={{background: `radial-gradient(1100px 900px at ${vx + (corner === 0 ? -20 : 20) * (1 - v)}% ${vy}%, #021f24 0%, ${TEALD} 22%, rgba(4,63,69,.6) 42%, transparent 72%)`, opacity: 1}} />
-      <Grain o={0.07} />
+    <AbsoluteFill style={{background: '#08aee6', overflow: 'hidden'}}>
+      <AbsoluteFill style={{background: `radial-gradient(82% 66% at ${wx}% ${wy}%, rgba(220,245,253,${0.97 * bloom}) 0%, rgba(165,228,250,${0.8 * bloom}) 34%, rgba(70,200,243,.42) 62%, rgba(8,174,230,0) 88%)`}} />
+      <AbsoluteFill style={{background: `radial-gradient(45% 40% at ${50 + c(t * 0.25) * 12}% -6%, rgba(0,150,214,.95) 0%, rgba(0,160,220,.5) 45%, transparent 75%)`}} />
+      <AbsoluteFill style={{background: `radial-gradient(78% 92% at ${vx + (vx < 50 ? -14 : 14) * (1 - v)}% ${vy}%, rgba(1,26,31,.95) 0%, rgba(3,52,59,.8) 16%, rgba(3,60,70,.45) 38%, rgba(3,60,70,.16) 58%, transparent 80%)`}} />
+      <Grain o={0.14} />
     </AbsoluteFill>
   );
 };
