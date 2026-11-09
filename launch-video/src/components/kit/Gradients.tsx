@@ -42,8 +42,8 @@ export const Sparkles: React.FC<{t: number; n: number; dark: boolean}> = ({t, n,
     })}
   </AbsoluteFill>
 );
-export const Ground: React.FC<{kind: GradKind; t?: number}> = (p) => (React.useContext(Bare) ? null : <Ground0 {...p} />);
-const Ground0: React.FC<{kind: GradKind; t?: number}> = ({kind: k0, t: tt}) => {
+export const Ground: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = (p) => (React.useContext(Bare) ? null : <Ground0 {...p} />);
+const Ground0: React.FC<{kind: GradKind; t?: number; behind?: React.ReactNode}> = ({kind: k0, t: tt, behind}) => {
   const kind = REMAP[k0] ?? k0;
   const f = useCurrentFrame();
   const t = (tt ?? f) / 30, s = Math.sin, c = Math.cos;
@@ -207,6 +207,7 @@ const Ground0: React.FC<{kind: GradKind; t?: number}> = ({kind: k0, t: tt}) => {
           <AbsoluteFill style={{background: `${b(-5 + s(t * .3) * 6, 15, 900, 900, 'rgba(0,185,239,.55)', 65)}, ${b(105 + c(t * .25) * 5, 30, 900, 1000, 'rgba(112,203,243,.4)', 65)}, ${b(55 + s(t * .2) * 10, 115, 1400, 600, 'rgba(10,139,132,.55)', 65)}`}} />
           <div style={{position: 'absolute', left: `${30 + s(t * .22) * 10}%`, top: '-20%', width: 260, height: 1500, background: 'linear-gradient(180deg, transparent, rgba(127,188,66,.55), rgba(0,185,239,.25), transparent)', filter: 'blur(50px)', transform: `rotate(${32 + s(t * .3) * 6}deg)`}} />
           {kind === 'horizon' && <>
+            {behind}
             <div style={{position: 'absolute', left: -480, top: 620, width: 2880, height: 2880, borderRadius: '50%', background: 'radial-gradient(circle at 50% 4%, #0a3a44 0%, #021015 25%)', boxShadow: '0 -30px 120px 10px rgba(0,185,239,.55), 0 -6px 30px 2px rgba(127,188,66,.6), inset 0 6px 14px rgba(112,203,243,.9)'}} />
           </>}
           <Sparkles t={t} n={10} dark />

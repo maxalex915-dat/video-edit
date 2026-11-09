@@ -4,6 +4,7 @@ import {useF, prog, spr, S, E, lerp, C, F, PlatformIcon, Platform, Typed, LoopGl
 import {Cursor, Ripple} from '../components/kit/Anim';
 import {KpiCard, PlatformCard, SessionsPanel, SiteHealthPanel, FunnelPanel, RequestsChart} from '../components/ui/Panels';
 import {ReportPage} from '../components/ui/Screens';
+import {RealHome} from './RealHome';
 import * as M from '../v4/Mid';
 import * as M2 from '../v4/Mid2';
 import * as SA from '../v4/Audit';
@@ -59,18 +60,7 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
         <Typed parts={[['Every channel. '], ['One dashboard.', true], [' Zero copy-paste.']]} at={2} size={60} dark />
       </div>
       <TiltIn t={t} at={26} dur={dur} cx={960} cy={640}>
-        <AppWin w={1500} h={770} active={0} title="Home" style={{left: 210, top: 210}}>
-          <div style={{position: 'absolute', left: 30, top: 74, display: 'flex', gap: 18}}>
-            {KP.map(([l, v, dd, p], i) => <div key={l} style={{opacity: prog(f, 44 + i * 5, 14), transform: `translateY(${(1 - prog(f, 44 + i * 5, 16, E.snappy)) * 30}px)`}}><KpiCard label={l} v={v} d={dd} icon={p} w={322} /></div>)}
-          </div>
-          <div style={{position: 'absolute', left: 30, top: 250, display: 'flex', gap: 18}}>
-            <SessionsPanel draw={d} count={d} w={770} />
-            <div style={{display: 'flex', flexDirection: 'column', gap: 18}}>
-              <PlatformCard p="li" label="Impressions" v={14210} d="12%" series={SER[0]} draw={d} best w={540} />
-              <PlatformCard p="fb" label="Views" v={9120} d="5%" series={SER[1]} draw={d} w={540} />
-            </div>
-          </div>
-        </AppWin>
+        <div style={{position: 'absolute', left: 240, top: 200, width: 1600, height: 900, transform: 'scale(0.9)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(120,220,255,.85), 0 0 50px -6px rgba(0,185,239,.55), 0 70px 150px -30px rgba(0,10,20,.8)'}}><RealHome at={26} /></div>
       </TiltIn>
     </AbsoluteFill>
   );
@@ -401,12 +391,7 @@ export const Recap: React.FC<{dur: number}> = ({dur}) => {
       <Sky dark />
       <AbsoluteFill style={{background: 'radial-gradient(800px 320px at 55% 62%, rgba(0,185,239,.35), transparent 70%)'}} />
       <TiltIn t={{ry0: -10, rx0: 50, x0: 0, y0: 500, ry1: -8, rx1: 24, rz1: 2}} at={4} len={30} dur={dur} cx={960} cy={800}>
-        <AppWin w={1400} h={700} active={0} title="Home" style={{left: 260, top: 450}}>
-          <div style={{position: 'absolute', left: 30, top: 74, display: 'flex', gap: 18}}>
-            {KP.map(([l, v, dd, p]) => <KpiCard key={l} label={l} v={v} d={dd} icon={p} w={300} />)}
-          </div>
-          <div style={{position: 'absolute', left: 30, top: 250}}><SessionsPanel w={1290} /></div>
-        </AppWin>
+        <div style={{position: 'absolute', left: 280, top: 430, width: 1600, height: 900, transform: 'scale(0.85)', transformOrigin: '0 0', borderRadius: 24, overflow: 'hidden', boxShadow: '0 0 0 2px rgba(120,220,255,.85), 0 0 50px -6px rgba(0,185,239,.55), 0 70px 150px -30px rgba(0,10,20,.8)'}}><RealHome at={-60} /></div>
       </TiltIn>
       <div style={{position: 'absolute', left: 0, right: 0, top: 110, textAlign: 'center'}}>
         <Typed parts={[['Less time collecting. '], ['More time deciding.', true]]} at={4} size={92} dark />
