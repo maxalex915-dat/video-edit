@@ -102,7 +102,7 @@ export const Montage: React.FC<{dur: number}> = ({dur}) => {
           const d = i - pos, ad = Math.abs(d);
           const on = prog(f, 0, 12);
           return (
-            <div key={it} style={{position: 'absolute', left: 110 + 1700 - Math.cos(d * 0.092) * 1700, top: 540 + Math.sin(d * 0.092) * 1700 - 40, fontFamily: F.display, fontSize: 64, fontWeight: 600, letterSpacing: '-0.035em', whiteSpace: 'nowrap', transformOrigin: '0 50%', transform: `rotate(${-d * 0.092 * 57.3}deg) scale(${1 - Math.min(1, ad) * 0.12 - ad * 0.04})`, opacity: on * Math.max(0, 1 - ad * 0.38), filter: ad > 0.08 ? `blur(${Math.min(8, ad * 3)}px)` : undefined, ...(i === cur && ad < 0.5 ? {backgroundImage: BRAND, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.08em'} : {color: INK})}}>{it}</div>
+            <div key={it} style={{position: 'absolute', left: 110 + 1700 - Math.cos(d * 0.092) * 1700 - Math.max(0, 1 - ad) * 70, top: 540 + Math.sin(d * 0.092) * 1700 - 40, fontFamily: F.display, fontSize: 64, fontWeight: 600, letterSpacing: '-0.035em', whiteSpace: 'nowrap', transformOrigin: '0 50%', transform: `rotate(${-d * 0.092 * 57.3}deg) scale(${1 - Math.min(1, ad) * 0.12 - ad * 0.04})`, opacity: on * Math.max(0, 1 - ad * 0.38), filter: ad > 0.08 ? `blur(${Math.min(8, ad * 3)}px)` : undefined, ...(i === cur && ad < 0.5 ? {backgroundImage: BRAND, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.08em'} : {color: INK})}}>{it}</div>
           );
         })}
       </div>
