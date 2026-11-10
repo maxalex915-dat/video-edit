@@ -22,22 +22,29 @@ const Tilt: React.FC<{rx: number; ry: number; rz?: number; cx?: number; cy?: num
 // 1. Brand field: the statistic arrives huge, then settles into the sentence.
 export const Stat: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
-  const k = prog(f, 38, 16, E.inOut);
+  const k = prog(f, 28, 14, E.inOut);
   return (
     <AbsoluteFill>
       <BrandField seed={0} />
       <Drift dur={dur} z={0.06}>
         <Center y={lerp(k, 0, -40)}>
-          <div style={{transform: `scale(${lerp(k, 1, 0.55)})`}}><Words parts={[['Every week']]} at={22} size={200} color={W} stagger={9} /></div>
+          <div style={{transform: `scale(${lerp(k, 1, 0.55)})`}}><Words parts={[['Millions']]} at={12} size={230} color={W} /></div>
         </Center>
-        <Center y={70}><Words parts={[['our marketing analytics']]} at={46} size={92} color={W} weight={500} stagger={5} /></Center>
+        <Center y={70}><Words parts={[['of marketing teams']]} at={31} size={92} color={W} weight={500} stagger={7} /></Center>
       </Drift>
     </AbsoluteFill>
   );
 };
 
 // 2. Mist: "lives on" then "7 different platforms" with the platforms scattered around it at different depths.
-const CHIP: [number, number, number][] = [[520, 300, 1], [1380, 260, 1.05], [400, 640, 0.95], [1500, 700, 1], [760, 860, 0.9], [1180, 880, 1.05], [960, 190, 0.85]];
+// fifteen platforms around the line: our seven, then other tools most marketing teams use
+const EXTRA: [string, string, string][] = [['Google Ads', 'G', '#4285f4'], ['TikTok', 'T', '#111111'], ['X', 'X', '#111111'], ['Mailchimp', 'M', '#e0a400'], ['Canva', 'C', '#00a3c4'], ['SEMrush', 'S', '#ff642d'], ['Google Business', 'B', '#34a853'], ['Zalo', 'Z', '#0068ff']];
+const CHIPS = Array.from({length: 15}).map((_, i) => {
+  const a = -Math.PI / 2 + (i / 15) * Math.PI * 2 + (i % 2) * 0.12;
+  const rx = 760 - (i % 3) * 70, ry = 400 - (i % 2) * 60;
+  return [960 + Math.cos(a) * rx, 545 + Math.sin(a) * ry, 0.8 + ((i * 7) % 5) * 0.06] as [number, number, number];
+});
+const ORDER15 = [0, 8, 3, 11, 6, 13, 1, 9, 4, 14, 7, 2, 12, 5, 10]; // pop order, scattered
 const FILES: [string, number, number][] = [['linkedin_export.csv', 230, 160], ['GA4_sessions (2).xlsx', 1660, 150], ['report_FINAL_v7.xlsx', 200, 900], ['search_console.csv', 1700, 930], ['facebook_insights.xlsx', 1120, 110], ['email_stats.csv', 640, 980]];
 export const Platforms: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
@@ -45,24 +52,25 @@ export const Platforms: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.25 + prog(f, 20, 60) * 0.35} />
-      {PS.map((_, i) => <Pop key={i} at={30 + i * 3} k={i} v={0.18} />)}
+      {ORDER15.map((_, i) => <Pop key={i} at={46 + i * 3} k={i} v={0.14} />)}
       <Drift dur={dur} z={0.08}>
         {FILES.map(([n, x, y], i) => {
-          const q = prog(f, 44 + i * 3, 20, E.snappy);
+          const q = prog(f, 60 + i * 3, 20, E.snappy);
           return <div key={n} style={{position: 'absolute', left: x - 120 + Math.sin(t + i) * 10, top: y - 22, opacity: q * 0.55, filter: 'blur(2.5px)', transform: `scale(${0.8 + q * 0.1})`, fontFamily: F.text, fontSize: 18, color: MUTE, background: 'rgba(255,255,255,.7)', borderRadius: 99, padding: '8px 18px', boxShadow: '0 6px 20px -10px rgba(4,63,69,.3)'}}>{n}</div>;
         })}
-        {PS.map(([p, n], i) => {
-          const [x, y, z] = CHIP[i];
-          const q = spr(f, 30 + i * 3, S.pop);
+        {CHIPS.map(([x, y, z], i) => {
+          const q = spr(f, 46 + ORDER15.indexOf(i) * 3, S.pop);
+          const own = i < PS.length;
+          const icon = own ? <PlatformIcon p={PS[i][0]} size={44} style={{borderRadius: 99}} /> : <span style={{width: 44, height: 44, borderRadius: 99, background: EXTRA[i - PS.length][2], color: '#fff', fontWeight: 800, fontSize: 20, display: 'grid', placeItems: 'center'}}>{EXTRA[i - PS.length][1]}</span>;
           return (
-            <div key={p} style={{position: 'absolute', left: x + Math.cos(t * 0.6 + i) * 10, top: y + Math.sin(t * 0.8 + i * 1.3) * 12, transform: `translate(-50%,-50%) scale(${Math.min(1.04, q) * z})`, opacity: Math.min(1, q), display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,.92)', borderRadius: 99, padding: '10px 26px 10px 10px', boxShadow: '0 0 0 1.5px #fff, 0 18px 40px -18px rgba(4,63,69,.35)', fontFamily: F.text, fontSize: 26, fontWeight: 600, color: INK, whiteSpace: 'nowrap'}}>
-              <PlatformIcon p={p} size={46} style={{borderRadius: 99}} />{n}
+            <div key={i} style={{position: 'absolute', left: x + Math.cos(t * 0.6 + i) * 10, top: y + Math.sin(t * 0.8 + i * 1.3) * 12, transform: `translate(-50%,-50%) scale(${Math.min(1.04, q) * z})`, opacity: Math.min(1, q), filter: z < 0.86 ? 'blur(1.2px)' : undefined, display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,.92)', borderRadius: 99, padding: '9px 24px 9px 9px', boxShadow: '0 0 0 1.5px #fff, 0 18px 40px -18px rgba(4,63,69,.35)', fontFamily: F.text, fontSize: 25, fontWeight: 600, color: INK, whiteSpace: 'nowrap'}}>
+              {icon}{own ? PS[i][1] : EXTRA[i - PS.length][0]}
             </div>
           );
         })}
         <Center>
-          {f < 20 ? <Words parts={[['lives on']]} at={1} size={84} out={13} />
-            : <Words parts={[['7', true], ['different platforms']]} at={20} size={92} stagger={5} />}
+          {f < 38 ? <Words parts={[['rely on']]} at={2} size={84} out={30} />
+            : <Words parts={[['15', true], ['different platforms']]} at={41} size={92} stagger={12} />}
         </Center>
       </Drift>
     </AbsoluteFill>
@@ -75,12 +83,12 @@ export const Fragmented: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <Mist lift={0.55} />
-      <Swish at={0} /><Swish at={44} k={1} />
+      <Swish at={0} /><Swish at={62} k={1} />
       <Drift dur={dur} z={0.05}>
-        <Pillar rise={prog(f, 0, 30, E.snappy)} split={prog(f, 44, 40, E.inOut)} />
+        <Pillar rise={prog(f, 0, 30, E.snappy)} split={prog(f, 62, 40, E.inOut)} />
         <Center>
-          {f < 44 ? <Words parts={[['What should be simple']]} at={6} size={80} out={36} />
-            : <Words parts={[['has become'], ['fragmented & manual', true]]} at={46} size={80} />}
+          {f < 40 ? <Words parts={[['What should be simple']]} at={6} size={80} out={34} />
+            : <div style={{display: 'flex', gap: 22}}><Words parts={[['has become'], ['fragmented', true]]} at={42} size={80} stagger={11} /><Words parts={[['& manual', true]]} at={85} size={80} stagger={6} /></div>}
         </Center>
       </Drift>
     </AbsoluteFill>
