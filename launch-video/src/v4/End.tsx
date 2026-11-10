@@ -8,8 +8,8 @@ import {LOOP_PATHS} from '../v9/loopPaths';
 // the centre card lands last. Hold. The centre card fills the screen; that colour is the loop, seen up close;
 // the loop pulls back to its normal size and "archetype group" forms around it.
 const LAST = land(7) + 26;          // all cards in
-const HOLD = LAST + 96;             // about 3 s of hold
-const EXPAND = 22, CROSS = 8, SHRINK = 30;
+const HOLD = LAST + 36;             // a short hold once every card is in
+const EXPAND = 20, CROSS = 0, SHRINK = 30; // the loop falls back the moment the gradient fills the screen
 const T1 = HOLD + EXPAND, T2 = T1 + CROSS, T3 = T2 + SHRINK;
 const LS = 900 / 2960, LX = 510, LY = 281;
 const LOOP_K = 835.02 / 2417.45;
@@ -27,7 +27,7 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
   const ex = prog(f, HOLD, EXPAND, E.inOut);
   const r = {x: lerp(ex, HERO.x, 0), y: lerp(ex, HERO.y, 0), w: lerp(ex, HERO.w, 1920), h: lerp(ex, HERO.h, 1080)};
   // the loop: huge (its ribbon fills the frame), then back to its real size
-  const sh = prog(f, T2, SHRINK, E.inOut);
+  const sh = prog(f, T2, SHRINK, (x) => 1 - Math.pow(1 - x, 3)); // fast start: the loop pulls back at once
   const scale = Math.pow(60, 1 - sh);
   const ox = LOOP_X + OX * LOOP_W, oy = LOOP_Y + OY * LOOP_H;
   const loopVis = f >= T1;

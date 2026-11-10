@@ -26,7 +26,7 @@ export const Consuming: React.FC<{dur: number}> = () => {
   const f = useF();
   // part 1: the list builds with the voice ("different providers", "different logins", "costing hundreds of dollars")
   const LIST: [string, number][] = [['Different providers', 45], ['Different logins', 82], ['Costing hundreds of dollars', 120]];
-  const S = 149; // parts 2 and 3 start after the list
+  const S = 164; // parts 2 and 3 start after the list (leaves a breath after the list's line)
   const g = f - S;
   const p1 = f < S + 10;
   const arrow = prog(f, 34, 12, E.snappy);

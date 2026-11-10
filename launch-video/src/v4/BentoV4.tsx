@@ -15,7 +15,7 @@ const T: React.FC<{children: React.ReactNode; size?: number; style?: React.CSSPr
   <div style={{fontFamily: F.text, fontWeight: 650, fontSize: size, lineHeight: 1.12, color: ink, letterSpacing: '-0.01em', ...style}}>{children}</div>
 );
 export const ORDER = [4, 9, 1, 11, 6, 0, 8, 3, 10, 5, 2, 7]; // random order, the centre card last
-export const land = (i: number) => 2 + ORDER.indexOf(i) * 6;
+export const land = (i: number) => 2 + ORDER.indexOf(i) * 4;
 
 const tiles = (f: number, i: number): React.ReactNode => {
   const s0 = land(i) + 14;
