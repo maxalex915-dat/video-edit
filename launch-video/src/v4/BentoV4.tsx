@@ -22,10 +22,10 @@ const tiles = (f: number, i: number): React.ReactNode => {
   const k = (d = 30, off = 0) => prog(f, s0 + off, d, E.snappy);
   switch (i) {
     case 0: return (<><T>Find out what<br />is working</T>
-      <div style={{display: 'flex', alignItems: 'flex-end', gap: 16, height: 150, marginTop: 44}}>
-        {[55, 85, 45, 140, 75].map((h, j) => <div key={j} style={{position: 'relative', width: 34, height: h * k(26, j * 3), borderRadius: 10, background: j === 3 ? `linear-gradient(0deg, ${C.cyan}, ${C.green})` : '#dfe6e8'}}>{j === 3 && <span style={{position: 'absolute', top: -34, left: -10, background: C.teal, color: '#fff', borderRadius: 99, padding: '3px 12px', fontSize: 17, fontWeight: 700, transform: `scale(${spr(f, s0 + 28, S.pop)})`}}>best</span>}</div>)}
+      <div style={{display: 'flex', alignItems: 'flex-end', gap: 16, height: 124, marginTop: 40}}>
+        {[46, 72, 38, 118, 64].map((h, j) => <div key={j} style={{position: 'relative', width: 34, height: h * k(26, j * 3), borderRadius: 10, background: j === 3 ? `linear-gradient(0deg, ${C.cyan}, ${C.green})` : '#dfe6e8'}}>{j === 3 && <span style={{position: 'absolute', top: -34, left: -10, background: C.teal, color: '#fff', borderRadius: 99, padding: '3px 12px', fontSize: 17, fontWeight: 700, transform: `scale(${spr(f, s0 + 28, S.pop)})`}}>best</span>}</div>)}
       </div>
-      <div style={{display: 'flex', gap: 12, marginTop: 22}}>{(['li', 'fb', 'ig', 'yt'] as Platform[]).map((p, j) => <PlatformIcon key={p} p={p} size={44} style={{transform: `scale(${spr(f, s0 + 10 + j * 4, S.pop)})`}} />)}</div></>);
+      <div style={{display: 'flex', gap: 12, marginTop: 18}}>{(['li', 'fb', 'ig', 'yt'] as Platform[]).map((p, j) => <PlatformIcon key={p} p={p} size={44} style={{transform: `scale(${spr(f, s0 + 10 + j * 4, S.pop)})`}} />)}</div></>);
     case 1: {
       const g = k(40);
       return (<><T>Free, in-house<br />site audit</T>
