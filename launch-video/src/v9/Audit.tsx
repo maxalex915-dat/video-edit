@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, interpolate} from 'remotion';
 import {useF} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog, spr, S, lerp} from '../theme/motion';
@@ -137,12 +137,14 @@ const CT = 92;
 export const Review: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   const turn = prog(f, 0, dur, (q) => q);
-  const cur = Math.min(2, Math.floor(f / 30));
+  // a real deck: the front card lifts up and over to the back, revealing the next one
+  const dp = interpolate(f, [0, 30, 46, 64, 80], [0, 0, 1, 1, 2], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: E.inOut});
+  const cur = Math.round(dp);
   const done = f >= CT + 4;
   return (
     <AbsoluteFill>
       <BrandField seed={6} />
-      <Swish at={8} /><Swish at={30} k={1} v={0.12} /><Swish at={60} v={0.12} /><Pop at={CT} v={0.26} />
+      <Swish at={6} /><Swish at={30} k={1} v={0.14} /><Swish at={64} v={0.14} /><Pop at={46} v={0.14} /><Pop at={80} k={1} v={0.14} /><Pop at={CT} k={2} v={0.26} />
       <div style={{position: 'absolute', left: 120, top: 330, width: 760, zIndex: 5}}>
         <Words parts={[['An AI expert\nreview, every month.']]} at={2} size={74} color={W} align="left" />
         <div style={{height: 22}} />
@@ -152,11 +154,18 @@ export const Review: React.FC<{dur: number}> = ({dur}) => {
       </div>
       <Tilt rx={lerp(turn, 16, 10)} ry={lerp(turn, -24, -14)} cx={1300} cy={560}>
         {FINDINGS.map(([cat, title, sev, todo], i) => {
-          const front = i === cur;
-          const q = spr(f, 8 + i * 6, S.soft);
-          const z = front ? 120 : -60 * Math.abs(i - cur);
+          const e = (((i - dp) % 3) + 3) % 3; // 0 front, 1 and 2 behind; (2,3) = travelling from the front to the back
+          const leaving = e > 2;
+          const u = leaving ? 3 - e : 0;
+          const depth = leaving ? lerp(u, 0, 2) : e;
+          const lift = leaving ? Math.sin(u * Math.PI) * 460 : 0;
+          const q = Math.min(1, spr(f, 6, S.soft));
+          const front = depth < 0.5 && !leaving;
           return (
-            <div key={cat} style={{position: 'absolute', left: 860, top: 220 + i * 70, width: 900, borderRadius: 28, background: 'rgba(255,255,255,.97)', ...glow(front ? 1.1 : 0.6), padding: '28px 34px', boxSizing: 'border-box', fontFamily: F.text, color: INK, transform: `translateZ(${z}px) translateY(${(1 - Math.min(1, q)) * 200}px)`, opacity: Math.min(1, q) * (front ? 1 : 0.75), zIndex: front ? 3 : 1, transition: 'none'}}>
+            <div key={cat} style={{position: 'absolute', left: 860, top: 300, width: 900, height: 340, borderRadius: 28, background: 'rgba(255,255,255,.97)', ...glow(front ? 1.1 : 0.55), padding: '28px 34px', boxSizing: 'border-box', fontFamily: F.text, color: INK,
+              transform: `translateY(${-depth * 22 - lift + (1 - q) * 260}px) translateZ(${-depth * 80 + (leaving ? Math.sin(u * Math.PI) * 60 : 0)}px) rotateX(${leaving ? -Math.sin(u * Math.PI) * 14 : 0}deg) scale(${1 - depth * 0.045})`,
+              opacity: q * (1 - Math.max(0, depth - 0.2) * 0.2)}}>
+              <div style={{position: 'absolute', inset: 0, padding: '28px 34px', opacity: leaving ? 1 - Math.min(1, u * 1.6) * 0.9 : 1 - Math.min(1, depth) * 0.92}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
                 <span style={{fontSize: 15, fontWeight: 700, letterSpacing: '.12em', backgroundImage: BRAND, WebkitBackgroundClip: 'text', color: 'transparent'}}>{cat.toUpperCase()}</span>
                 <span style={{fontSize: 14, fontWeight: 700, color: sev === 'High' ? '#c4501b' : '#a87412', background: sev === 'High' ? '#fcf0ea' : '#fdf6e4', borderRadius: 99, padding: '4px 12px'}}>{sev}</span>
@@ -164,7 +173,8 @@ export const Review: React.FC<{dur: number}> = ({dur}) => {
               <div style={{fontFamily: F.display, fontSize: 36, fontWeight: 650, letterSpacing: '-0.02em', lineHeight: 1.15, marginTop: 12}}>{title}</div>
               <div style={{fontSize: 15, fontWeight: 700, color: MUTE, marginTop: 18, letterSpacing: '.08em'}}>WHAT TO DO</div>
               <div style={{fontSize: 22, lineHeight: 1.4, marginTop: 6}}>{todo}</div>
-              <div style={{marginTop: 20, display: 'inline-block', borderRadius: 99, padding: '12px 26px', fontSize: 20, fontWeight: 700, background: front && done && i === 2 ? `linear-gradient(90deg, ${GR}, ${CY} 60%, ${SKY})` : INK, color: W}}>{front && done && i === 2 ? '✓ Task created' : 'Create task'}</div>
+              <div style={{position: 'absolute', left: 34, bottom: 28, borderRadius: 99, padding: '12px 26px', fontSize: 20, fontWeight: 700, background: done && i === 2 ? `linear-gradient(90deg, ${GR}, ${CY} 60%, ${SKY})` : INK, color: W}}>{done && i === 2 ? '✓ Task created' : 'Create task'}</div>
+              </div>
             </div>
           );
         })}
