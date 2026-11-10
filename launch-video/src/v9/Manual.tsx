@@ -16,18 +16,18 @@ const Sheet: React.FC<{name: string; w: number; h: number; fill: number; seed: n
   const rows = Math.floor((h - 92) / 26), cols = 6;
   const shown = Math.floor(fill * rows * cols);
   return (
-    <div style={{width: w, height: h, borderRadius: 14, overflow: 'hidden', background: '#fff', boxShadow: '0 0 0 1px rgba(16,36,42,.08), 0 30px 60px -24px rgba(0,40,60,.45)', fontFamily: F.text}}>
-      <div style={{height: 34, background: XL, display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px', color: '#fff', fontSize: 14, fontWeight: 600}}>
+    <div style={{width: w, height: h, borderRadius: 18, overflow: 'hidden', background: 'linear-gradient(155deg, rgba(240,252,244,.66) 0%, rgba(196,236,208,.52) 55%, rgba(150,215,172,.46) 100%)', border: '1.5px solid rgba(255,255,255,.85)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.9), 0 30px 60px -26px rgba(0,50,40,.45)', fontFamily: F.text}}>
+      <div style={{height: 34, background: 'linear-gradient(90deg, rgba(29,111,66,.78), rgba(46,140,88,.55))', display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px', color: '#fff', fontSize: 14, fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,.5)'}}>
         <span style={{width: 18, height: 18, borderRadius: 4, background: '#fff', color: XL, fontSize: 12, fontWeight: 800, display: 'grid', placeItems: 'center'}}>X</span>{name}
       </div>
-      <div style={{height: 24, background: '#f3f6f4', borderBottom: '1px solid #dfe6e2', display: 'flex', fontSize: 11, color: MUTE}}>
-        <span style={{width: 30}} />{'ABCDEF'.split('').map((l) => <span key={l} style={{flex: 1, textAlign: 'center', lineHeight: '24px', borderLeft: '1px solid #e3e9e6'}}>{l}</span>)}
+      <div style={{height: 24, background: 'rgba(255,255,255,.28)', borderBottom: '1px solid rgba(255,255,255,.55)', display: 'flex', fontSize: 11, color: '#3f5f50'}}>
+        <span style={{width: 30}} />{'ABCDEF'.split('').map((l) => <span key={l} style={{flex: 1, textAlign: 'center', lineHeight: '24px', borderLeft: '1px solid rgba(255,255,255,.45)'}}>{l}</span>)}
       </div>
       <div style={{position: 'relative'}}>
         {Array.from({length: rows}).map((_, r) => (
-          <div key={r} style={{display: 'flex', height: 26, borderBottom: '1px solid #eef2f0', fontSize: 12.5, color: INK, fontVariantNumeric: 'tabular-nums'}}>
-            <span style={{width: 30, textAlign: 'center', lineHeight: '26px', color: MUTE, background: '#f8faf9', fontSize: 11}}>{r + 1}</span>
-            {Array.from({length: cols}).map((_, c) => <span key={c} style={{flex: 1, lineHeight: '26px', padding: '0 6px', borderLeft: '1px solid #eef2f0', textAlign: c ? 'right' : 'left', opacity: r * cols + c < shown ? 1 : 0, whiteSpace: 'nowrap', overflow: 'hidden'}}>{num(r, c, seed)}</span>)}
+          <div key={r} style={{display: 'flex', height: 26, borderBottom: '1px solid rgba(255,255,255,.45)', fontSize: 12.5, color: '#163a2a', fontVariantNumeric: 'tabular-nums'}}>
+            <span style={{width: 30, textAlign: 'center', lineHeight: '26px', color: '#3f5f50', background: 'rgba(255,255,255,.22)', fontSize: 11}}>{r + 1}</span>
+            {Array.from({length: cols}).map((_, c) => <span key={c} style={{flex: 1, lineHeight: '26px', padding: '0 6px', borderLeft: '1px solid rgba(255,255,255,.4)', textAlign: c ? 'right' : 'left', opacity: r * cols + c < shown ? 1 : 0, whiteSpace: 'nowrap', overflow: 'hidden'}}>{num(r, c, seed)}</span>)}
           </div>
         ))}
         {sel > 0 && <div style={{position: 'absolute', left: 30 + ((w - 30) / 6) * 1, top: 26, width: ((w - 30) / 6) * 3 * sel, height: 26 * 6, background: 'rgba(29,111,66,.12)', border: `2px ${ants > 0 ? 'dashed' : 'solid'} ${XL}`, borderRadius: 2}} />}
@@ -36,13 +36,13 @@ const Sheet: React.FC<{name: string; w: number; h: number; fill: number; seed: n
   );
 };
 const Report: React.FC<{w: number; h: number; bars: number; week: number}> = ({w, h, bars, week}) => (
-  <div style={{width: w, height: h, borderRadius: 16, overflow: 'hidden', background: '#f4f1ef', boxShadow: '0 0 0 1px rgba(16,36,42,.08), 0 40px 80px -24px rgba(0,40,60,.5)', fontFamily: F.text, display: 'flex', flexDirection: 'column'}}>
-    <div style={{height: 38, background: PP, display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px', color: '#fff', fontSize: 15, fontWeight: 600}}>
+  <div style={{width: w, height: h, borderRadius: 20, overflow: 'hidden', background: 'linear-gradient(155deg, rgba(255,255,255,.66) 0%, rgba(252,228,218,.45) 60%, rgba(245,200,182,.36) 100%)', border: '1.5px solid rgba(255,255,255,.85)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.9), 0 40px 80px -26px rgba(60,30,20,.45)', fontFamily: F.text, display: 'flex', flexDirection: 'column'}}>
+    <div style={{height: 38, background: 'linear-gradient(90deg, rgba(196,62,28,.8), rgba(222,110,70,.58))', borderBottom: '1px solid rgba(255,255,255,.5)', display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px', color: '#fff', fontSize: 15, fontWeight: 600}}>
       <span style={{width: 20, height: 20, borderRadius: 4, background: '#fff', color: PP, fontSize: 13, fontWeight: 800, display: 'grid', placeItems: 'center'}}>P</span>Weekly marketing report, week {week}.pptx
     </div>
     <div style={{flex: 1, display: 'flex', gap: 14, padding: 14}}>
-      <div style={{width: 120, display: 'flex', flexDirection: 'column', gap: 10}}>{[0, 1, 2, 3].map((i) => <div key={i} style={{height: 66, borderRadius: 6, background: '#fff', border: i === 1 ? `2px solid ${PP}` : '1px solid #e2dcd8'}} />)}</div>
-      <div style={{flex: 1, background: '#fff', borderRadius: 8, padding: '26px 30px', boxShadow: '0 4px 14px -6px rgba(0,0,0,.15)', position: 'relative'}}>
+      <div style={{width: 120, display: 'flex', flexDirection: 'column', gap: 10}}>{[0, 1, 2, 3].map((i) => <div key={i} style={{height: 66, borderRadius: 8, background: 'rgba(255,255,255,.5)', border: i === 1 ? '2px solid rgba(196,62,28,.7)' : '1px solid rgba(255,255,255,.8)'}} />)}</div>
+      <div style={{flex: 1, background: 'rgba(255,255,255,.72)', border: '1px solid rgba(255,255,255,.9)', borderRadius: 12, padding: '26px 30px', boxShadow: '0 8px 20px -10px rgba(60,30,20,.25)', position: 'relative'}}>
         <div style={{fontSize: 30, fontWeight: 700, color: INK}}>Marketing performance, week {week}</div>
         <div style={{fontSize: 16, color: MUTE, marginTop: 4}}>LinkedIn, Facebook, Instagram, YouTube, website, search, email</div>
         <div style={{position: 'absolute', left: 30, right: 30, bottom: 30, height: h * 0.45, display: 'flex', alignItems: 'flex-end', gap: 16, borderBottom: '2px solid #e7e2de'}}>
