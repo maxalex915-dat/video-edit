@@ -14,7 +14,7 @@ import {BrandFieldRaw, MistRaw} from './Look';
 type G = {k: 'brand'; seed: number} | {k: 'mist'; lift: number} | {k: 'own'};
 export const BEATS9: [number, React.FC<{dur: number}>, string, G][] = [
   [2.6, V.Stat, 'statistic', {k: 'brand', seed: 0}], [4.4, V.Platforms, '7 platforms', {k: 'mist', lift: 0.45}], [3.4, V.Fragmented, 'fragmented', {k: 'mist', lift: 0.55}],
-  [7.0, Manual, 'sheets and slides', {k: 'brand', seed: 1}], [6.4, Consuming, 'consuming time', {k: 'mist', lift: 0.7}],
+  [7.0, Manual, 'sheets and slides', {k: 'mist', lift: 0.5}], [6.4, Consuming, 'consuming time', {k: 'mist', lift: 0.7}],
   [3.6, V.Intro, 'introducing', {k: 'mist', lift: 0.3}], [4.4, V.Home, 'home', {k: 'mist', lift: 1}],
   [2.6, V.Decide, 'action plan', {k: 'brand', seed: 2}], [5.0, V.Carousel, 'features', {k: 'mist', lift: 0.8}], [5.0, TrendsZoom, 'trends', {k: 'mist', lift: 0.6}],
   [5.0, V.Report, 'ai report', {k: 'brand', seed: 3}], [4.0, V.AllInOne, 'all in one', {k: 'mist', lift: 0.2}], [5.4, V.Tiles, 'tiles', {k: 'brand', seed: 4}],

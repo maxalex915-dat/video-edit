@@ -3,7 +3,7 @@ import {AbsoluteFill, interpolate} from 'remotion';
 import {useF} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog, spr, S, lerp} from '../theme/motion';
-import {BrandField, Words, Pop, Swish, INK, GR, CY, SKY} from './Look';
+import {Mist, Words, Pop, Swish, INK, GR, CY, SKY} from './Look';
 
 // The old way, every week: countless spreadsheets of numbers, copied by hand into a PowerPoint report. Then again.
 const XL = '#1d6f42', PP = '#c43e1c', MUTE = '#6b7f84';
@@ -66,7 +66,7 @@ export const Manual: React.FC<{dur: number}> = ({dur}) => {
   const reshuffle = (k: number) => (f >= 120 ? Math.abs(Math.sin(((f - 120) / 28) * Math.PI)) : 0) * (k % 2 ? 1 : 0.6);
   return (
     <AbsoluteFill>
-      <BrandField seed={1} />
+      <Mist lift={0.5} />
       {WALL.map((_, i) => <Pop key={i} at={4 + i * 2} k={i} v={0.09} />)}<Swish at={34} /><Pop at={68} v={0.2} /><Swish at={70} k={1} /><Pop at={86} k={1} v={0.18} /><Swish at={96} />{[120, 148, 176].map((t, i) => <Pop key={t} at={t + 14} k={i} v={0.16} />)}
       <div style={{position: 'absolute', inset: 0, perspective: 2000}}>
         <div style={{position: 'absolute', inset: 0, transformStyle: 'preserve-3d', transformOrigin: `${cx}px ${cy}px`, transform: `translate(${960 - cx}px, ${560 - cy}px) scale(${cs}) rotateX(${lerp(prog(f, 0, dur), 20, 12)}deg) rotateY(${lerp(prog(f, 0, dur), -10, -4)}deg)`}}>
@@ -89,7 +89,7 @@ export const Manual: React.FC<{dur: number}> = ({dur}) => {
         </div>
       </div>
       {/* the weekly loop */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.']]} at={102} size={84} color="#fff" stagger={5} /></div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.', true]]} at={102} size={84} stagger={5} /></div>
       <div style={{position: 'absolute', left: 0, right: 0, bottom: 60, display: 'flex', justifyContent: 'center', opacity: prog(f, 118, 10), transform: `translateY(${(1 - prog(f, 118, 14, E.snappy)) * 40}px)`}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,.95)', borderRadius: 99, padding: '12px 26px', fontFamily: F.text, fontSize: 28, fontWeight: 700, color: INK, boxShadow: '0 16px 40px -14px rgba(0,60,90,.4)'}}>
           <svg width="30" height="30" viewBox="0 0 24 24" style={{transform: `rotate(${f * 6}deg)`}}><defs><linearGradient id="lp" x1="0" x2="1"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor={SKY} /></linearGradient></defs><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="url(#lp)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
