@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, interpolate, staticFile} from 'remotion';
 import {prog, spr, S, E, useF, Cue, lerp} from '../v3/util';
 import {BentoAnim, ORDER, land} from './BentoV4';
+import {LOOP_PATHS} from '../v9/loopPaths';
 
 // Close: the bento builds in random order while the camera pulls back (corners blurred, a gust of wind),
 // the centre card lands last. Hold. The centre card fills the screen; that colour is the loop, seen up close;
@@ -30,7 +31,13 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
   const scale = Math.pow(60, 1 - sh);
   const ox = LOOP_X + OX * LOOP_W, oy = LOOP_Y + OY * LOOP_H;
   const loopVis = f >= T1;
-  const cross = prog(f, T1, CROSS);
+  // loop transform in screen space: viewBox units -> pixels, scaled about the ribbon point (OX, OY), drifting to place
+  const k0 = LOOP_W / 2403;
+  const gs = k0 * scale;
+  const ax = LOOP_X + OX * LOOP_W, ay = LOOP_Y + OY * LOOP_H; // anchor in screen space at rest
+  const sx = ax + (960 - ax) * (1 - sh), sy = ay + (540 - ay) * (1 - sh); // where the anchor sits now
+  const gx = sx - OX * 2403 * gs, gy = sy - OY * 2496 * gs;
+  const real = prog(f, T3 - 6, 10);
   const wa = prog(f, T3 + 2, 20, E.snappy), wg = prog(f, T3 + 8, 20, E.snappy);
   const end = prog(f, T3, dur - T3, E.glide);
   const mask = `radial-gradient(70% 70% at 50% 50%, transparent 55%, black 100%)`;
@@ -51,14 +58,23 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
         </AbsoluteFill>
       )}
       {f >= T1 && <AbsoluteFill style={{background: '#fff'}} />}
-      {f >= HOLD && f < T2 + 1 && (
-        <div style={{position: 'absolute', left: r.x, top: r.y, width: r.w, height: r.h, borderRadius: lerp(ex, 27, 0), overflow: 'hidden', opacity: 1 - cross, background: 'linear-gradient(135deg, #7fbc42 0%, #00b9ef 45%, #70cbf3 100%)'}} />
+      {f >= HOLD && f < T1 + 1 && (
+        <div style={{position: 'absolute', left: r.x, top: r.y, width: r.w, height: r.h, borderRadius: lerp(ex, 27, 0), overflow: 'hidden', background: 'linear-gradient(135deg, #7fbc42 0%, #00b9ef 45%, #70cbf3 100%)'}}>
+          <svg width="100%" height="100%" style={{position: 'absolute', inset: 0}}><filter id="cardN"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 5} /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer></filter><rect width="100%" height="100%" filter="url(#cardN)" /></svg>
+        </div>
       )}
       {loopVis && (
         <AbsoluteFill style={{transform: `scale(${1 + end * 0.03})`, transformOrigin: '960px 540px'}}>
-          <AbsoluteFill style={{transform: `translate(${(960 - ox) * (1 - sh)}px, ${(540 - oy) * (1 - sh)}px)`}}>
-            <Img src={staticFile('logo_loop.svg')} style={{position: 'absolute', left: LOOP_X, top: LOOP_Y, width: LOOP_W, height: LOOP_H, transform: `scale(${scale})`, transformOrigin: `${OX * 100}% ${OY * 100}%`}} />
-          </AbsoluteFill>
+          {/* the loop as a vector cut-out of the same screen-wide gradient as the card, so the colour cannot jump */}
+          <svg width="1920" height="1080" style={{position: 'absolute', left: 0, top: 0, opacity: 1 - real}}>
+            <defs>
+              <linearGradient id="endG" gradientUnits="userSpaceOnUse" x1="210" y1="-210" x2="1710" y2="1290"><stop offset="0" stopColor="#7fbc42" /><stop offset=".45" stopColor="#00b9ef" /><stop offset="1" stopColor="#70cbf3" /></linearGradient>
+              <clipPath id="endLoop">{LOOP_PATHS.map((d, i) => <path key={i} d={d} transform={`translate(${gx}, ${gy}) scale(${gs})`} />)}</clipPath>
+              <filter id="endN"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 5} /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer></filter>
+            </defs>
+            <g clipPath="url(#endLoop)"><rect width="1920" height="1080" fill="url(#endG)" /><rect width="1920" height="1080" filter="url(#endN)" /></g>
+          </svg>
+          {real > 0 && <Img src={staticFile('logo_loop.svg')} style={{position: 'absolute', left: LOOP_X, top: LOOP_Y, width: LOOP_W, height: LOOP_H, opacity: real}} />}
           <Img src={staticFile('logo_word_a.svg')} style={{position: 'absolute', left: LX, top: LY, width: 900, opacity: wa, filter: `blur(${(1 - wa) * 12}px)`, transform: `translateX(${(1 - wa) * -60}px)`}} />
           <Img src={staticFile('logo_word_g.svg')} style={{position: 'absolute', left: LX, top: LY, width: 900, opacity: wg, filter: `blur(${(1 - wg) * 12}px)`, transform: `translateX(${(1 - wg) * -60}px)`}} />
         </AbsoluteFill>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, Sequence, Html5Audio, staticFile} from 'remotion';
-import {useF, FrameOffset} from '../frame';
+import {useF, FrameOffset, NoGround} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog} from '../theme/motion';
 
@@ -35,7 +35,8 @@ export const Dots: React.FC<{color: string; o: number}> = ({color, o}) => {
 
 // Brand field: the whole frame is the brand gradient, drifting and turning slowly. A second, offset copy of the same
 // gradient breathes over it, so the colour moves like the reference's bold screens without any other colour.
-export const BrandField: React.FC<{seed?: number}> = ({seed = 0}) => {
+export const BrandField: React.FC<{seed?: number}> = (p) => (React.useContext(NoGround) ? null : <BrandFieldRaw {...p} />);
+export const BrandFieldRaw: React.FC<{seed?: number}> = ({seed = 0}) => {
   const f = useF();
   const t = f / 30 + seed * 3;
   const a = 125 + s(t * 0.25) * 18;
@@ -50,7 +51,8 @@ export const BrandField: React.FC<{seed?: number}> = ({seed = 0}) => {
 };
 
 // Mist: off-white, and the brand gradient rising softly from the bottom edge. lift raises it (0 to 1).
-export const Mist: React.FC<{lift?: number}> = ({lift = 0.4}) => {
+export const Mist: React.FC<{lift?: number}> = (p) => (React.useContext(NoGround) ? null : <MistRaw {...p} />);
+export const MistRaw: React.FC<{lift?: number}> = ({lift = 0.4}) => {
   const f = useF();
   const t = f / 30;
   const h = 34 + lift * 30 + s(t * 0.6) * 3;

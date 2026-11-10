@@ -252,13 +252,13 @@ const FEAT: [string, string][] = [['Trends', 'M4 40 L16 28 L26 34 L44 12'], ['AI
 export const Carousel: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   // centred card follows the voice: "Trends" ... "AI insight" ... "keyword strategy" ... "and a lot more"
-  const KEY: [number, number][] = [[0, -0.15], [0.2, 0], [0.95, 0], [1.2, 1], [2.0, 1], [2.25, 2], [3.2, 2], [dur / 30, FEAT.length - 1]];
+  const KEY: [number, number][] = [[0, -0.15], [0.35, 0], [1.1, 0], [1.35, 1], [2.15, 1], [2.4, 2], [3.35, 2], [dur / 30, FEAT.length - 1]];
   const pos = interpolate(f / 30, KEY.map((k) => k[0]), KEY.map((k) => k[1]), {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: E.inOut});
   return (
     <AbsoluteFill>
       <Mist lift={0.8} />
-      {[0.0, 0.95, 2.0].map((t, i) => <Swish key={i} at={Math.round(t * 30) - 4} k={i} v={0.12} />)}
-      {[0, 1, 2, 3, 4].map((i) => <Pop key={i} at={Math.round((3.2 + i * 0.36) * 30)} k={i} v={0.12} />)}
+      {[0.1, 1.1, 2.15].map((t, i) => <Swish key={i} at={Math.round(t * 30) - 4} k={i} v={0.12} />)}
+      {[0, 1, 2, 3, 4].map((i) => <Pop key={i} at={Math.round((3.35 + i * 0.32) * 30)} k={i} v={0.12} />)}
       <div style={{position: 'absolute', inset: 0, perspective: 2000}}>
         {FEAT.map(([n, d], i) => {
           const o = i - pos, ao = Math.abs(o);
