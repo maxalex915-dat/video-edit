@@ -22,15 +22,15 @@ const Tilt: React.FC<{rx: number; ry: number; rz?: number; cx?: number; cy?: num
 // 1. Brand field: the statistic arrives huge, then settles into the sentence.
 export const Stat: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
-  const k = prog(f, 26, 18, E.inOut);
+  const k = prog(f, 38, 16, E.inOut);
   return (
     <AbsoluteFill>
       <BrandField seed={0} />
       <Drift dur={dur} z={0.06}>
         <Center y={lerp(k, 0, -40)}>
-          <div style={{transform: `scale(${lerp(k, 1, 0.55)})`}}><Words parts={[['Every week']]} at={4} size={200} color={W} stagger={5} /></div>
+          <div style={{transform: `scale(${lerp(k, 1, 0.55)})`}}><Words parts={[['Every week']]} at={22} size={200} color={W} stagger={9} /></div>
         </Center>
-        <Center y={70}><Words parts={[['our marketing data']]} at={34} size={92} color={W} weight={500} /></Center>
+        <Center y={70}><Words parts={[['our marketing analytics']]} at={46} size={92} color={W} weight={500} stagger={5} /></Center>
       </Drift>
     </AbsoluteFill>
   );
@@ -61,8 +61,8 @@ export const Platforms: React.FC<{dur: number}> = ({dur}) => {
           );
         })}
         <Center>
-          {f < 32 ? <Words parts={[['lives on']]} at={2} size={84} out={24} />
-            : <Words parts={[['7', true], ['different platforms']]} at={33} size={92} />}
+          {f < 20 ? <Words parts={[['lives on']]} at={1} size={84} out={13} />
+            : <Words parts={[['7', true], ['different platforms']]} at={20} size={92} stagger={5} />}
         </Center>
       </Drift>
     </AbsoluteFill>
@@ -227,7 +227,7 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
       </Tilt>
       <Pill x={250} y={700} at={56}>7 platforms, one view</Pill>
       <Pill x={1650} y={170} at={72}>Updated every day</Pill>
-      <Cursor path={[{f: 40, x: 900, y: 1060}, {f: 70, x: 400, y: 735}, {f: dur, x: 420, y: 750}]} show={40} />
+      <Cursor path={[{f: 40, x: 900, y: 1060}, {f: 70, x: 345, y: 712}, {f: dur, x: 360, y: 722}]} show={40} />
     </AbsoluteFill>
   );
 };

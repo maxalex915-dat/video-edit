@@ -4,6 +4,7 @@ import {FrameOffset} from '../frame';
 import {E} from '../theme/motion';
 import * as V from './Scenes';
 import * as A from './Audit';
+import {TrendsZoom} from './TrendsZoom';
 import * as En from '../v4/End';
 
 // v9 film: the animation keeps its own timing; the voice-over is placed on it afterwards (outside Remotion).
@@ -13,7 +14,7 @@ export const BEATS9: [number, React.FC<{dur: number}>, string, number[]][] = [
   [3.0, V.Outlines, 'consuming time', []], [3.4, V.Simpler, 'simpler', []], [3.6, V.Intro, 'introducing', []], [4.4, V.Home, 'home', []],
   // site audit, the second key feature
   [3.4, A.AuditOpen, 'audit tool', []], [4.2, A.Dials, 'dials', []], [4.0, A.Issues, 'issues', []], [4.6, A.Review, 'expert review', []], [3.6, A.Cancel, 'saving', []],
-  [2.6, V.Decide, 'decisions', []], [5.0, V.Carousel, 'features', []], [5.0, V.Trends, 'trends', []], [5.0, V.Report, 'ai report', []],
+  [2.6, V.Decide, 'decisions', []], [5.0, V.Carousel, 'features', []], [5.0, TrendsZoom, 'trends', []], [5.0, V.Report, 'ai report', []],
   [4.0, V.AllInOne, 'all in one', []], [5.4, V.Tiles, 'tiles', []], [11.4, En.End, 'bento and logo', []],
 ];
 // camera moves between scenes, mixed: push in, pan, pull out, rise...

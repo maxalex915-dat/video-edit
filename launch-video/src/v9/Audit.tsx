@@ -143,7 +143,7 @@ export const Review: React.FC<{dur: number}> = ({dur}) => {
     <AbsoluteFill>
       <BrandField seed={6} />
       <Swish at={8} /><Swish at={30} k={1} v={0.12} /><Swish at={60} v={0.12} /><Pop at={CT} v={0.26} />
-      <div style={{position: 'absolute', left: 120, top: 330, width: 640, zIndex: 5}}>
+      <div style={{position: 'absolute', left: 120, top: 330, width: 760, zIndex: 5}}>
         <Words parts={[['An AI expert\nreview, every month.']]} at={2} size={74} color={W} align="left" />
         <div style={{height: 22}} />
         <div style={{display: 'flex', gap: 12}}>
@@ -169,8 +169,8 @@ export const Review: React.FC<{dur: number}> = ({dur}) => {
           );
         })}
       </Tilt>
-      <Ripple x={1012} y={720} at={CT} />
-      <Cursor path={[{f: 62, x: 1500, y: 1060}, {f: CT - 3, x: 1005, y: 712}, {f: dur, x: 1030, y: 740}]} clicks={[CT]} show={62} />
+      <Ripple x={955} y={606} at={CT} />
+      <Cursor path={[{f: 62, x: 1500, y: 1060}, {f: CT - 3, x: 950, y: 604}, {f: dur, x: 970, y: 626}]} clicks={[CT]} show={62} />
     </AbsoluteFill>
   );
 };

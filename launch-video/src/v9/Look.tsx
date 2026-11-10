@@ -20,6 +20,19 @@ const Grain: React.FC<{o: number}> = ({o}) => {
   );
 };
 
+// The reference's texture: a fine grid of tiny dots, low opacity, drifting; dot sizes breathe in a slow wave.
+export const Dots: React.FC<{color: string; o: number}> = ({color, o}) => {
+  const f = useF();
+  const t = f / 30, G = 40;
+  const dx = (t * 6) % G, dy = (t * 3) % G;
+  const els: React.ReactElement[] = [];
+  for (let y = -G; y < 1080 + G; y += G) for (let x = -G; x < 1920 + G; x += G) {
+    const w = Math.sin(x / 260 + y / 340 - t * 0.9) * 0.5 + 0.5;
+    els.push(<circle key={`${x}-${y}`} cx={x + dx} cy={y + dy} r={0.9 + w * 1.3} />);
+  }
+  return <svg width="1920" height="1080" style={{position: 'absolute', left: 0, top: 0, opacity: o}} fill={color}>{els}</svg>;
+};
+
 // Brand field: the whole frame is the brand gradient, drifting and turning slowly. A second, offset copy of the same
 // gradient breathes over it, so the colour moves like the reference's bold screens without any other colour.
 export const BrandField: React.FC<{seed?: number}> = ({seed = 0}) => {
@@ -30,6 +43,7 @@ export const BrandField: React.FC<{seed?: number}> = ({seed = 0}) => {
     <AbsoluteFill style={{overflow: 'hidden'}}>
       <div style={{position: 'absolute', inset: '-12%', background: `linear-gradient(${a}deg, ${GR} 0%, ${CY} 45%, ${SKY} 100%)`, transform: `translate(${s(t * 0.3) * 6}%, ${c(t * 0.22) * 5}%)`}} />
       <div style={{position: 'absolute', inset: '-12%', background: `linear-gradient(${a + 70}deg, ${GR} 0%, ${CY} 45%, ${SKY} 100%)`, opacity: 0.45 + s(t * 0.4) * 0.2, filter: 'blur(60px)', WebkitMaskImage: `radial-gradient(45% 55% at ${50 + s(t * 0.35) * 18}% ${50 + c(t * 0.3) * 14}%, #000 0%, transparent 70%)`, maskImage: `radial-gradient(45% 55% at ${50 + s(t * 0.35) * 18}% ${50 + c(t * 0.3) * 14}%, #000 0%, transparent 70%)`}} />
+      <Dots color="#fff" o={0.32} />
       <Grain o={0.1} />
     </AbsoluteFill>
   );
@@ -44,6 +58,7 @@ export const Mist: React.FC<{lift?: number}> = ({lift = 0.4}) => {
   return (
     <AbsoluteFill style={{background: MIST, overflow: 'hidden'}}>
       <div style={{position: 'absolute', left: '-20%', right: '-20%', bottom: '-12%', height: `${h + 12}%`, background: `linear-gradient(${a}deg, ${GR} 0%, ${CY} 50%, ${SKY} 100%)`, transform: `translateX(${s(t * 0.25) * 6}%)`, filter: 'blur(90px)', opacity: 0.7, WebkitMaskImage: 'linear-gradient(0deg, #000 25%, transparent 100%)', maskImage: 'linear-gradient(0deg, #000 25%, transparent 100%)'}} />
+      <Dots color="#0b6d86" o={0.16} />
       <Grain o={0.035} />
     </AbsoluteFill>
   );
