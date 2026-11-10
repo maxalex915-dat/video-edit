@@ -1,25 +1,25 @@
-# Voice-over placement (v17)
+# Voice-over placement (v18)
 
-NEW = the four intro clips (played 4% faster). KEPT = lines from the previous take (played 8% faster), unchanged.
+NEW = clips recorded for the new intro and the feature montage (played 4% faster). KEPT = lines from the previous take (played 8% faster).
 
 ```
-0:00.40-0:07.92  NEW  "Millions of marketing teams ... run their marketing operations."
-0:08.02-0:11.74  NEW  "What should be simple has become fragmented and manual."
-0:12.00-0:16.61  KEPT "Sign in, export, make the reports all by hand, every single week."
-0:19.10-0:25.76  NEW  "Not to mention, different providers, different logins, costing hundreds of dollars of subscription fees."
-0:25.87-0:31.96  NEW  "But what if running your marketing could be so much simpler, with everything you need in one place?"
-0:32.47-0:34.37  KEPT "Introducing the Marketing Dashboard."
-0:36.07-0:40.71  KEPT "All platforms in one dashboard, updated automatically, no more copy and paste."
-0:40.81-0:43.29  KEPT "Turning insights into an action plan for the team."
-0:43.39-0:47.38  KEPT "Trends, AI insight, keyword strategy, and a lot more."
-0:48.07-0:51.02  KEPT "Spot a spike on one channel and see how it connects to the others."
-0:53.07-0:56.49  KEPT "Every week, AI reads the numbers and tells us what to do next."
-0:58.07-0:59.68  KEPT "All of it in one dashboard."
-1:02.50-1:07.10  KEPT "Site health, press mentions, competitors analysis, and leads tracking. Always live."
-1:07.47-1:10.55  KEPT "And we built our own site audit tool. Just like SEMrush."
-1:10.90-1:14.41  KEPT "It scores our site SEO health and how ready we are for AI search."
-1:15.07-1:19.07  KEPT "Every issue is grouped by severity and a detailed instruction on how to fix it."
-1:19.17-1:23.66  KEPT "Then an AI agent reviews the site audit and provide insights on how to improve our website."
-1:23.76-1:27.50  KEPT "We now save over $2,000 a year on SEMrush subscription."
-1:27.60-1:31.11  KEPT "The Marketing Dashboard. Less time collecting, more time marketing."
+0:00.40-0:07.92  NEW  "Millions of marketing teams ... run their marketing operations."   (off its text by +0.00 s)
+0:08.02-0:11.74  NEW  "What should be simple has become fragmented and manual."   (off its text by +0.12 s)
+0:12.00-0:16.61  KEPT "Sign in, export, make the reports all by hand, every single week."   (off its text by -0.10 s)
+0:19.10-0:25.76  NEW  "Not to mention, different providers, different logins, costing hundreds of dollars of subscription fees."   (off its text by +0.00 s)
+0:25.87-0:31.96  NEW  "But what if running your marketing could be so much simpler, with everything you need in one place?"   (off its text by +0.00 s)
+0:32.47-0:34.37  KEPT "Introducing the Marketing Dashboard."   (off its text by -0.10 s)
+0:36.07-0:40.71  KEPT "All platforms in one dashboard, updated automatically, no more copy and paste."   (off its text by -0.10 s)
+0:40.81-0:43.77  KEPT "Spot a spike on one channel and see how it connects to the others."   (off its text by +0.24 s)
+0:45.47-0:48.89  KEPT "Every week, AI reads the numbers and tells us what to do next."   (off its text by -0.10 s)
+0:50.47-0:52.95  KEPT "Turning insights into an action plan for the team."   (off its text by -0.10 s)
+0:53.40-1:05.19  NEW  "Cross-channel analytics, social media performance, SEO rankings, AI-powered insights, competitor intelligence, media monitoring, lead tracking, task management, and a lot more."   (off its text by +0.00 s)
+1:05.57-1:07.18  KEPT "All of it in one dashboard."   (off its text by -0.10 s)
+1:10.00-1:14.60  KEPT "Site health, press mentions, competitors analysis, and leads tracking. Always live."   (off its text by -0.10 s)
+1:14.97-1:18.05  KEPT "And we built our own site audit tool. Just like SEMrush."   (off its text by -0.10 s)
+1:18.40-1:21.91  KEPT "It scores our site SEO health and how ready we are for AI search."   (off its text by -0.10 s)
+1:22.57-1:26.57  KEPT "Every issue is grouped by severity and a detailed instruction on how to fix it."   (off its text by -0.10 s)
+1:26.67-1:31.16  KEPT "Then an AI agent reviews the site audit and provide insights on how to improve our website."   (off its text by -0.00 s)
+1:31.26-1:35.00  KEPT "We now save over $2,000 a year on SEMrush subscription."   (off its text by -0.01 s)
+1:35.10-1:38.61  KEPT "The Marketing Dashboard. Less time collecting, more time marketing."   (off its text by -0.10 s)
 ```

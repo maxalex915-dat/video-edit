@@ -8,6 +8,7 @@ import * as En from '../v4/End';
 import {TrendsZoom} from './TrendsZoom';
 import {Manual} from './Manual';
 import {Consuming} from './Consuming';
+import {Montage} from './Montage';
 import {BrandFieldRaw, MistRaw} from './Look';
 
 // v16 order: problem, introduction, the all-in-one dashboard and its features, then the site audit, then the close.
@@ -16,8 +17,8 @@ export const BEATS9: [number, React.FC<{dur: number}>, string, G][] = [
   [2.9, V.Stat, 'statistic', {k: 'brand', seed: 0}], [4.8, V.Platforms, '15 platforms', {k: 'mist', lift: 0.45}], [4.2, V.Fragmented, 'fragmented', {k: 'mist', lift: 0.55}],
   [7.0, Manual, 'sheets and slides', {k: 'mist', lift: 0.5}], [13.6, Consuming, 'consuming time', {k: 'mist', lift: 0.7}],
   [3.6, V.Intro, 'introducing', {k: 'mist', lift: 0.3}], [4.4, V.Home, 'home', {k: 'mist', lift: 1}],
-  [2.6, V.Decide, 'action plan', {k: 'brand', seed: 2}], [5.0, V.Carousel, 'features', {k: 'mist', lift: 0.8}], [5.0, TrendsZoom, 'trends', {k: 'mist', lift: 0.6}],
-  [5.0, V.Report, 'ai report', {k: 'brand', seed: 3}], [4.0, V.AllInOne, 'all in one', {k: 'mist', lift: 0.2}], [5.4, V.Tiles, 'tiles', {k: 'brand', seed: 4}],
+  [5.0, TrendsZoom, 'trends', {k: 'mist', lift: 0.6}], [5.0, V.Report, 'ai report', {k: 'brand', seed: 3}], [2.6, V.Decide, 'action plan', {k: 'brand', seed: 2}],
+  [12.5, Montage, 'feature montage', {k: 'mist', lift: 0.55}], [4.0, V.AllInOne, 'all in one', {k: 'mist', lift: 0.2}], [5.4, V.Tiles, 'tiles', {k: 'brand', seed: 4}],
   [3.4, A.AuditOpen, 'audit tool', {k: 'brand', seed: 5}], [4.2, A.Dials, 'dials', {k: 'mist', lift: 0.7}], [4.0, A.Issues, 'issues', {k: 'mist', lift: 0.5}],
   [4.6, A.Review, 'expert review', {k: 'brand', seed: 6}], [3.6, A.Cancel, 'saving', {k: 'mist', lift: 0.6}], [11.4, En.End, 'bento and logo', {k: 'own'}],
 ];
