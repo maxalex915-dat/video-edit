@@ -89,7 +89,7 @@ export const Manual: React.FC<{dur: number}> = ({dur}) => {
         </div>
       </div>
       {/* the weekly loop */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.', true]]} at={102} size={84} stagger={5} /></div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.', true]]} at={122} size={84} stagger={5} /></div>
       <div style={{position: 'absolute', left: 0, right: 0, bottom: 60, display: 'flex', justifyContent: 'center', opacity: prog(f, 118, 10), transform: `translateY(${(1 - prog(f, 118, 14, E.snappy)) * 40}px)`}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,.95)', borderRadius: 99, padding: '12px 26px', fontFamily: F.text, fontSize: 28, fontWeight: 700, color: INK, boxShadow: '0 16px 40px -14px rgba(0,60,90,.4)'}}>
           <svg width="30" height="30" viewBox="0 0 24 24" style={{transform: `rotate(${f * 6}deg)`}}><defs><linearGradient id="lp" x1="0" x2="1"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor={SKY} /></linearGradient></defs><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="url(#lp)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
