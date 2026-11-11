@@ -230,15 +230,16 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
       <div style={{position: 'absolute', left: 0, right: 0, top: 60, zIndex: 10}}><Words parts={[['All platforms.'], ['One dashboard.', true]]} at={2} size={60} /></div>
       <Tilt rx={lerp(turn, 26, 18)} ry={lerp(turn, -16, -6)} rz={lerp(turn, 3, 1)} cy={620}>
         <div style={{position: 'absolute', left: 240, top: 210, width: 1600, height: 900, transform: `translateY(${(1 - p) * 160}px) scale(0.9)`, transformOrigin: '0 0', transformStyle: 'preserve-3d', ...glow(1)}}>
-          <RealHome at={10} lift={lift} />
+          <RealHome at={10} lift={lift} hover={HOVER} />
         </div>
       </Tilt>
       <Pill x={250} y={700} at={56}>7 platforms, one view</Pill>
       <Pill x={1650} y={170} at={72}>Updated every day</Pill>
-      <Cursor path={[{f: 40, x: 900, y: 1060}, {f: 70, x: 345, y: 712}, {f: dur, x: 360, y: 722}]} show={40} />
     </AbsoluteFill>
   );
 };
+// the cursor's tour of the dashboard, in the dashboard's own coordinates: it rests on each card in turn
+const HOVER = [{f: 30, x: 640, y: 1000}, {f: 46, x: 600, y: 470}, {f: 56, x: 640, y: 440}, {f: 72, x: 1080, y: 250}, {f: 80, x: 1110, y: 240}, {f: 95, x: 1410, y: 290}, {f: 103, x: 1440, y: 280}, {f: 118, x: 1090, y: 540}, {f: 125, x: 1110, y: 530}, {f: 140, x: 930, y: 790}, {f: 200, x: 960, y: 800}];
 
 // 9. Brand field again: the turn from data to decisions.
 export const Decide: React.FC<{dur: number}> = ({dur}) => {

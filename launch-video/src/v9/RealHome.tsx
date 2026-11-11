@@ -5,6 +5,7 @@ import {prog, E, lerp} from '../theme/motion';
 import {C} from '../theme/tokens';
 import {F} from '../theme/fonts';
 import {PlatformIcon, Platform} from '../components/ui/Primitives';
+import {Cursor, cursorPos, Way} from '../components/kit/Anim';
 const GLASS_BG = 'linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.42)), linear-gradient(135deg, rgba(127,188,66,.22) 0%, rgba(0,185,239,.22) 45%, rgba(112,203,243,.22) 100%)';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
@@ -15,11 +16,28 @@ const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 const Pill: React.FC<{up: boolean; v: string}> = ({up, v}) => <span style={{fontSize: 12, fontWeight: 700, color: up ? GREEN : RED, background: up ? 'rgba(127,188,66,.16)' : 'rgba(179,38,30,.1)', borderRadius: 99, padding: '3px 8px', whiteSpace: 'nowrap'}}>{up ? '▲' : '▼'} {v}</span>;
 const Arrow = () => <span style={{width: 26, height: 26, borderRadius: 99, border: `1px solid ${LINE}`, display: 'grid', placeItems: 'center', color: MUTE, fontSize: 14}}>→</span>;
 const LiftCtx = React.createContext(0);
+// the cursor glides from card to card; like a weak magnet it draws the card under it (and a little the ones
+// near it) up toward the viewer. The pull trails the cursor by a few frames so it eases in and out.
+const HoverCtx = React.createContext<Way[] | null>(null);
+const pull = (f: number, path: Way[] | null, x: number, y: number, w: number, h: number) => {
+  if (!path || f < path[0].f) return 0;
+  let m = 0;
+  for (let k = 0; k < 8; k++) {
+    const c = cursorPos(f - k, path);
+    const dx = Math.max(x - c.x, 0, c.x - (x + w)), dy = Math.max(y - c.y, 0, c.y - (y + h));
+    const d = Math.hypot(dx, dy);
+    m += d === 0 ? 1 : Math.max(0, 1 - d / 160) * 0.35;
+  }
+  return m / 8;
+};
 const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; z?: number; bg?: string}> = ({x, y, w, h, children, at, z = 60, bg = 'linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.62))'}) => {
   const f = useF();
   const p = prog(f, at, 18, E.snappy);
-  const lift = React.useContext(LiftCtx);
-  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: `0 0 0 1.5px rgba(255,255,255,.95), 0 ${14 + lift * z * 0.5}px ${34 + lift * z}px -16px rgba(0,110,150,${0.3 + lift * 0.15})`, padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px) translateZ(${lift * z}px)`}}>{children}</div>;
+  const base = React.useContext(LiftCtx);
+  const m = pull(f, React.useContext(HoverCtx), x, y, w, h);
+  const ez = m * m * (3 - 2 * m);
+  const lift = base + ez * 0.9;
+  return <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, background: bg, boxShadow: `0 0 0 1.5px rgba(255,255,255,.95), 0 ${14 + lift * z * 0.5 + ez * 30}px ${34 + lift * z + ez * 40}px -16px rgba(0,110,150,${0.3 + lift * 0.12})`, padding: '20px 22px', boxSizing: 'border-box', overflow: 'hidden', opacity: p, transform: `translateY(${(1 - p) * 24}px) translateZ(${base * z + ez * 90}px) scale(${1 + ez * 0.025})`}}>{children}</div>;
 };
 const NAV: [string, [string, boolean?, string?][]][] = [
   ['OVERVIEW', [['Home', true], ['Insights']]],
@@ -32,7 +50,7 @@ const NAV: [string, [string, boolean?, string?][]][] = [
 const IMP = [62, 58, 70, 64, 76, 60, 55, 66, 72, 58, 64, 60, 70, 82, 230, 120, 66, 60, 72, 64, 58, 62, 68, 60, 64, 70, 42, 36, 38, 40];
 const ENG = [44, 52, 40, 58, 46, 54, 60, 50, 64, 48, 70, 56, 100, 62, 58, 66];
 
-export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift = 0}) => {
+export const RealHome: React.FC<{at?: number; lift?: number; hover?: Way[]}> = ({at = 0, lift = 0, hover}) => {
   const f = useF() - at;
   const n = prog(f, 14, 40, E.snappy);
   const draw = prog(f, 12, 46, E.inOut);
@@ -40,7 +58,7 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
   const solid = IMP.slice(0, 27).map((v, i) => `${i ? 'L' : 'M'}${hx(i)},${hy(v)}`).join(' ');
   const dotted = IMP.slice(26).map((v, i) => `${i ? 'L' : 'M'}${hx(26 + i)},${hy(v)}`).join(' ');
   return (
-    <LiftCtx.Provider value={lift}><div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, borderRadius: 26, background: GLASS_BG, fontFamily: F.text, color: INK, transformStyle: 'preserve-3d', boxShadow: '0 0 0 2px rgba(255,255,255,.95)'}}>
+    <HoverCtx.Provider value={hover ?? null}><LiftCtx.Provider value={lift}><div style={{position: 'absolute', left: 0, top: 0, width: 1600, height: 900, borderRadius: 26, background: GLASS_BG, fontFamily: F.text, color: INK, transformStyle: 'preserve-3d', boxShadow: '0 0 0 2px rgba(255,255,255,.95)'}}>
       {/* sidebar */}
       <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: 244, borderRadius: '26px 0 0 26px', background: 'rgba(255,255,255,.5)', borderRight: '1px solid rgba(255,255,255,.9)', padding: '16px 10px'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 8, padding: '0 6px 14px'}}>
@@ -175,7 +193,8 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
           })}
         </div>
       </Card>
+      {hover && <div style={{position: 'absolute', inset: 0, transform: 'translateZ(220px)', pointerEvents: 'none'}}><Cursor path={hover} show={hover[0].f} s={1.5} /></div>}
       <span style={{display: 'none'}}>{lerp(0, 0, 0)}{C.ink}</span>
-    </div></LiftCtx.Provider>
+    </div></LiftCtx.Provider></HoverCtx.Provider>
   );
 };
