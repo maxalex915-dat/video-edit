@@ -1,4 +1,4 @@
-# Voice-over placement (v23)
+# Voice-over placement (v24)
 
 NEW = clips recorded for the new intro and the feature montage (played 4% faster). KEPT = lines from the previous take (played 8% faster).
 
@@ -12,12 +12,12 @@ NEW = clips recorded for the new intro and the feature montage (played 4% faster
 0:36.04-0:40.68  (silence before: 1.70 s)  KEPT "All platforms in one dashboard, updated automatically, no more copy and paste."
 0:41.29-0:44.24  (silence before: 0.61 s)  KEPT "Spot a spike on one channel and see how it connects to the others."
 0:46.29-0:49.71  (silence before: 2.05 s)  KEPT "Every week, AI reads the numbers and tells us what to do next."
-0:51.29-0:53.77  (silence before: 1.58 s)  KEPT "Turning insights into an action plan for the team."
-0:54.38-0:57.46  (silence before: 0.61 s)  KEPT "And we built our own site audit tool. Just like SEMrush."
-0:58.07-1:01.58  (silence before: 0.61 s)  KEPT "It scores our site SEO health and how ready we are for AI search."
-1:02.24-1:06.24  (silence before: 0.66 s)  KEPT "Every issue is grouped by severity and a detailed instruction on how to fix it."
-1:06.85-1:11.34  (silence before: 0.61 s)  KEPT "Then an AI agent reviews the site audit and provide insights on how to improve our website."
-1:11.95-1:15.69  (silence before: 0.61 s)  KEPT "We now save over $2,000 a year on SEMrush subscription."
-1:16.30-1:28.09  (silence before: 0.61 s)  NEW  "Cross-channel analytics, social media performance, SEO rankings, AI-powered insights, competitor intelligence, media monitoring, lead tracking, task management, and a lot more."
-1:28.90-1:32.41  (silence before: 0.81 s)  KEPT "The Marketing Dashboard. Less time collecting, more time marketing."
+0:50.77-0:53.25  (silence before: 1.06 s)  KEPT "Turning insights into an action plan for the team."
+0:55.59-0:58.67  (silence before: 2.34 s)  KEPT "And we built our own site audit tool. Just like SEMrush."
+0:59.28-1:02.79  (silence before: 0.61 s)  KEPT "It scores our site SEO health and how ready we are for AI search."
+1:03.45-1:07.45  (silence before: 0.66 s)  KEPT "Every issue is grouped by severity and a detailed instruction on how to fix it."
+1:10.65-1:15.14  (silence before: 3.20 s)  KEPT "Then an AI agent reviews the site audit and provide insights on how to improve our website."
+1:15.75-1:19.49  (silence before: 0.61 s)  KEPT "We now save over $2,000 a year on SEMrush subscription."
+1:20.10-1:31.89  (silence before: 0.61 s)  NEW  "Cross-channel analytics, social media performance, SEO rankings, AI-powered insights, competitor intelligence, media monitoring, lead tracking, task management, and a lot more."
+1:32.70-1:36.21  (silence before: 0.81 s)  KEPT "The Marketing Dashboard. Less time collecting, more time marketing."
 ```

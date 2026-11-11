@@ -70,11 +70,11 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
       <div style={{position: 'absolute', left: 278, top: 82, fontSize: 12.5, fontWeight: 600, color: MUTE}}>Key numbers</div>
 
       {/* hero: total impressions */}
-      <Card x={274} y={110} w={640} h={640} at={4} z={170} bg={LOOP}>
+      <Card x={274} y={110} w={640} h={550} at={4} z={170} bg={LOOP}>
         <div style={{display: 'flex', justifyContent: 'space-between', color: '#fff'}}><span style={{fontSize: 19, fontWeight: 700}}>Total impressions</span><span style={{width: 26, height: 26, borderRadius: 99, background: 'rgba(255,255,255,.25)', display: 'grid', placeItems: 'center'}}>→</span></div>
         <div style={{fontFamily: F.display, fontSize: 66, fontWeight: 750, color: '#fff', letterSpacing: '-0.03em', marginTop: 14, fontVariantNumeric: 'tabular-nums'}}>{fmt(164715 * n)}</div>
         <span style={{display: 'inline-block', marginTop: 6, fontSize: 12.5, fontWeight: 700, color: '#fff', background: 'rgba(255,255,255,.22)', borderRadius: 99, padding: '4px 10px'}}>▼ 5.9% vs previous 30 days</span>
-        <svg width="600" height="520" style={{position: 'absolute', left: 0, top: 0}}>
+        <svg width="600" height="520" style={{position: 'absolute', left: 0, top: 0, transform: 'scale(1, .84)', transformOrigin: '0 0'}}>
           <defs><linearGradient id="rhfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff" stopOpacity=".35" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
             <clipPath id="rhclip"><rect x={0} y={0} width={22 + 430 * draw + 6} height={600} /></clipPath></defs>
           <g clipPath="url(#rhclip)">
@@ -90,22 +90,22 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
       </Card>
 
       {/* total engagements */}
-      <Card x={930} y={110} w={316} h={312} at={9} z={110}>
+      <Card x={930} y={110} w={316} h={267} at={9} z={110}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>Total engagements</span><Arrow /></div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{fmt(4916 * n)}</span><Pill up v="32.0%" /></div>
         <div style={{fontSize: 12, color: MUTE}}>vs previous 30 days</div>
-        <div style={{position: 'absolute', left: 22, right: 22, bottom: 44, height: 120, display: 'flex', alignItems: 'flex-end', gap: 5}}>
-          {ENG.map((v, i) => <div key={i} style={{flex: 1, height: v * 1.05 * prog(f, 18 + i, 20, E.snappy), borderRadius: 4, background: v === 100 ? LOOP : '#dfe8ea', position: 'relative'}}>{v === 100 && <span style={{position: 'absolute', top: -24, left: -12, fontSize: 10.5, fontWeight: 700, fontStyle: 'italic', color: '#fff', background: TEAL, borderRadius: 99, padding: '2px 7px', opacity: prog(f, 44, 10)}}>best</span>}</div>)}
+        <div style={{position: 'absolute', left: 22, right: 22, bottom: 40, height: 96, display: 'flex', alignItems: 'flex-end', gap: 5}}>
+          {ENG.map((v, i) => <div key={i} style={{flex: 1, height: v * 0.82 * prog(f, 18 + i, 20, E.snappy), borderRadius: 4, background: v === 100 ? LOOP : '#dfe8ea', position: 'relative'}}>{v === 100 && <span style={{position: 'absolute', top: -24, left: -12, fontSize: 10.5, fontWeight: 700, fontStyle: 'italic', color: '#fff', background: TEAL, borderRadius: 99, padding: '2px 7px', opacity: prog(f, 44, 10)}}>best</span>}</div>)}
         </div>
         <div style={{position: 'absolute', left: 22, right: 22, bottom: 18, display: 'flex', justifyContent: 'space-between', fontSize: 11, color: MUTE}}><span>7 Oct</span><span>20 Oct</span></div>
       </Card>
 
       {/* social followers */}
-      <Card x={1262} y={110} w={316} h={312} at={13} z={140}>
+      <Card x={1262} y={110} w={316} h={267} at={13} z={140}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>Social followers</span><Arrow /></div>
         <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{fmt(60318 * n)}</span><Pill up v="1.2%" /></div>
         <div style={{fontSize: 12, color: MUTE}}>vs previous 30 days</div>
-        <svg width="110" height="110" style={{position: 'absolute', left: 20, top: 168}} viewBox="-55 -55 110 110">
+        <svg width="110" height="110" style={{position: 'absolute', left: 20, top: 140}} viewBox="-55 -55 110 110">
           {[[0.754, '#0a66c2'], [0.218, '#1877f2'], [0.016, '#e1306c'], [0.012, '#ff0000']].reduce<{o: number; el: React.ReactElement[]}>((acc, [v, c], i) => {
             const len = (v as number) * 2 * Math.PI * 42 * prog(f, 18, 40, E.inOut);
             acc.el.push(<circle key={i} r={42} fill="none" stroke={c as string} strokeWidth={13} strokeDasharray={`${len} 400`} strokeDashoffset={-acc.o} transform="rotate(-90)" />);
@@ -113,35 +113,40 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
           }, {o: 0, el: []}).el}
           <text y={2} textAnchor="middle" fontSize={16} fontWeight={750} fill={INK}>+721</text><text y={16} textAnchor="middle" fontSize={9} fill={MUTE}>net</text>
         </svg>
-        <div style={{position: 'absolute', left: 150, right: 22, top: 182, fontSize: 12.5, display: 'grid', gap: 9}}>
+        <div style={{position: 'absolute', left: 150, right: 22, top: 152, fontSize: 12.5, display: 'grid', gap: 9}}>
           {[['LinkedIn', '45,460', '#0a66c2'], ['Facebook', '13,184', '#1877f2'], ['Instagram', '960', '#e1306c'], ['YouTube', '714', '#ff0000']].map(([a, b, c]) => <div key={a} style={{display: 'flex', alignItems: 'center', gap: 7}}><span style={{width: 9, height: 9, borderRadius: 2, background: c}} /><span style={{flex: 1}}>{a}</span><b>{b}</b></div>)}
         </div>
       </Card>
 
-      {/* PR articles */}
-      <Card x={930} y={438} w={316} h={312} at={17} z={130}>
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>PR articles</span><Arrow /></div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{Math.round(14 * n)}</span><Pill up v="55.6%" /></div>
-        <div style={{fontSize: 12, color: MUTE}}>vs 9 in the previous 30 days</div>
-        <div style={{position: 'absolute', left: 22, right: 22, top: 168, borderRadius: 14, background: '#fff', boxShadow: '0 0 0 1px rgba(5,60,63,.08), 0 12px 24px -12px rgba(5,60,63,.25)', padding: '12px 14px', display: 'flex', gap: 12, alignItems: 'center', transform: `translateY(${(1 - prog(f, 40, 16, E.snappy)) * 20}px)`, opacity: prog(f, 40, 12)}}>
-          <span style={{width: 34, height: 34, borderRadius: 10, background: LOOP}} />
-          <div><div style={{fontSize: 13, fontWeight: 700}}>3 new mentions</div><div style={{fontSize: 11.5, color: MUTE}}>VnExpress, 2 days ago</div></div>
+      {/* site health */}
+      <Card x={930} y={393} w={316} h={267} at={17} z={130}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{fontSize: 17, fontWeight: 700}}>Site health</span><Arrow /></div>
+        <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}><span style={{fontFamily: F.display, fontSize: 40, fontWeight: 750, backgroundImage: LOOP, WebkitBackgroundClip: 'text', color: 'transparent'}}>{Math.round(72 * n)}</span><Pill up v="+6" /></div>
+        <div style={{fontSize: 12, color: MUTE}}>vs the last audit · AI search health 58</div>
+        <div style={{position: 'absolute', left: 22, right: 22, top: 150, display: 'grid', gap: 9}}>
+          {[['Errors', 214, '#d9483b', 0.21], ['Warnings', 1032, '#e8a33d', 1], ['Notices', 610, '#7a8f94', 0.59]].map(([l, v, c, w], i) => (
+            <div key={l as string} style={{display: 'grid', gridTemplateColumns: '78px 1fr 46px', alignItems: 'center', gap: 8, fontSize: 12.5}}>
+              <span style={{display: 'flex', alignItems: 'center', gap: 6}}><span style={{width: 8, height: 8, borderRadius: 9, background: c as string}} />{l}</span>
+              <span style={{height: 7, borderRadius: 4, background: '#e6eef0', overflow: 'hidden'}}><span style={{display: 'block', height: '100%', width: `${(w as number) * 100 * prog(f, 36 + i * 4, 18, E.snappy)}%`, background: c as string, borderRadius: 4}} /></span>
+              <b style={{textAlign: 'right', fontVariantNumeric: 'tabular-nums'}}>{(v as number).toLocaleString('en-US')}</b>
+            </div>
+          ))}
         </div>
-        <div style={{position: 'absolute', left: 22, bottom: 20, fontSize: 12, color: INK}}>Brand 9  ·  People 3  ·  Offices 2</div>
+        <div style={{position: 'absolute', left: 22, bottom: 18, fontSize: 12, color: INK}}>1,240 pages checked · 2 days ago</div>
       </Card>
 
       {/* this week */}
-      <Card x={1262} y={438} w={316} h={312} at={21} z={95}>
+      <Card x={1262} y={393} w={316} h={267} at={21} z={95}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><span style={{display: 'flex', alignItems: 'center', gap: 8, fontSize: 17, fontWeight: 700}}><span style={{width: 26, height: 26, borderRadius: 99, background: LOOP}} />This week</span><Arrow /></div>
         <div style={{fontSize: 14, fontWeight: 700, lineHeight: 1.35, marginTop: 14}}>Website traffic nearly doubled, Thursday 8 Oct was the standout day</div>
-        <div style={{position: 'absolute', left: 22, right: 22, top: 176, display: 'flex', gap: 8}}>
+        <div style={{position: 'absolute', left: 22, right: 22, top: 120, display: 'flex', gap: 8}}>
           {[['+96%', 'pages viewed'], ['20x', 'Instagram reach Sun'], ['+33%', 'LinkedIn clicks']].map(([a, b], i) => <div key={a} style={{flex: 1, background: '#f1f6f7', borderRadius: 12, padding: '10px 10px', opacity: prog(f, 36 + i * 4, 12), transform: `translateY(${(1 - prog(f, 36 + i * 4, 14, E.snappy)) * 14}px)`}}><span style={{display: 'block', width: 20, height: 20, borderRadius: 6, background: LOOP, marginBottom: 8}} /><div style={{fontSize: 16, fontWeight: 750}}>{a}</div><div style={{fontSize: 10.5, color: MUTE, lineHeight: 1.25}}>{b}</div></div>)}
         </div>
         <div style={{position: 'absolute', left: 22, bottom: 20, fontSize: 12, fontWeight: 700, color: TEAL}}>See all insights →</div>
       </Card>
 
       {/* start of the Every platform section, below the fold */}
-      <Card x={274} y={770} w={1304} h={112} at={26} z={60}>
+      <Card x={274} y={678} w={1304} h={136} at={26} z={60}>
         <div style={{display: 'flex', alignItems: 'baseline', gap: 10}}><span style={{fontSize: 17, fontWeight: 700}}>Every platform</span><span style={{fontSize: 12, color: MUTE}}>the last 30 days · each platform in its own words</span></div>
         <div style={{display: 'flex', gap: 12, marginTop: 14}}>
           {[['LinkedIn', '47,415', '#0a66c2'], ['Facebook', '37,951', '#1877f2'], ['Instagram', '401', '#e1306c'], ['YouTube', '2,342', '#ff0000'], ['Website', '13,246', TEAL], ['Search', '77,699', '#00768f']].map(([a, b, c]) => <div key={a} style={{flex: 1, borderRadius: 14, boxShadow: `0 0 0 1px ${LINE}`, padding: '12px 14px'}}><div style={{display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, fontWeight: 700}}><span style={{width: 24, height: 24, borderRadius: 7, background: c}} />{a}</div><div style={{fontSize: 22, fontWeight: 750, marginTop: 10}}>{b}</div></div>)}

@@ -58,28 +58,62 @@ export const AuditOpen: React.FC<{dur: number}> = ({dur}) => {
   );
 };
 
-// A2. The two dials, big, the main visual. Both sweep and count up together.
+// A2. The two scores, each with what feeds it: the dials sweep and count up, then the parts that make up
+// each score pop out beside it on thin lines, with the change since the last audit underneath.
+const PARTS: [string, number][][] = [
+  [['Crawlability', 81], ['Speed', 64], ['On-page', 77], ['Internal links', 69]],
+  [['Clear answers', 52], ['Structured data', 61], ['Cited by AI', 47], ['Readability', 70]],
+];
 export const Dials: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
-  const p = prog(f, 12, 50, E.inOut);
+  const p = prog(f, 10, 46, E.inOut);
   const turn = prog(f, 0, dur, (q) => q);
-  const D: [number, string, string, number][] = [[72, 'Site health', '114 checks, every two weeks', -1], [58, 'AI search health', 'How quotable we are in AI search', 1]];
+  const D: [number, string, number, string][] = [[72, 'Site health', -1, '+6 since the last audit'], [58, 'AI search health', 1, '+11 since the last audit']];
+  const SZ = 460, DY = 280;
   return (
     <AbsoluteFill>
       <Mist lift={0.7} />
-      <Swish at={2} /><Swish at={10} k={1} v={0.12} /><Pop at={62} v={0.2} /><Pop at={66} k={1} v={0.2} />
-      <Drift dur={dur} z={0.05}>
-        {D.map(([v, label, sub, side], i) => {
-          const q = spr(f, 2 + i * 5, S.soft);
-          return (
-            <div key={label} style={{position: 'absolute', inset: 0, perspective: 2000}}>
-              <div style={{position: 'absolute', left: 960 + side * 430 - 290, top: 150, width: 580, transform: `rotateY(${side * -lerp(turn, 18, 10)}deg) translateY(${(1 - Math.min(1, q)) * 200}px)`, opacity: Math.min(1, q), textAlign: 'center'}}>
-                <Dial v={v} p={p} size={580} label={label} id={`d${i}`} />
-                <div style={{fontFamily: F.text, fontSize: 28, fontWeight: 500, color: MUTE, marginTop: -30, whiteSpace: 'nowrap', opacity: prog(f, 50 + i * 6, 14)}}>{sub}</div>
-              </div>
+      <Swish at={2} /><Swish at={10} k={1} v={0.12} /><Pop at={56} v={0.2} /><Pop at={60} k={1} v={0.2} />
+      {PARTS.flatMap((ps, d) => ps.map((_, i) => <Pop key={`${d}${i}`} at={44 + i * 5 + d * 2} k={i} v={0.1} />))}
+      <Drift dur={dur} z={0.06}>
+        <div style={{position: 'absolute', inset: 0, perspective: 2200, perspectiveOrigin: '960px 500px'}}>
+          <div style={{position: 'absolute', inset: 0, transformStyle: 'preserve-3d', transform: `rotateX(${lerp(turn, 14, 6)}deg)`, transformOrigin: '960px 600px'}}>
+            {D.map(([v, label, side, delta], d) => {
+              const q = spr(f, 2 + d * 5, S.soft);
+              const dcx = side < 0 ? 670 : 1250, dcy = DY + SZ / 2;
+              return (
+                <React.Fragment key={label}>
+                  <div style={{position: 'absolute', left: dcx - SZ / 2, top: DY, width: SZ, transform: `rotateY(${side * -lerp(turn, 16, 8)}deg) translateY(${(1 - Math.min(1, q)) * 200}px)`, opacity: Math.min(1, q), textAlign: 'center'}}>
+                    <Dial v={v} p={p} size={SZ} label={label} id={`d${d}`} />
+                    <div style={{display: 'inline-block', fontFamily: F.text, fontSize: 24, fontWeight: 700, color: '#2f7a4a', background: 'rgba(255,255,255,.85)', borderRadius: 99, padding: '8px 20px', marginTop: -24, opacity: prog(f, 58 + d * 4, 10), transform: `translateY(${(1 - prog(f, 58 + d * 4, 14, E.snappy)) * 20}px)`}}>{delta}</div>
+                  </div>
+                  {/* the parts of the score, on the outer side, with a thin line to the dial */}
+                  <svg width="1920" height="1080" style={{position: 'absolute', left: 0, top: 0, overflow: 'visible'}}>
+                    {PARTS[d].map((_, i) => {
+                      const q2 = prog(f, 44 + i * 5 + d * 2, 12, E.inOut);
+                      const cy = 280 + i * 120 + 34, cx = side < 0 ? 400 : 1520;
+                      const ey = dcy + (i - 1.5) * 80, ex = dcx - side * Math.sqrt(Math.max(0, (SZ / 2 - 30) ** 2 - (ey - dcy) ** 2));
+                      return <path key={i} d={`M ${cx} ${cy} C ${(cx + ex) / 2} ${cy}, ${(cx + ex) / 2} ${ey}, ${ex} ${ey}`} fill="none" stroke="rgba(0,140,180,.35)" strokeWidth={2} strokeDasharray="1200" strokeDashoffset={1200 * (1 - q2)} />;
+                    })}
+                  </svg>
+                  {PARTS[d].map(([n, val], i) => {
+                    const q2 = spr(f, 46 + i * 5 + d * 2, S.pop);
+                    const x = side < 0 ? 100 : 1520, y = 280 + i * 120;
+                    return (
+                      <div key={n} style={{position: 'absolute', left: x, top: y, width: 300, height: 68, borderRadius: 22, background: 'rgba(255,255,255,.92)', ...glow(0.5), boxSizing: 'border-box', padding: '10px 18px', fontFamily: F.text, color: INK, transform: `translateZ(${40 + i * 10}px) scale(${Math.min(1.05, q2)})`, opacity: Math.min(1, q2), transformOrigin: side < 0 ? '100% 50%' : '0 50%'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', fontSize: 18, fontWeight: 600}}><span>{n}</span><span style={{fontWeight: 750, fontVariantNumeric: 'tabular-nums'}}>{Math.round(val * prog(f, 48 + i * 5 + d * 2, 20, E.snappy))}</span></div>
+                        <div style={{height: 8, borderRadius: 4, background: '#e6eef0', marginTop: 8, overflow: 'hidden'}}><div style={{height: '100%', width: `${val * prog(f, 48 + i * 5 + d * 2, 20, E.snappy)}%`, borderRadius: 4, background: `linear-gradient(90deg, ${GR}, ${CY} 60%, ${SKY})`}} /></div>
+                      </div>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            })}
+            <div style={{position: 'absolute', left: 0, right: 0, top: 880, textAlign: 'center', opacity: prog(f, 66, 12)}}>
+              <span style={{fontFamily: F.text, fontSize: 24, fontWeight: 600, color: MUTE, background: 'rgba(255,255,255,.7)', borderRadius: 99, padding: '10px 26px'}}>1,240 pages checked against 114 rules, every two weeks</span>
             </div>
-          );
-        })}
+          </div>
+        </div>
       </Drift>
     </AbsoluteFill>
   );
@@ -91,13 +125,16 @@ export const Issues: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   const turn = prog(f, 0, dur, (q) => q);
   const SEV: [string, number, string][] = [['Errors', 214, '#d9483b'], ['Warnings', 1032, '#e8a33d'], ['Notices', 610, '#7a8f94']];
+  const flat = prog(f, 52, 22, E.inOut);
+  const hover = prog(f, 74, 6);
+  const open = prog(f, IC + 2, 20, E.inOut);
   return (
     <AbsoluteFill>
       <Mist lift={0.5} />
       {[6, 10, 14].map((t, i) => <Pop key={i} at={t} k={i} v={0.2} />)}{CATS.map((_, i) => <Pop key={`c${i}`} at={24 + i * 5} k={i} v={0.12} />)}
       <div style={{position: 'absolute', left: 0, right: 0, top: 70, zIndex: 5}}><Words parts={[['Every issue,'], ['sorted and explained.', true]]} at={2} size={64} /></div>
-      <Tilt rx={lerp(turn, 22, 14)} ry={lerp(turn, 14, 6)} cy={640}>
-        <div style={{position: 'absolute', left: 200, top: 230, display: 'flex', flexDirection: 'column', gap: 18}}>
+      <Tilt rx={lerp(flat, lerp(turn, 22, 14), 0)} ry={lerp(flat, lerp(turn, 14, 6), 0)} cy={640}>
+        <div style={{position: 'absolute', left: 200, top: 230, display: 'flex', flexDirection: 'column', gap: 18, filter: open > 0.02 ? `blur(${open * 8}px)` : undefined, opacity: 1 - open * 0.5}}>
           {SEV.map(([n, v, c], i) => {
             const q = spr(f, 6 + i * 4, S.soft);
             return (
@@ -108,12 +145,12 @@ export const Issues: React.FC<{dur: number}> = ({dur}) => {
             );
           })}
         </div>
-        <div style={{position: 'absolute', left: 680, top: 230, width: 1040, borderRadius: 26, background: 'rgba(255,255,255,.95)', ...glow(1), padding: '26px 34px', boxSizing: 'border-box', fontFamily: F.text, color: INK, opacity: prog(f, 16, 14)}}>
+        <div style={{position: 'absolute', left: 680, top: 230, width: 1040, borderRadius: 26, background: 'rgba(255,255,255,.95)', ...glow(1), padding: '26px 34px', boxSizing: 'border-box', fontFamily: F.text, color: INK, opacity: prog(f, 16, 14) * (1 - open * 0.5), filter: open > 0.02 ? `blur(${open * 8}px)` : undefined}}>
           <div style={{fontSize: 24, fontWeight: 700, marginBottom: 14}}>Issues by category</div>
           {CATS.map(([n, e, w], i) => {
             const q = prog(f, 24 + i * 5, 18, E.snappy);
             return (
-              <div key={n} style={{display: 'grid', gridTemplateColumns: '260px 1fr 70px 70px', alignItems: 'center', gap: 16, padding: '14px 0', borderTop: '1px solid #edf2f3', opacity: q, transform: `translateZ(${(1 - q) * 120}px) translateY(${(1 - q) * 20}px)`}}>
+              <div key={n} style={{display: 'grid', gridTemplateColumns: '260px 1fr 70px 70px', alignItems: 'center', gap: 16, padding: '14px 0', borderTop: '1px solid #edf2f3', opacity: q, background: i === 0 ? `rgba(0,185,239,${0.1 * hover})` : undefined, borderRadius: 12, marginLeft: -12, marginRight: -12, paddingLeft: 12, paddingRight: 12, transform: `translateZ(${(1 - q) * 120}px) translateY(${(1 - q) * 20}px)`}}>
                 <span style={{fontSize: 22, fontWeight: 600}}>{n}</span>
                 <span style={{height: 14, borderRadius: 7, background: '#edf2f3', position: 'relative', overflow: 'hidden'}}><span style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${(w / 300) * 100 * q}%`, background: `linear-gradient(90deg, #d9483b ${(e / w) * 100}%, #e8a33d ${(e / w) * 100}%)`, borderRadius: 7}} /></span>
                 <span style={{fontSize: 20, fontWeight: 700, color: '#d9483b', textAlign: 'right'}}>{e}</span>
@@ -123,7 +160,61 @@ export const Issues: React.FC<{dur: number}> = ({dur}) => {
           })}
         </div>
       </Tilt>
+      {f >= IC && <IssueDetail f={f} open={open} />}
+      <Ripple x={IX} y={IY} at={IC} />
+      <Cursor path={[{f: 50, x: 1500, y: 1100}, {f: IC - 3, x: IX, y: IY}, {f: IC + 30, x: 1420, y: 1000}, {f: 400, x: 1460, y: 1040}]} clicks={[IC]} show={50} />
+      <Pop at={IC} k={2} v={0.24} /><Swish at={IC + 2} v={0.14} />{[0, 1, 2, 3, 4, 5].map((i) => <Pop key={`d${i}`} at={IC + 22 + i * 7} k={i} v={0.09} />)}
     </AbsoluteFill>
+  );
+};
+const IC = 84, IX = 860, IY = 334; // the click on "Internal linking"
+const PAGES: [string, string][] = [['/projects/long-an-factory', '/news/handover-2024'], ['/services/design-and-build', '/about/team-old'], ['/insights/factory-costs-2026', '/case-studies/bac-ninh'], ['/projects/binh-duong-warehouse', '/contact-us-old']];
+const STEPS = ['Point each broken link to the live page, or remove it.', 'Add a redirect for any page that has moved.', 'Run the audit again to confirm the links work.'];
+const IssueDetail: React.FC<{f: number; open: number}> = ({f, open}) => {
+  // grows from the clicked row to a large card
+  const x0 = 692, y0 = 306, w0 = 1016, h0 = 56;
+  const x1 = 230, y1 = 250, w1 = 1460, h1 = 600;
+  const x = lerp(open, x0, x1), y = lerp(open, y0, y1), w = lerp(open, w0, w1), h = lerp(open, h0, h1);
+  const c = (k: number) => prog(f, IC + 18 + k * 7, 12, E.snappy);
+  const lab: React.CSSProperties = {fontSize: 15, fontWeight: 700, letterSpacing: '.1em', color: MUTE};
+  return (
+    <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: lerp(open, 12, 32), background: 'rgba(255,255,255,.98)', ...glow(open), overflow: 'hidden', fontFamily: F.text, color: INK, zIndex: 8}}>
+      <div style={{position: 'absolute', left: 50, top: 42, right: 50, opacity: prog(f, IC + 10, 10)}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
+          <span style={{fontSize: 16, fontWeight: 700, color: '#b3261e', background: '#fbe9e7', borderRadius: 99, padding: '6px 14px'}}>Error</span>
+          <span style={{fontSize: 18, color: MUTE}}>Internal linking · found on 58 pages</span>
+          <span style={{marginLeft: 'auto', borderRadius: 99, padding: '12px 26px', fontSize: 19, fontWeight: 700, background: INK, color: W}}>Create task</span>
+        </div>
+        <div style={{fontFamily: F.display, fontSize: 52, fontWeight: 650, letterSpacing: '-0.025em', marginTop: 14}}>Broken internal links</div>
+        <div style={{display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 44, marginTop: 30}}>
+          <div style={{opacity: c(0)}}>
+            <div style={lab}>WHERE</div>
+            {PAGES.map(([pg, to], i) => (
+              <div key={pg} style={{display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', marginTop: 10, borderRadius: 14, background: '#f4f8f9', opacity: c(i), transform: `translateX(${(1 - c(i)) * -30}px)`, fontSize: 18}}>
+                <span style={{fontWeight: 650}}>{pg}</span>
+                <span style={{color: MUTE}}>links to</span>
+                <span style={{color: '#b3261e', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{to}</span>
+                <span style={{marginLeft: 'auto', fontSize: 14, fontWeight: 700, color: '#b3261e', background: '#fbe9e7', borderRadius: 8, padding: '3px 8px'}}>404</span>
+              </div>
+            ))}
+            <div style={{fontSize: 17, color: MUTE, marginTop: 14, opacity: c(4)}}>and 54 more pages</div>
+          </div>
+          <div>
+            <div style={{opacity: c(2)}}>
+              <div style={lab}>WHY IT MATTERS</div>
+              <div style={{fontSize: 21, lineHeight: 1.45, marginTop: 10}}>Links that lead nowhere waste Google's visit and leave readers at a dead end. Fixed links let search engines reach every project page.</div>
+            </div>
+            <div style={{...lab, marginTop: 28, opacity: c(3)}}>HOW TO FIX</div>
+            {STEPS.map((t, i) => (
+              <div key={t} style={{display: 'flex', gap: 14, alignItems: 'flex-start', marginTop: 14, opacity: c(3 + i), transform: `translateY(${(1 - c(3 + i)) * 14}px)`}}>
+                <span style={{flex: 'none', width: 34, height: 34, borderRadius: 99, background: `linear-gradient(135deg, ${GR}, ${CY} 60%, ${SKY})`, color: W, fontSize: 16, fontWeight: 700, display: 'grid', placeItems: 'center'}}>{i + 1}</span>
+                <span style={{fontSize: 20, lineHeight: 1.4}}>{t}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

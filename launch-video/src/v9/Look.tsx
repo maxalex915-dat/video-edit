@@ -38,14 +38,25 @@ export const Dots: React.FC<{color: string; o: number}> = ({color, o}) => {
 export const BrandField: React.FC<{seed?: number}> = (p) => (React.useContext(NoGround) ? null : <BrandFieldRaw {...p} />);
 export const BrandFieldRaw: React.FC<{seed?: number}> = ({seed = 0}) => {
   const f = useF();
-  const t = f / 30 + seed * 3;
-  const a = 125 + s(t * 0.25) * 18;
+  const t = f / 30 + seed * 3.7;
+  // Fluid colour, after the reference's full-colour screens: a strong base with a few huge, very soft blobs
+  // (one light, one green, one deep shadow in a corner) that drift, stretch and turn like a thick liquid.
+  const blob = (k: string, cx: number, cy: number, w: number, h: number, sx: number, rot: number, bg: string, o = 1) => (
+    <div key={k} style={{position: 'absolute', left: cx - w / 2, top: cy - h / 2, width: w, height: h, borderRadius: '50%', background: bg, opacity: o, transform: `rotate(${rot}deg) scale(${sx}, ${2 - sx})`}} />
+  );
   return (
-    <AbsoluteFill style={{overflow: 'hidden'}}>
-      <div style={{position: 'absolute', inset: '-12%', background: `linear-gradient(${a}deg, ${GR} 0%, ${CY} 45%, ${SKY} 100%)`, transform: `translate(${s(t * 0.3) * 6}%, ${c(t * 0.22) * 5}%)`}} />
-      <div style={{position: 'absolute', inset: '-12%', background: `linear-gradient(${a + 70}deg, ${GR} 0%, ${CY} 45%, ${SKY} 100%)`, opacity: 0.45 + s(t * 0.4) * 0.2, filter: 'blur(60px)', WebkitMaskImage: `radial-gradient(45% 55% at ${50 + s(t * 0.35) * 18}% ${50 + c(t * 0.3) * 14}%, #000 0%, transparent 70%)`, maskImage: `radial-gradient(45% 55% at ${50 + s(t * 0.35) * 18}% ${50 + c(t * 0.3) * 14}%, #000 0%, transparent 70%)`}} />
-      <Dots color="#fff" o={0.32} />
-      <Grain o={0.1} />
+    <AbsoluteFill style={{overflow: 'hidden', background: CY}}>
+      <div style={{position: 'absolute', inset: '-18%', filter: 'blur(90px)'}}>
+        <div style={{position: 'absolute', left: '18%', top: '18%', width: 1920, height: 1080}}>
+          {blob('sky', 1500 + s(t * 0.33) * 320, 220 + c(t * 0.41) * 160, 1500, 1100, 1 + s(t * 0.5) * 0.25, t * 9, `radial-gradient(closest-side, ${SKY} 30%, rgba(112,203,243,0))`)}
+          {blob('green', 320 + s(t * 0.38 + 2) * 360, 860 + c(t * 0.52) * 220, 1800, 1300, 1 + s(t * 0.61 + 1) * 0.3, -t * 11, `radial-gradient(closest-side, ${GR} 30%, rgba(127,188,66,0))`, 0.95)}
+          {blob('light', 960 + s(t * 0.52) * 560 + s(t * 1.07 + 1) * 140, 420 + c(t * 0.43) * 260, 1600, 1150, 1 + s(t * 0.72) * 0.35, t * 14, 'radial-gradient(closest-side, rgba(255,255,255,.97) 25%, rgba(220,245,255,.55) 60%, rgba(255,255,255,0))', 0.9)}
+          {blob('deep', 1780 + s(t * 0.47 + 4) * 260, 1080 + c(t * 0.56 + 1) * 200, 1400, 1100, 1 + s(t * 0.66 + 3) * 0.3, t * 7, 'radial-gradient(closest-side, #04303c 25%, rgba(4,48,60,0))', 0.8)}
+          {blob('deep2', -80 + s(t * 0.29 + 1) * 200, -60 + c(t * 0.37 + 2) * 160, 900, 700, 1 + s(t * 0.5 + 2) * 0.25, -t * 6, 'radial-gradient(closest-side, #063f4d, rgba(6,63,77,0))', 0.55)}
+        </div>
+      </div>
+      <Dots color="#fff" o={0.22} />
+      <Grain o={0.12} />
     </AbsoluteFill>
   );
 };
