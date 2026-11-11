@@ -3,7 +3,7 @@ import {AbsoluteFill, interpolate} from 'remotion';
 import {useF} from '../frame';
 import {F} from '../theme/fonts';
 import {E, prog, spr, S, lerp} from '../theme/motion';
-import {Cursor, Ripple} from '../components/kit/Anim';
+import {Ripple, cursorPos, Way} from '../components/kit/Anim';
 import {Words, glow, BRAND, GR, CY, SKY, INK, Pop, Swish} from './Look';
 
 // Weekly AI report, then the action plan, in one continuous shot on the brand field.
@@ -61,6 +61,22 @@ const posOf = (k: number, f: number): [number, number, number] => {
 // drags done with the cursor: [card, start frame]
 const DRAGS: [number, number][] = [[0, 205], [1, 232], [0, 258]];
 
+const SOFT = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
+// a teammate's cursor: the usual arrow in their colour with their name beside it
+const Teammate: React.FC<{name: string; color: string; path: Way[]; clicks: number[]; show: number}> = ({name, color, path, clicks, show}) => {
+  const f = useF();
+  const {x, y} = cursorPos(f, path, SOFT);
+  const press = clicks.reduce((m, c) => Math.max(m, f >= c && f < c + 6 ? 1 - Math.abs(f - c - 2) / 4 : 0), 0);
+  const o = prog(f, show, 8);
+  return (
+    <div style={{position: 'absolute', left: x, top: y, opacity: o, zIndex: 30, transform: `scale(${1 - press * 0.12})`, transformOrigin: '0 0'}}>
+      <svg width="34" height="40" viewBox="0 0 34 40" style={{position: 'absolute', left: -3, top: -3, overflow: 'visible', filter: 'drop-shadow(0 6px 8px rgba(5,40,44,.3))'}}>
+        <path d="M3 3 L3 33 L11 25 L17 37 L23 34 L17 22 L28 22 Z" fill={color} stroke="#fff" strokeWidth={3} strokeLinejoin="round" />
+      </svg>
+      <span style={{position: 'absolute', left: 26, top: 30, fontFamily: F.text, fontSize: 20, fontWeight: 700, color: W, background: color, borderRadius: 99, padding: '5px 14px', whiteSpace: 'nowrap', boxShadow: '0 8px 18px -8px rgba(5,40,44,.4)', border: '2px solid #fff'}}>{name}</span>
+    </div>
+  );
+};
 export const Report: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   const doc = spr(f, 6, S.soft);
@@ -68,14 +84,18 @@ export const Report: React.FC<{dur: number}> = ({dur}) => {
   const board = spr(f, 134, S.soft);
   const t1out = 124;
   // cursor: comes in, then grabs each card at its current spot and rides with it
-  const path: {f: number; x: number; y: number}[] = [{f: 176, x: 1500, y: 1100}];
-  DRAGS.forEach(([k, at]) => {
+  // three people work on the board at once, each with their own cursor and name
+  const grab = (k: number, at: number, ox: number, oy: number, from: Way, end: Way): Way[] => {
     const [x0, y0, s0] = posOf(k, at - 1);
-    path.push({f: at - 6, x: x0 + CW * s0 * 0.5, y: y0 + CH * s0 * 0.45});
-    for (let g = 0; g <= MV; g += 2) {const [x, y, s] = posOf(k, at + g); path.push({f: at + g, x: x + CW * s * 0.5, y: y + CH * s * 0.45});}
-  });
-  const last = path[path.length - 1];
-  path.push({f: dur + 20, x: last.x + 60, y: last.y + 120});
+    const pts: Way[] = [from, {f: at - 6, x: x0 + CW * s0 * ox, y: y0 + CH * s0 * oy}];
+    for (let g = 0; g <= MV; g += 2) {const [x, y, sc] = posOf(k, at + g); pts.push({f: at + g, x: x + CW * sc * ox, y: y + CH * sc * oy});}
+    pts.push(end);
+    return pts;
+  };
+  const pA = [...grab(0, 205, 0.5, 0.45, {f: 172, x: 760, y: 1120}, {f: 236, x: 820, y: 560}).slice(0, -1), ...grab(0, 258, 0.5, 0.45, {f: 236, x: 820, y: 560}, {f: dur + 20, x: 1500, y: 640})];
+  const pB = grab(1, 232, 0.62, 0.5, {f: 180, x: 120, y: 1100}, {f: dur + 20, x: 800, y: 760});
+  const pC: Way[] = [{f: 186, x: 1960, y: 900}, {f: 214, x: 330, y: 760}, {f: 236, x: 300, y: 720}, {f: 252, x: 360, y: 600}, {f: 275, x: 1440, y: 820}, {f: dur + 20, x: 1460, y: 840}];
+  const PEOPLE: [string, string, Way[], number[], number][] = [['Dat', GR, pA, [203, 256], 176], ['Sophie', CY, pB, [230], 186], ['Lucas', '#f08a5d', pC, [], 192]];
   return (
     <AbsoluteFill>
       <Swish at={6} />{RECS.map((_, k) => <Pop key={k} at={40 + k * 14} k={k} v={0.18} />)}
@@ -146,7 +166,7 @@ export const Report: React.FC<{dur: number}> = ({dur}) => {
           })}
           <div style={{position: 'absolute', inset: 0, transform: 'translateZ(90px)', zIndex: 20}}>
           {DRAGS.map(([k, at], i) => {const [x, y, s] = posOf(k, at + MV); return <Ripple key={i} x={x + CW * s * 0.5} y={y + CH * s * 0.45} at={at + MV} />;})}
-          <Cursor path={path} clicks={DRAGS.map(([, at]) => at - 2)} show={180} />
+          {PEOPLE.map(([n, c, pth, cl, sh]) => <Teammate key={n} name={n} color={c} path={pth} clicks={cl} show={sh} />)}
           </div>
         </div>
       </div>

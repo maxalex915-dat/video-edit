@@ -45,9 +45,9 @@ const Glow: React.FC<{h: number}> = ({h}) => {
 export const Consuming: React.FC<{dur: number}> = () => {
   const f = useF();
   // part 1: the list builds with the voice ("different providers", "different logins", "costing hundreds of dollars")
-  const LIST: [string, number][] = [['Different providers', 45], ['Different logins', 82], ['Costing hundreds of dollars', 120]];
+  const LIST: [string, number][] = [['Different providers', 26], ['Different logins', 82], ['Costing hundreds of dollars', 120]];
   const p1 = f < CUT;
-  const arrow = prog(f, 34, 12, E.snappy);
+  const arrow = prog(f, 4, 22, E.inOut);
   const out1 = prog(f, CUT - 8, 8, E.expoIn);
   const h = f - CUT;
   const cl = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
