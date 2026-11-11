@@ -68,7 +68,7 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
           {/* the loop as a vector cut-out of the same screen-wide gradient as the card, so the colour cannot jump */}
           <svg width="1920" height="1080" style={{position: 'absolute', left: 0, top: 0, opacity: 1 - real}}>
             <defs>
-              <linearGradient id="endG" gradientUnits="userSpaceOnUse" x1="210" y1="-210" x2="1710" y2="1290"><stop offset="0" stopColor="#7fbc42" /><stop offset=".45" stopColor="#00b9ef" /><stop offset="1" stopColor="#70cbf3" /></linearGradient>
+              <linearGradient id="endG" gradientUnits="userSpaceOnUse" x1={lerp(sh, 210, gx)} y1={lerp(sh, -210, gy)} x2={lerp(sh, 1710, gx + 2403 * gs)} y2={lerp(sh, 1290, gy + 2496 * gs)}><stop offset="0" stopColor="#7fbc42" /><stop offset=".45" stopColor="#00b9ef" /><stop offset="1" stopColor="#70cbf3" /></linearGradient>
               <clipPath id="endLoop">{LOOP_PATHS.map((d, i) => <path key={i} d={d} transform={`translate(${gx}, ${gy}) scale(${gs})`} />)}</clipPath>
               <filter id="endN"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 5} /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer></filter>
             </defs>

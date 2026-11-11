@@ -57,40 +57,52 @@ const WALL: [number, number, number, number][] = [[140, 260, -260, -4], [620, 20
 export const Manual: React.FC<{dur: number}> = ({dur}) => {
   const f = useF();
   // camera: wide on the wall, push in to the front sheet, back out to the report beside the pile
-  const push = prog(f, 34, 26, E.inOut), back = prog(f, 96, 30, E.inOut);
-  const cs = lerp(back, lerp(push, 1, 1.45), 0.72), cx = lerp(back, lerp(push, 960, 820), 960), cy = lerp(back, lerp(push, 640, 760), 380);
-  const sel = prog(f, 56, 12, E.inOut), ants = f >= 68 ? 1 : 0;
-  const fly = prog(f, 70, 18, E.inOut);
-  const pptIn = spr(f, 62, S.soft), bars = prog(f, 84, 22, (q) => q);
-  const week = 44 + Math.max(0, Math.min(3, Math.floor((f - 120) / 28)));
-  const reshuffle = (k: number) => (f >= 120 ? Math.abs(Math.sin(((f - 120) / 28) * Math.PI)) : 0) * (k % 2 ? 1 : 0.6);
+  // camera: a slight push while the copying goes on, then back out to the pile and the report
+  const push = prog(f, 20, 24, E.inOut), back = prog(f, 104, 26, E.inOut);
+  const cs = lerp(back, lerp(push, 1, 1.12), 0.72), cx = 960, cy = lerp(back, 640, 380);
+  // chaos: one copy after another, from seven different sheets, each pasted into the report by hand
+  const FL: [number, number][] = [9, 4, 7, 1, 10, 6, 2].map((sh, k) => [sh, 34 + k * 9]);
+  const arrived = FL.reduce((m, [, at]) => m + prog(f, at + 14, 6), 0);
+  const pptIn = spr(f, 22, S.soft), bars = arrived / 7;
+  const week = 44 + Math.max(0, Math.min(3, Math.floor((f - 118) / 18)));
+  const reshuffle = (k: number) => (f >= 118 ? Math.abs(Math.sin(((f - 118) / 18) * Math.PI)) : 0) * (k % 2 ? 1 : 0.6);
+  const slot = (k: number) => [1080 + 178 + (k + 0.5) * (540 / 7) - 30, 360 + 330];
   return (
     <AbsoluteFill>
       <Mist lift={0.5} />
-      {WALL.map((_, i) => <Pop key={i} at={4 + i * 2} k={i} v={0.09} />)}<Swish at={34} /><Pop at={68} v={0.2} /><Swish at={70} k={1} /><Pop at={86} k={1} v={0.18} /><Swish at={96} />{[120, 148, 176].map((t, i) => <Pop key={t} at={t + 14} k={i} v={0.16} />)}
+      {WALL.map((_, i) => <Pop key={i} at={4 + i * 2} k={i} v={0.08} />)}<Swish at={22} />
+      {FL.map(([, at], k) => <React.Fragment key={k}><Pop at={at - 2} k={k} v={0.14} /><Swish at={at} k={k} v={0.07} /><Pop at={at + 15} k={k + 1} v={0.16} /></React.Fragment>)}
+      <Swish at={104} />{[118, 136, 154].map((t, i) => <Pop key={t} at={t + 9} k={i} v={0.14} />)}
       <div style={{position: 'absolute', inset: 0, perspective: 2000}}>
         <div style={{position: 'absolute', inset: 0, transformStyle: 'preserve-3d', transformOrigin: `${cx}px ${cy}px`, transform: `translate(${960 - cx}px, ${560 - cy}px) scale(${cs}) rotateX(${lerp(prog(f, 0, dur), 20, 12)}deg) rotateY(${lerp(prog(f, 0, dur), -10, -4)}deg)`}}>
           {WALL.map(([x, y, z, r], i) => {
             const q = spr(f, 4 + i * 2, S.soft);
-            const front = i === 9;
-            const fill = prog(f, 6 + i * 2, 30, (t) => t);
-            const out = back * (front ? 0.1 : 0.3) + reshuffle(i) * 0.5;
+            const fl = FL.find(([sh]) => sh === i);
+            const sel = fl ? prog(f, fl[1] - 8, 7, E.inOut) * (1 - prog(f, fl[1] + 16, 6)) : 0;
+            const fill = prog(f, 4 + i * 2, 24, (t) => t);
+            const out = back * 0.3 + reshuffle(i) * 0.5;
             return (
               <div key={i} style={{position: 'absolute', left: x - 230, top: y - 300, transform: `translateZ(${z}px) rotate(${r}deg) translateY(${(1 - Math.min(1, q)) * 500}px)`, opacity: Math.min(1, q) * (1 - out), transformStyle: 'preserve-3d'}}>
-                <Sheet name={front ? 'linkedin_export_wk44.xlsx' : FILES[(i + (week - 44) * 5) % FILES.length]} w={460} h={300} fill={fill} seed={i + week} sel={front ? sel : 0} ants={front ? ants : 0} />
+                <Sheet name={FILES[(i + (week - 44) * 5) % FILES.length]} w={460} h={300} fill={fill} seed={i + week} sel={sel} ants={fl && f >= fl[1] ? 1 : 0} />
               </div>
             );
           })}
-          {/* the copied block flies from the sheet into the slide */}
-          {fly > 0 && fly < 1 && <div style={{position: 'absolute', left: lerp(fly, 760 - 230 + 105, 1180), top: lerp(fly, 940 - 300 + 84, 620), width: lerp(fly, 215, 120), height: lerp(fly, 156, 80), border: `2px dashed ${XL}`, background: 'rgba(29,111,66,.18)', borderRadius: 4, transform: `translateZ(${120 + Math.sin(fly * Math.PI) * 200}px)`}} />}
+          {/* the copied blocks, one per sheet, flying into the slide */}
+          {FL.map(([sh, at], k) => {
+            const p = prog(f, at, 15, E.inOut);
+            if (p <= 0 || p >= 1) return null;
+            const [x, y, z] = WALL[sh];
+            const [tx, ty] = slot(k);
+            return <div key={k} style={{position: 'absolute', left: lerp(p, x - 230 + 105, tx), top: lerp(p, y - 300 + 84, ty), width: lerp(p, 215, 60), height: lerp(p, 156, 44), border: `2px dashed ${XL}`, background: 'rgba(29,111,66,.2)', borderRadius: 4, transform: `translateZ(${lerp(p, z + 20, 200) + Math.sin(p * Math.PI) * 180}px) rotate(${Math.sin(p * Math.PI) * (k % 2 ? 8 : -8)}deg)`}} />;
+          })}
           <div style={{position: 'absolute', left: 1080, top: 360, transform: `translateZ(${180}px) translateX(${(1 - Math.min(1, pptIn)) * 900}px)`, opacity: Math.min(1, pptIn)}}>
             <Report w={760} h={480} bars={bars} week={week} />
           </div>
         </div>
       </div>
       {/* the weekly loop */}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.', true]]} at={122} size={84} stagger={5} /></div>
-      <div style={{position: 'absolute', left: 0, right: 0, bottom: 60, display: 'flex', justifyContent: 'center', opacity: prog(f, 118, 10), transform: `translateY(${(1 - prog(f, 118, 14, E.snappy)) * 40}px)`}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 70}}><Words parts={[['Every week.'], ['By hand.', true]]} at={124} size={84} stagger={5} /></div>
+      <div style={{position: 'absolute', left: 0, right: 0, bottom: 60, display: 'flex', justifyContent: 'center', opacity: prog(f, 112, 10), transform: `translateY(${(1 - prog(f, 112, 14, E.snappy)) * 40}px)`}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,255,255,.95)', borderRadius: 99, padding: '12px 26px', fontFamily: F.text, fontSize: 28, fontWeight: 700, color: INK, boxShadow: '0 16px 40px -14px rgba(0,60,90,.4)'}}>
           <svg width="30" height="30" viewBox="0 0 24 24" style={{transform: `rotate(${f * 6}deg)`}}><defs><linearGradient id="lp" x1="0" x2="1"><stop offset="0" stopColor={GR} /><stop offset=".55" stopColor={CY} /><stop offset="1" stopColor={SKY} /></linearGradient></defs><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="url(#lp)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
           Week {week}

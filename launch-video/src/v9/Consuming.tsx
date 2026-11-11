@@ -21,7 +21,8 @@ for (let r = 0; r < ROWS; r++) {
     x += w + 22 + ((k * 13) % 30);
   }
 }
-const DOT: [number, number, number][] = [[46, 960, 600], [54, 960, 572], [62, 1000, 540], [74, 1012, 520], [86, 942, 470], [98, 990, 450], [110, 930, 470], [122, 962, 520], [130, 960, 540]];
+// the dot wanders far and lost, left, right, up and down, before it finds the middle
+const DOT: [number, number, number][] = [[44, 960, 620], [54, 560, 500], [64, 1380, 780], [74, 700, 880], [84, 1520, 440], [94, 820, 390], [104, 1240, 720], [112, 960, 560]];
 export const Consuming: React.FC<{dur: number}> = () => {
   const f = useF();
   // part 1: the list builds with the voice ("different providers", "different logins", "costing hundreds of dollars")
@@ -34,21 +35,20 @@ export const Consuming: React.FC<{dur: number}> = () => {
   // part 2: the field
   const zoom = prog(g, 44, 40, E.inOut);
   const fs = lerp(zoom, 1.7, 1);
-  const melt = (r: number) => prog(g, 98 + r * 3, 18, E.inOut); // top rows first
   const dx = interpolate(g, DOT.map((d) => d[0]), DOT.map((d) => d[1]), {...cl, easing: E.inOut});
   const dy = interpolate(g, DOT.map((d) => d[0]), DOT.map((d) => d[2]), {...cl, easing: E.inOut});
-  const dotIn = prog(g, 44, 8, E.snappy), dotOut = prog(g, 128, 6, E.expoIn);
+  const dotIn = prog(g, 44, 8, E.snappy), dotOut = prog(g, 132, 7, E.expoIn);
   // part 3: glass square, card ("simpler"), panel ("everything in one place")
-  const sq = prog(g, 126, 8, E.snappy);
-  const card = prog(g, 134, 10, E.snappy);
-  const open = prog(g, 150, 30, E.inOut);
+  const sq = prog(g, 130, 8, E.snappy);
+  const card = prog(g, 135, 10, E.snappy);
+  const open = prog(g, 166, 26, E.inOut);
   const cw = lerp(card, 230, 640), ch = lerp(card, 150, 330);
   const W2 = lerp(open, cw, 1180), H2 = lerp(open, ch, 560);
-  const ink = prog(g, 140, 14);
+  const ink = prog(g, 146, 16);
   return (
     <AbsoluteFill>
       <Mist lift={g < 44 ? 0.35 : lerp(prog(g, 44, 56, E.inOut), 0.45, 0.95)} />
-      <Swish at={S + 44} /><Swish at={S + 100} k={1} v={0.12} /><Pop at={S + 130} v={0.22} /><Pop at={S + 136} k={1} v={0.22} /><Swish at={S + 150} />
+      <Swish at={S + 44} />{[54, 64, 74, 84, 94, 104].map((t, i) => <Swish key={t} at={S + t - 6} k={i} v={0.06} />)}<Swish at={S + 104} k={1} v={0.16} /><Pop at={S + 130} v={0.24} /><Pop at={S + 136} k={1} v={0.2} /><Swish at={S + 166} />
       {p1 && (
         <AbsoluteFill style={{opacity: 1 - out1, filter: `blur(${out1 * 14}px)`, transform: `translateY(${-prog(f, 0, S, (q) => q) * 30}px) scale(${1 + out1 * 0.08})`}}>
           {LIST.map(([t, at], k) => {
@@ -69,16 +69,27 @@ export const Consuming: React.FC<{dur: number}> = () => {
       {g >= 42 && (
         <AbsoluteFill style={{transform: `scale(${fs})`, transformOrigin: '960px 560px', opacity: prog(g, 42, 8)}}>
           {PILLS.map(([x, y, w], i) => {
-            const r = Math.round((y - RY0) / RGAP);
-            const d = Math.hypot(x + w / 2 - 960, y - 560);
-            const a = prog(g, 44 + d / 60, 10, E.snappy) * (1 - melt(r));
-            if (a <= 0.01) return null;
-            return <div key={i} style={{position: 'absolute', left: x, top: y - 30, width: w, height: 60, borderRadius: 99, border: '2px solid rgba(255,255,255,.95)', background: 'rgba(255,255,255,.14)', boxShadow: 'inset 0 0 16px rgba(255,255,255,.4)', opacity: a, transform: `scale(${0.9 + a * 0.1})`}} />;
+            const pcx = x + w / 2, pcy = y;
+            const d0 = Math.hypot(pcx - 960, pcy - 560);
+            const a = prog(g, 44 + d0 / 60, 10, E.snappy);
+            // the dot in the field's own coordinates (the field is scaled about 960, 560)
+            const fx = (dx - 960) / fs + 960, fy = (dy - 560) / fs + 560;
+            const dd = Math.hypot(pcx - fx, pcy - fy);
+            const room = g < 112 ? Math.max(0, Math.min(1, (dd - 70) / 190)) : 1; // 0 right next to the dot
+            const ux = (pcx - fx) / (dd || 1), uy = (pcy - fy) / (dd || 1);
+            // black hole: closest blocks first, they spiral into the dot
+            const s = prog(g, 106 + Math.min(10, d0 / 100), 14, (q) => q * q * q);
+            if (a <= 0.01 || s >= 0.999) return null;
+            const ang = Math.atan2(pcy - fy, pcx - fx) + s * 2.2;
+            const rr = Math.hypot(pcx - fx, pcy - fy) * (1 - s);
+            const sx = fx + Math.cos(ang) * rr - pcx, sy = fy + Math.sin(ang) * rr - pcy;
+            const push = (1 - room) * 46;
+            return <div key={i} style={{position: 'absolute', left: x, top: y - 30, width: w, height: 60, borderRadius: 99, border: '2px solid rgba(255,255,255,.95)', background: 'rgba(255,255,255,.14)', boxShadow: 'inset 0 0 16px rgba(255,255,255,.4)', opacity: a * (1 - s * 0.6), transform: `translate(${ux * push + sx}px, ${uy * push + sy}px) scale(${(0.9 + a * 0.1) * (0.2 + 0.8 * room) * (1 - s * 0.85)}) rotate(${s * 160}deg)`}} />;
           })}
         </AbsoluteFill>
       )}
-      {g >= 44 && g < 135 && <div style={{position: 'absolute', left: dx - 45, top: dy - 45, width: 90, height: 90, borderRadius: 99, background: BRAND, boxShadow: '0 10px 30px -6px rgba(0,150,200,.55)', opacity: dotIn * (1 - dotOut), transform: `scale(${(0.6 + dotIn * 0.4) * (1 - dotOut * 0.5)})`}} />}
-      {g >= 126 && (
+      {g >= 44 && g < 140 && <div style={{position: 'absolute', left: dx - 45, top: dy - 45, width: 90, height: 90, borderRadius: 99, background: BRAND, boxShadow: '0 10px 30px -6px rgba(0,150,200,.55)', opacity: dotIn * (1 - dotOut), transform: `scale(${(0.6 + dotIn * 0.4) * (1 - dotOut * 0.5)})`}} />}
+      {g >= 130 && (
         <>
           {open > 0 && <div style={{position: 'absolute', left: 960 - lerp(open, W2, 1320) / 2, top: 560 - lerp(open, H2, 660) / 2, width: lerp(open, W2, 1320), height: lerp(open, H2, 660), borderRadius: 40, border: '2px solid rgba(255,255,255,.9)', background: 'rgba(255,255,255,.12)', opacity: open}} />}
           <div style={{position: 'absolute', left: 960 - W2 / 2, top: 560 - H2 / 2, width: W2, height: H2, borderRadius: lerp(card, 22, 30), background: 'linear-gradient(160deg, rgba(255,255,255,.6), rgba(255,255,255,.25))', border: '2px solid rgba(255,255,255,.95)', boxShadow: '0 30px 70px -30px rgba(0,90,120,.35)', opacity: sq, transform: `scale(${0.85 + sq * 0.15})`, overflow: 'hidden'}}>
@@ -87,7 +98,7 @@ export const Consuming: React.FC<{dur: number}> = () => {
             </div>
           </div>
           <div style={{position: 'absolute', left: 0, right: 0, top: 560 - lerp(open, 0, 150) - 45}}>
-            {g < 154 ? <Words parts={[['Simpler', ink < 0.5]]} at={S + 137} size={64} color={INK} out={S + 150} /> : <Words parts={[['Everything in one place']]} at={S + 171} size={68} />}
+            {g < 170 ? <Words parts={[['Simpler', ink < 0.5]]} at={S + 138} size={64} color={INK} out={S + 165} /> : <Words parts={[['Everything in one place']]} at={S + 172} size={68} />}
           </div>
         </>
       )}
