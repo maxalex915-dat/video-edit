@@ -1,6 +1,7 @@
 import React from 'react';
 import {useF} from './frame';
 import {cursorPos, Way} from './cursor';
+import {BRAND} from './brand';
 
 // "Low-power magnet" lift: an (invisible or visible) path glides from card to card; the card under it rises toward
 // the viewer and settles again, the cards near it rise a little. The pull is a weighted look back over the last
@@ -25,7 +26,7 @@ export const MagnetCard: React.FC<{x: number; y: number; w: number; h: number; b
   const ez = m * m * (3 - 2 * m);
   return (
     <div style={{position: 'absolute', left: x, top: y, width: w, height: h, borderRadius: 22, boxSizing: 'border-box', overflow: 'hidden',
-      boxShadow: `0 0 0 1.5px rgba(255,255,255,.95), 0 ${14 + (base * z) * 0.5 + ez * 30}px ${34 + base * z + ez * 40}px -16px rgba(0,110,150,.35)`,
+      boxShadow: `0 0 0 1.5px rgba(255,255,255,.95), 0 ${14 + (base * z) * 0.5 + ez * 30}px ${34 + base * z + ez * 40}px -16px rgba(${BRAND.shadeRGB},.35)`,
       transform: `translateZ(${base * z + ez * 90}px) scale(${1 + ez * 0.025})`, ...style}}>{children}</div>
   );
 };

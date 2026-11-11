@@ -1,5 +1,5 @@
 import React from 'react';
-import {F, C0 as GR, C1 as CY, C2 as SKY, INK} from './brand';
+import {F, C0 as GR, C1 as CY, C2 as SKY, INK, BRAND} from './brand';
 
 
 // A large score dial: a 270-degree arc in the brand gradient that sweeps to the score while the number counts up.
@@ -22,11 +22,11 @@ export const Dial: React.FC<{v: number; p: number; size: number; label: string; 
         </defs>
         {/* glass track with ticks */}
         <path d={arc(a0, a0 + span)} fill="none" stroke="rgba(255,255,255,.75)" strokeWidth={46} strokeLinecap="round" />
-        <path d={arc(a0, a0 + span)} fill="none" stroke="rgba(16,36,42,.06)" strokeWidth={46} strokeLinecap="round" />
+        <path d={arc(a0, a0 + span)} fill="none" stroke={`rgba(${BRAND.inkRGB},.06)`} strokeWidth={46} strokeLinecap="round" />
         {Array.from({length: 28}).map((_, i) => {
           const d = a0 + (span * i) / 27, [x0, y0] = pt(d);
           const k = (r - 44) / r;
-          return <line key={i} x1={x0} y1={y0} x2={cx + (x0 - cx) * k} y2={cy + (y0 - cy) * k} stroke="rgba(16,36,42,.14)" strokeWidth={i % 9 === 0 ? 3 : 1.5} transform={`translate(${(cx - x0) * 0.12}, ${(cy - y0) * 0.12})`} />;
+          return <line key={i} x1={x0} y1={y0} x2={cx + (x0 - cx) * k} y2={cy + (y0 - cy) * k} stroke={`rgba(${BRAND.inkRGB},.14)`} strokeWidth={i % 9 === 0 ? 3 : 1.5} transform={`translate(${(cx - x0) * 0.12}, ${(cy - y0) * 0.12})`} />;
         })}
         {p > 0.005 && <>
           <path d={arc(a0, end)} fill="none" stroke={`url(#dg${id})`} strokeWidth={46} strokeLinecap="round" filter={`url(#dgl${id})`} opacity={0.55} />
@@ -36,7 +36,7 @@ export const Dial: React.FC<{v: number; p: number; size: number; label: string; 
       </svg>
       <div style={{position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontFamily: F.display, color: INK}}>
         <div style={{fontSize: size * 0.28, fontWeight: 600, letterSpacing: '-0.05em', lineHeight: 1.05, fontVariantNumeric: 'tabular-nums', backgroundImage: `linear-gradient(135deg, ${GR} 0%, ${CY} 55%, ${SKY} 100%)`, WebkitBackgroundClip: 'text', color: 'transparent', paddingBottom: '0.04em'}}>{Math.round(v * p)}</div>
-        <div style={{fontSize: size * 0.052, fontWeight: 600, color: '#3d5359', marginTop: size * 0.01, letterSpacing: '-0.01em'}}>{label}</div>
+        <div style={{fontSize: size * 0.052, fontWeight: 600, color: BRAND.mute, marginTop: size * 0.01, letterSpacing: '-0.01em'}}>{label}</div>
       </div>
     </div>
   );

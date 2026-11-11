@@ -21,6 +21,8 @@ A 90 to 110 second launch film in five movements. Percentages are of total lengt
 | Proof + more + close | ~17% | trust, abundance, memory | "We now save over $2,000 a year on our SEMrush subscription." / "But wait, there's more." / a fast list of 8 features "...and a lot more." / "The Marketing Dashboard. Less time collecting, more time marketing." |
 
 Rules of thumb:
+- No headline statistic in the brief? Open on the pain as a short, concrete sentence instead ("Hours lost to the rota
+  every week"), or a question. Never invent a number to fill the opener.
 - One idea per line, one line per scene. A line is 2 to 5 seconds spoken.
 - Put a saving or proof point near the end of the features: it is the business reason.
 - "But wait, there's more" plus a fast montage gives the breadth without slowing the film.

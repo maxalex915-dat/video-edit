@@ -10,7 +10,7 @@ import {F, GRAD, INK} from '../brand';
 // toward the ends. On the left, the real feature for that item tilts in with depth; the previous one falls back
 // into the distance. The last item ("And a lot more") fans out every visual at once.
 // at = seconds into the scene when the voice SAYS each item (measure with scripts/vo_words.py; never guess).
-export const Montage: React.FC<{dur: number; items: string[]; at: number[]; visual: (k: number, f: number) => React.ReactNode}> = ({dur, items, at, visual}) => {
+export const Montage: React.FC<{dur: number; items: string[]; at: number[]; visual: (k: number, f: number) => React.ReactNode; visualW?: number; visualH?: number; fanCols?: number}> = ({dur, items, at, visual, visualW = 460, visualH = 300, fanCols = 4}) => {
   const f = useF();
   const t = f / 30;
   const pos = interpolate(t, at.flatMap((a) => [a - 0.22, a + 0.05]).map((v, i) => Math.max(0, v + i * 0.0001)), at.flatMap((_, i) => [i - (i ? 1 : 0), i]), {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: E.inOut});
@@ -32,8 +32,10 @@ export const Montage: React.FC<{dur: number; items: string[]; at: number[]; visu
           );
         })}
         {f >= fr(last) - 2 && Array.from({length: last}).map((_, k) => {
-          const q = spr(f, fr(last) + k * 2, S.soft), col = k % 4, row = Math.floor(k / 4);
-          return <div key={`m${k}`} style={{position: 'absolute', left: 140 + col * 230, top: 300 + row * 300 - (col % 2) * 40, width: 460, transform: `scale(${0.42 * Math.min(1, q)}) rotateY(12deg)`, transformOrigin: '0 0', opacity: Math.min(1, q)}}>{visual(k, 60)}</div>;
+          // fan grid sized from the visual's own size (the kit's fixed 230 px pitch overlapped wider visuals)
+          const q = spr(f, fr(last) + k * 2, S.soft), col = k % fanCols, row = Math.floor(k / fanCols);
+          const sc = 0.42, pw = visualW * sc + 28, ph = visualH * sc + 50, rows = Math.ceil(last / fanCols);
+          return <div key={`m${k}`} style={{position: 'absolute', left: 560 - (fanCols * pw - 28) / 2 + col * pw, top: 540 - (rows * ph - 50) / 2 + row * ph - (col % 2) * 30, width: visualW, transform: `scale(${0.42 * Math.min(1, q)}) rotateY(12deg)`, transformOrigin: '0 0', opacity: Math.min(1, q)}}>{visual(k, 60)}</div>;
         })}
       </div>
       <div style={{position: 'absolute', left: 1080, top: 0, width: 840, height: 1080, WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%)', maskImage: 'linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%)'}}>

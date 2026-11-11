@@ -2,7 +2,7 @@ import React from 'react';
 import {interpolate} from 'remotion';
 import {useF} from './frame';
 import {E, prog} from './motion';
-import {F} from './brand';
+import {F, BRAND, C1} from './brand';
 
 // Cursors move like a person: unhurried, a slight arc on each move, a short rest on what they point at.
 // Use E.soft (sine) for the speed curve; E.inOut is too fast in the middle and was rejected as "too fast".
@@ -32,7 +32,7 @@ export const Cursor: React.FC<{path: Way[]; clicks?: number[]; show?: number; s?
   const {x, y} = cursorPos(f, path);
   return (
     <div style={{position: 'absolute', left: x, top: y, opacity: prog(f, show, 8), zIndex: 30, transform: `scale(${s * (1 - press(f, clicks) * 0.15)})`, transformOrigin: '0 0'}}>
-      <svg width="34" height="40" viewBox="0 0 34 40" style={{position: 'absolute', left: -3, top: -3, overflow: 'visible', filter: 'drop-shadow(0 6px 8px rgba(5,40,44,.3))'}}>
+      <svg width="34" height="40" viewBox="0 0 34 40" style={{position: 'absolute', left: -3, top: -3, overflow: 'visible', filter: `drop-shadow(0 6px 8px rgba(${BRAND.inkRGB},.3))`}}>
         <path d="M3 3 L3 33 L11 25 L17 37 L23 34 L17 22 L28 22 Z" fill="#1a1a1a" stroke="#fff" strokeWidth={3} strokeLinejoin="round" />
       </svg>
     </div>
@@ -45,17 +45,24 @@ export const Teammate: React.FC<{name: string; color: string; path: Way[]; click
   const {x, y} = cursorPos(f, path);
   return (
     <div style={{position: 'absolute', left: x, top: y, opacity: prog(f, show, 8), zIndex: 30, transform: `scale(${1 - press(f, clicks) * 0.12})`, transformOrigin: '0 0'}}>
-      <svg width="34" height="40" viewBox="0 0 34 40" style={{position: 'absolute', left: -3, top: -3, overflow: 'visible', filter: 'drop-shadow(0 6px 8px rgba(5,40,44,.3))'}}>
+      <svg width="34" height="40" viewBox="0 0 34 40" style={{position: 'absolute', left: -3, top: -3, overflow: 'visible', filter: `drop-shadow(0 6px 8px rgba(${BRAND.inkRGB},.3))`}}>
         <path d="M3 3 L3 33 L11 25 L17 37 L23 34 L17 22 L28 22 Z" fill={color} stroke="#fff" strokeWidth={3} strokeLinejoin="round" />
       </svg>
-      <span style={{position: 'absolute', left: 26, top: 30, fontFamily: F.text, fontSize: 20, fontWeight: 700, color: '#fff', background: color, borderRadius: 99, padding: '5px 14px', whiteSpace: 'nowrap', boxShadow: '0 8px 18px -8px rgba(5,40,44,.4)', border: '2px solid #fff'}}>{name}</span>
+      <span style={{position: 'absolute', left: 26, top: 30, fontFamily: F.text, fontSize: 20, fontWeight: 700, color: '#fff', background: color, borderRadius: 99, padding: '5px 14px', whiteSpace: 'nowrap', boxShadow: `0 8px 18px -8px rgba(${BRAND.inkRGB},.4)`, border: '2px solid #fff'}}>{name}</span>
     </div>
   );
 };
 // A ring that spreads from a click.
-export const Ripple: React.FC<{x: number; y: number; at: number; color?: string}> = ({x, y, at, color = '#00b9ef'}) => {
+export const Ripple: React.FC<{x: number; y: number; at: number; color?: string}> = ({x, y, at, color = C1}) => {
   const f = useF();
   if (f < at || f > at + 22) return null;
   const p = prog(f, at, 20, E.snappy), r = 12 + p * 48;
   return <div style={{position: 'absolute', left: x - r, top: y - r, width: r * 2, height: r * 2, borderRadius: '50%', border: `3px solid ${color}`, background: `${color}1f`, opacity: 1 - p, zIndex: 29}} />;
+};
+
+// DRAGGING: a held card must follow the cursor exactly (cursorPos moves on an arc, so a card interpolated in a
+// straight line drifts off the pointer). While held, place the card at the cursor minus the grab offset.
+export const dragPos = (f: number, path: Way[], grabX: number, grabY: number) => {
+  const c = cursorPos(f, path);
+  return {x: c.x - grabX, y: c.y - grabY};
 };

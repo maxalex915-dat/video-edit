@@ -26,6 +26,7 @@ reviewed frame by frame by a demanding client. The rules below are what survived
 | copying a reference video | `references/workflow.md` (section "Copying a reference") |
 | unsure why a rule exists | `references/lessons.md` (every client correction, with the fix) |
 | writing code | `kit/README.md` (the code kit: copy it, then edit `src/brand.ts` and `src/scenes.tsx`) |
+| want to see a finished plan for a different product | `references/example-plan-shiftly.md` (script with tags, scene table, open items) |
 
 ## The non-negotiables
 
@@ -61,8 +62,9 @@ reviewed frame by frame by a demanding client. The rules below are what survived
 2. **Script** (`references/script-voiceover-music.md`): problem (25%) > turn ("But what if...") > reveal
    ("Introducing...") on the music's drop > features in use (45%) > proof/saving > "But wait, there's more" montage >
    name + tagline + logo. Give the client the lines ready to paste into the voice tool, with expression tags.
-3. **Storyboard**: one contact sheet of key frames from a first build, not drawings. Get the order and look approved
-   before polishing.
+3. **Storyboard**: one contact sheet of key frames from a first build, not drawings. Before any voice exists, set
+   scene lengths by hand in `src/timing.json` (estimate ~2.6 words a second of voice plus 0.6 s breaths); once the
+   clips arrive, `build_audio.py` takes over that file. Get the order and look approved before polishing.
 4. **Build**: copy `kit/`, set `src/brand.ts`, list scenes in `src/scenes.tsx`, write each scene from the library
    patterns. Render stills constantly (`node scripts/stills.mjs <frames>`, `python3 scripts/sheet.py`).
 5. **Voice + music**: put clips in `public/vo/`, describe them in `audio.json`, run `python3 scripts/build_audio.py

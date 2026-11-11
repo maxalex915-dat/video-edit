@@ -11,7 +11,7 @@ import {F, INK, MUTE} from '../brand';
 // are fine on the small logo dots only; the chips themselves stay glass.
 type Chip = [string, string, string];
 const FILES = ['export_final_v7.xlsx', 'sessions (2).csv', 'report_FINAL.xlsx', 'insights.csv'];
-export const Chaos: React.FC<{dur: number; chips: Chip[]; lead?: string; line?: [string, string]}> = ({dur, chips, lead = 'rely on', line = ['15', 'different platforms']}) => {
+export const Chaos: React.FC<{dur: number; chips: Chip[]; lead?: string; line?: [string, string]; files?: string[]}> = ({dur, chips, lead = 'rely on', line = ['15', 'different platforms'], files = FILES}) => {
   const f = useF();
   const t = f / 30, n = chips.length;
   const pos = chips.map((_, i) => {
@@ -24,7 +24,7 @@ export const Chaos: React.FC<{dur: number; chips: Chip[]; lead?: string; line?: 
       <Mist lift={0.25 + prog(f, 20, 60) * 0.35} />
       {order.map((_, i) => <Pop key={i} at={46 + i * 3} k={i} v={0.14} />)}
       <Drift dur={dur} z={0.08}>
-        {FILES.map((nm, i) => {
+        {files.slice(0, 4).map((nm, i) => {
           const q = prog(f, 60 + i * 3, 20, E.snappy);
           const [x, y] = [[230, 160], [1660, 150], [200, 900], [1700, 930]][i];
           return <div key={nm} style={{position: 'absolute', left: x - 120 + Math.sin(t + i) * 10, top: y - 22, opacity: q * 0.55, filter: 'blur(2.5px)', fontFamily: F.text, fontSize: 18, color: MUTE, background: 'rgba(255,255,255,.3)', border: '1px solid rgba(255,255,255,.75)', borderRadius: 99, padding: '8px 18px'}}>{nm}</div>;

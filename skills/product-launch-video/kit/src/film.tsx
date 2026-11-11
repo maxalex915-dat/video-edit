@@ -20,7 +20,10 @@ export type K = 'pushIn' | 'pullOut' | 'left' | 'right' | 'up' | 'down';
 export type Beat = {name: string; C: React.FC<{dur: number}>; ground: Ground; into?: K}; // into = how the camera enters this scene
 const P = 14;
 const durs: Record<string, number> = Object.fromEntries((timing as unknown as {scenes: [string, number][]}).scenes.map(([n, d]) => [n, Math.round(d * 30)]));
-export const DURS = SCENES.map((b) => durs[b.name] ?? 90);
+export const DURS = SCENES.map((b) => {
+  if (durs[b.name] === undefined) throw new Error(`Scene "${b.name}" has no length in src/timing.json (names must match exactly)`);
+  return durs[b.name];
+});
 export const STARTS = DURS.reduce<number[]>((a, d, i) => [...a, i ? a[i - 1] + DURS[i - 1] : 0], []);
 export const TOTAL = STARTS[STARTS.length - 1] + DURS[DURS.length - 1];
 const easeOut = (x: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);

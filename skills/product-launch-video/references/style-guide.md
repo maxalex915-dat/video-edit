@@ -30,6 +30,8 @@ UI that floats as frosted glass, and a camera that keeps gliding. Nothing flashe
 - Plus white, a near-black ink tinted toward the brand (e.g. `#10242a`), one muted text grey and a mist off-white.
 - **Never add a colour to "help" the palette.** In the source project a deep teal shadow blob was added to the fluid
   gradient for depth; the client called it too dark and asked to use only brand colours plus a bit of white.
+- Shadows and hairlines are tinted from the brand too (`shadeA()`, `inkA()` in `brand.ts`), never a stock grey or
+  another brand's teal.
 - Third-party colours appear only on small logos (platform chips). Status colours (red error, amber warning, green
   done) appear only inside UI and in small doses.
 - If the reference video is in another brand's colours, map its roles, not its hues: their primary becomes your core
@@ -62,7 +64,8 @@ toward, over 28 frames.
 - Headline sizes: hero word 190 to 230 px, statement 84 to 120 px, scene headline 60 to 68 px, list items 64 px,
   sub-lines 34 to 46 px. Letter spacing -0.035em on display sizes, line height 1.12.
 - One word or phrase per headline may be in the brand gradient (text clipped to the gradient); usually the payoff
-  ("One dashboard.", "sorted and explained.").
+  ("One dashboard.", "sorted and explained."). Keep gradient phrases to 1 to 3 words: each word carries its own
+  full gradient, so a long phrase shows several short sweeps.
 - Ink on mist, white on fluid. Muted grey only for sub-lines.
 - Plain words. No jargon, no product codes, no exclamation marks, no em dashes.
 

@@ -77,15 +77,16 @@ export const Problems: React.FC<Props> = ({list = [['Different providers', 37], 
             // how many items came after this one (0 = the current line); eased as each new item arrives
             const after = LIST.slice(k + 1).reduce((m, [, a2]) => m + prog(f, a2 - 4, 12, E.inOut), 0);
             const on = prog(f, at - 2, 10, E.snappy);
-            const size = lerp(Math.min(1, after), 100, 56);
+            const big = Math.min(100, Math.floor(1320 / (t.length * 0.52))); // long items shrink to fit the frame
+            const size = lerp(Math.min(1, after), big, 56);
             return (
               <div key={t} style={{position: 'absolute', left: 520, top: 572 - after * 190 - size * 0.62, opacity: on * (after > 0 ? lerp(Math.min(1, after), 1, 0.16) : 1)}}>
-                {after < 0.05 ? <Words parts={[[t]]} at={at} size={100} align="left" stagger={4} quiet={false} />
+                {after < 0.05 ? <Words parts={[[t]]} at={at} size={big} align="left" stagger={4} quiet={false} />
                   : <div style={{fontFamily: F.display, fontSize: size, fontWeight: 600, letterSpacing: '-0.035em', color: INK, whiteSpace: 'nowrap'}}>{t}</div>}
               </div>
             );
           })}
-          <svg width="520" height="20" style={{position: 'absolute', left: 0, top: 562}}><path d={`M0 10 L${490 * arrow} 10`} stroke="rgba(16,36,42,.35)" strokeWidth={2} /><path d={`M${490 * arrow - 8} 4 L${490 * arrow} 10 L${490 * arrow - 8} 16`} fill="none" stroke="rgba(16,36,42,.35)" strokeWidth={2} opacity={arrow} /></svg>
+          <svg width="520" height="20" style={{position: 'absolute', left: 0, top: 562}}><path d={`M0 10 L${490 * arrow} 10`} stroke={`rgba(${B.inkRGB},.35)`} strokeWidth={2} /><path d={`M${490 * arrow - 8} 4 L${490 * arrow} 10 L${490 * arrow - 8} 16`} fill="none" stroke={`rgba(${B.inkRGB},.35)`} strokeWidth={2} opacity={arrow} /></svg>
         </AbsoluteFill>
       )}
       {h >= 0 && h < 60 && (
@@ -96,14 +97,14 @@ export const Problems: React.FC<Props> = ({list = [['Different providers', 37], 
             const fade = prog(h, r < 4 ? 10 + r * 3 + jit : 30 + (r - 4) * 5 + jit * 1.4, 12, E.inOut); // dissolve, top row first
             const o = pin * (1 - fade);
             if (o <= 0.01) return null;
-            return <div key={i} style={{position: 'absolute', left: x, top: y - PH / 2, width: w, height: PH, borderRadius: 99, border: '2px solid rgba(255,255,255,.85)', background: 'rgba(255,255,255,.06)', boxShadow: '0 0 0 1px rgba(16,36,42,.035)', opacity: o * 0.85, filter: fade > 0.05 ? `blur(${fade * 6}px)` : undefined, transform: `scale(${0.7 + pin * 0.3})`}} />;
+            return <div key={i} style={{position: 'absolute', left: x, top: y - PH / 2, width: w, height: PH, borderRadius: 99, border: '2px solid rgba(255,255,255,.85)', background: 'rgba(255,255,255,.06)', boxShadow: `0 0 0 1px rgba(${B.inkRGB},.035)`, opacity: o * 0.85, filter: fade > 0.05 ? `blur(${fade * 6}px)` : undefined, transform: `scale(${0.7 + pin * 0.3})`}} />;
           })}
         </AbsoluteFill>
       )}
       {h >= 45 && (
         <>
           {frame > 0 && <div style={{position: 'absolute', left: 960 - lerp(frame, 1090, 1490) / 2, top: 540 - lerp(frame, 590, 870) / 2, width: lerp(frame, 1090, 1490), height: lerp(frame, 590, 870), borderRadius: 64, border: '1.5px solid rgba(255,255,255,.6)', background: 'rgba(255,255,255,.1)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', opacity: frame}} />}
-          <div style={{position: 'absolute', left: cx - cw / 2, top: cy - ch / 2, width: cw, height: ch, borderRadius: lerp(prog(h, 45, 20), 26, 44), background: 'linear-gradient(170deg, rgba(255,255,255,.3), rgba(255,255,255,.06))', backdropFilter: 'blur(26px)', WebkitBackdropFilter: 'blur(26px)', border: '1.5px solid rgba(255,255,255,.75)', boxShadow: '0 30px 80px -40px rgba(0,90,120,.25)', opacity: cardO, overflow: 'hidden'}}>
+          <div style={{position: 'absolute', left: cx - cw / 2, top: cy - ch / 2, width: cw, height: ch, borderRadius: lerp(prog(h, 45, 20), 26, 44), background: 'linear-gradient(170deg, rgba(255,255,255,.3), rgba(255,255,255,.06))', backdropFilter: 'blur(26px)', WebkitBackdropFilter: 'blur(26px)', border: '1.5px solid rgba(255,255,255,.75)', boxShadow: `0 30px 80px -40px rgba(${B.shadeRGB},.25)`, opacity: cardO, overflow: 'hidden'}}>
             {grid > 0 && (
               <div style={{position: 'absolute', inset: 16, opacity: grid}}>
                 {([[0, 0, 205, 1], [220, 0, 838, 0.2], [220, 98, 267, 0.46], [502, 98, 267, 0.46], [784, 98, 274, 0.46], [220, 383, 838, 0.33]] as const).map(([x, y, w, hh], i) => (
@@ -117,7 +118,7 @@ export const Problems: React.FC<Props> = ({list = [['Different providers', 37], 
           </div>
         </>
       )}
-      {h >= 0 && dotGone < 1 && <div style={{position: 'absolute', left: dx - 53, top: dy - 53, width: 106, height: 106, borderRadius: 99, background: BRAND, boxShadow: '0 12px 34px -8px rgba(0,150,200,.5)', opacity: dotO * (1 - dotGone)}} />}
+      {h >= 0 && dotGone < 1 && <div style={{position: 'absolute', left: dx - 53, top: dy - 53, width: 106, height: 106, borderRadius: 99, background: BRAND, boxShadow: `0 12px 34px -8px rgba(${B.shadeRGB},.5)`, opacity: dotO * (1 - dotGone)}} />}
     </AbsoluteFill>
   );
 };

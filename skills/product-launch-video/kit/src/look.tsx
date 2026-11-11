@@ -110,9 +110,9 @@ export const Words: React.FC<{parts: Part[]; at: number; size: number; color?: s
 };
 
 // A card floating on light: a white halo around it.
-export const glow = (k = 1): React.CSSProperties => ({boxShadow: `0 0 0 ${6 * k}px rgba(255,255,255,.35), 0 0 ${70 * k}px ${12 * k}px rgba(255,255,255,.5), 0 30px 60px -30px rgba(0,90,120,.35)`});
+export const glow = (k = 1): React.CSSProperties => ({boxShadow: `0 0 0 ${6 * k}px rgba(255,255,255,.35), 0 0 ${70 * k}px ${12 * k}px rgba(255,255,255,.5), 0 30px 60px -30px rgba(${BRAND.shadeRGB},.35)`});
 // FROSTED GLASS: see-through, the ground's colour shows through blurred; white hairline edge; light from above.
-export const glass = (o = 1): React.CSSProperties => ({background: `linear-gradient(160deg, rgba(255,255,255,${0.62 * o}), rgba(255,255,255,${0.26 * o}))`, backdropFilter: 'blur(18px) saturate(1.4)', WebkitBackdropFilter: 'blur(18px) saturate(1.4)', border: '1.5px solid rgba(255,255,255,.85)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 20px -12px rgba(255,255,255,.6), 0 18px 40px -18px rgba(4,63,69,.3)'});
+export const glass = (o = 1): React.CSSProperties => ({background: `linear-gradient(160deg, rgba(255,255,255,${0.62 * o}), rgba(255,255,255,${0.26 * o}))`, backdropFilter: 'blur(18px) saturate(1.4)', WebkitBackdropFilter: 'blur(18px) saturate(1.4)', border: '1.5px solid rgba(255,255,255,.85)', boxShadow: `inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 20px -12px rgba(255,255,255,.6), 0 18px 40px -18px rgba(${BRAND.shadeRGB},.3)`});
 // The camera never stops: a slow push and drift through every scene.
 export const Drift: React.FC<{dur: number; children: React.ReactNode; z?: number; x?: number}> = ({dur, children, z = 0.05, x = 0}) => {
   const f = useF();

@@ -46,6 +46,9 @@ sheets", one copy-paste was too calm). Camera pushes in, then pulls back to reve
 "Every week. By hand." with a "Week 44" pill that keeps flipping (45, 46, 47) every 18 frames.
 
 ### 5. Problems to "Simpler" [kit: Problems.tsx]  (a frame-by-frame copy of the reference; keep it exact)
+(Without a reference video the pattern still stands: it is the approved look. It is the one scene that carries two
+voice lines, the problem list and the "But what if..." turn, 0.3 s apart. List items longer than ~22 characters
+shrink automatically to fit.)
 Mist, ~14 s, three parts.
 1. **The list**: a thin arrow draws in from the left edge (from frame 4, so the screen is never empty); each
    problem (100 px) blurs in at the arrow's tip ON its spoken word; earlier items shrink to 56 px, rise and fade
@@ -158,6 +161,11 @@ of a blur; the music's own ending lands here, with the tagline voice line just b
 Client corrections: the hold before the expansion was too long; the logo was cut at the bottom; the shrinking logo
 showed one flat colour (fixed by drawing the logo's own coloured pieces).
 
+## Units in the kit
+Scene props that say when something happens are in scene FRAMES (30 fps), except `Montage` `at`, which is in
+SECONDS into the scene (it comes straight from the measured voice). Montage visuals are drawn at ~760 x 440 by
+default; pass `visualW`, `visualH`, `fanCols` if yours differ.
+
 ## E. Patterns that work in any scene
 
 - **Count-ups**: numbers count with the snappy curve over 30 to 40 frames, commas kept, tabular figures.
@@ -167,4 +175,5 @@ showed one flat colour (fixed by drawing the logo's own coloured pieces).
   card's rectangle while the background blurs 8 px and fades to 50%.
 - **Deck**: front card lifts in an arc over the others to the back, revealing the next.
 - **Kanban drag**: card lift (scale 1.04, rotate -2, deeper shadow, Z +60) > travel 16 frames > drop with ripple + pop.
+  While held, the card must follow the cursor exactly: use `dragPos()` from `cursor.tsx` (example: `kit/src/scenes/WeekGrid.tsx`).
 - **Stamp**: pop spring at an angle (-8 deg) with a gradient fill.
