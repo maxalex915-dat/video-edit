@@ -58,12 +58,12 @@ export const rise = (f: number, at: number, dur = 18, dist = 60) => {
 
 // Cursor moving along gentle arcs between waypoints; presses on clicks.
 export type Way = {f: number; x: number; y: number};
-export const cursorPos = (f: number, path: Way[]) => {
+export const cursorPos = (f: number, path: Way[], ease: (t: number) => number = E.inOut) => {
   if (f <= path[0].f) return {x: path[0].x, y: path[0].y};
   for (let i = 1; i < path.length; i++) {
     const a = path[i - 1], b = path[i];
     if (f <= b.f) {
-      const p = interpolate(f, [a.f, b.f], [0, 1], {...cl, easing: E.inOut});
+      const p = interpolate(f, [a.f, b.f], [0, 1], {...cl, easing: ease});
       const bow = Math.hypot(b.x - a.x, b.y - a.y) * 0.18;
       const nx = -(b.y - a.y), ny = b.x - a.x, nl = Math.hypot(nx, ny) || 1;
       const arc = Math.sin(p * Math.PI) * bow;
@@ -82,9 +82,9 @@ const heading = (f: number, path: Way[]) => {
   }
   return -Math.PI * 0.75; // at rest it points up-left, like a normal cursor
 };
-export const Cursor: React.FC<{path: Way[]; clicks?: number[]; show?: number; s?: number}> = ({path, clicks = [], show = 0, s = 1.4}) => {
+export const Cursor: React.FC<{path: Way[]; clicks?: number[]; show?: number; s?: number; ease?: (t: number) => number}> = ({path, clicks = [], show = 0, s = 1.4, ease}) => {
   const f = useCurrentFrame();
-  const {x, y} = cursorPos(f, path);
+  const {x, y} = cursorPos(f, path, ease);
   // smooth the heading over a few frames so turns bank like a plane
   let sx = 0, sy = 0;
   for (let k = -3; k <= 3; k++) {const h = heading(f + k, path); sx += Math.cos(h); sy += Math.sin(h);}

@@ -46,13 +46,14 @@ export const BrandFieldRaw: React.FC<{seed?: number}> = ({seed = 0}) => {
   );
   return (
     <AbsoluteFill style={{overflow: 'hidden', background: CY}}>
-      <div style={{position: 'absolute', inset: '-18%', filter: 'blur(90px)'}}>
+      <div style={{position: 'absolute', inset: '-18%', filter: 'blur(80px)'}}>
         <div style={{position: 'absolute', left: '18%', top: '18%', width: 1920, height: 1080}}>
-          {blob('sky', 1500 + s(t * 0.33) * 320, 220 + c(t * 0.41) * 160, 1500, 1100, 1 + s(t * 0.5) * 0.25, t * 9, `radial-gradient(closest-side, ${SKY} 30%, rgba(112,203,243,0))`)}
-          {blob('green', 320 + s(t * 0.38 + 2) * 360, 860 + c(t * 0.52) * 220, 1800, 1300, 1 + s(t * 0.61 + 1) * 0.3, -t * 11, `radial-gradient(closest-side, ${GR} 30%, rgba(127,188,66,0))`, 0.95)}
-          {blob('light', 960 + s(t * 0.52) * 560 + s(t * 1.07 + 1) * 140, 420 + c(t * 0.43) * 260, 1600, 1150, 1 + s(t * 0.72) * 0.35, t * 14, 'radial-gradient(closest-side, rgba(255,255,255,.97) 25%, rgba(220,245,255,.55) 60%, rgba(255,255,255,0))', 0.9)}
-          {blob('deep', 1780 + s(t * 0.47 + 4) * 260, 1080 + c(t * 0.56 + 1) * 200, 1400, 1100, 1 + s(t * 0.66 + 3) * 0.3, t * 7, 'radial-gradient(closest-side, #04303c 25%, rgba(4,48,60,0))', 0.8)}
-          {blob('deep2', -80 + s(t * 0.29 + 1) * 200, -60 + c(t * 0.37 + 2) * 160, 900, 700, 1 + s(t * 0.5 + 2) * 0.25, -t * 6, 'radial-gradient(closest-side, #063f4d, rgba(6,63,77,0))', 0.55)}
+          {blob('sky', 1450 + s(t * 0.55) * 520, 260 + c(t * 0.67) * 300, 1500, 1100, 1 + s(t * 0.8) * 0.4, t * 16, `radial-gradient(closest-side, ${SKY} 35%, rgba(112,203,243,0))`)}
+          {blob('green', 380 + s(t * 0.6 + 2) * 560, 820 + c(t * 0.78) * 320, 1700, 1250, 1 + s(t * 0.9 + 1) * 0.45, -t * 18, `radial-gradient(closest-side, ${GR} 35%, rgba(127,188,66,0))`)}
+          {blob('light', 960 + s(t * 0.72) * 720 + s(t * 1.4 + 1) * 180, 460 + c(t * 0.63) * 360, 1500, 1050, 1 + s(t * 1.05) * 0.5, t * 22, 'radial-gradient(closest-side, rgba(255,255,255,.95) 25%, rgba(235,250,255,.5) 60%, rgba(255,255,255,0))', 0.85)}
+          {blob('green2', 1600 + s(t * 0.66 + 4) * 420, 980 + c(t * 0.74 + 1) * 260, 1300, 950, 1 + s(t * 0.95 + 3) * 0.45, t * 14, `radial-gradient(closest-side, ${GR} 25%, rgba(127,188,66,0))`, 0.8)}
+          {blob('cyan', 300 + s(t * 0.5 + 1) * 380, 120 + c(t * 0.6 + 2) * 240, 1200, 900, 1 + s(t * 0.85 + 2) * 0.4, -t * 12, `radial-gradient(closest-side, ${CY} 40%, rgba(0,185,239,0))`)}
+          {blob('light2', 520 + s(t * 0.9 + 3) * 600, 300 + c(t * 0.8 + 5) * 280, 900, 520, 1 + s(t * 1.2) * 0.5, t * 30, 'radial-gradient(closest-side, rgba(255,255,255,.7), rgba(255,255,255,0))', 0.7)}
         </div>
       </div>
       <Dots color="#fff" o={0.22} />

@@ -46,13 +46,13 @@ const Move: React.FC<{len: number; inK: K | null; outK: K | null; children: Reac
     if (k === 'right') tx -= d * e * 1100;
     if (k === 'up') ty += d * e * 800;
     if (k === 'down') ty -= d * e * 800;
-    bl += e * 26;
+    bl += e * e * 26;
   };
   if (inK) apply(inK, i, false);
   if (outK) apply(outK, o, true);
   // the old scene clears before the new one arrives, so two lines of text never overlap
   const wi = inK ? Math.max(0, Math.min(1, f / (2 * P))) : 1, wo = outK ? Math.max(0, Math.min(1, (f - (len - 2 * P)) / (2 * P))) : 0;
-  const op = Math.min(E.inOut(Math.max(0, Math.min(1, (wi - 0.4) / 0.6))), 1 - E.inOut(Math.max(0, Math.min(1, wo / 0.6))));
+  const op = Math.min(easeOut(Math.max(0, Math.min(1, (wi - 0.4) / 0.35))), 1 - E.inOut(Math.max(0, Math.min(1, wo / 0.6))));
   return <AbsoluteFill style={{transform: `translate(${tx}px, ${ty}px) scale(${sc})`, opacity: op, filter: bl > 0.4 ? `blur(${bl}px)` : undefined}}>{children}</AbsoluteFill>;
 };
 // The shared ground: each scene's ground blooms open over the previous one from where the camera is heading.

@@ -239,7 +239,7 @@ export const Home: React.FC<{dur: number}> = ({dur}) => {
   );
 };
 // the cursor's tour of the dashboard, in the dashboard's own coordinates: it rests on each card in turn
-const HOVER = [{f: 30, x: 640, y: 1000}, {f: 46, x: 600, y: 470}, {f: 56, x: 640, y: 440}, {f: 72, x: 1080, y: 250}, {f: 80, x: 1110, y: 240}, {f: 95, x: 1410, y: 290}, {f: 103, x: 1440, y: 280}, {f: 118, x: 1090, y: 540}, {f: 125, x: 1110, y: 530}, {f: 140, x: 930, y: 790}, {f: 200, x: 960, y: 800}];
+const HOVER = [{f: 26, x: 700, y: 1000}, {f: 52, x: 610, y: 470}, {f: 62, x: 630, y: 455}, {f: 90, x: 1090, y: 250}, {f: 99, x: 1105, y: 245}, {f: 124, x: 1100, y: 540}, {f: 131, x: 1110, y: 535}, {f: 156, x: 950, y: 790}, {f: 220, x: 975, y: 800}];
 
 // 9. Brand field again: the turn from data to decisions.
 export const Decide: React.FC<{dur: number}> = ({dur}) => {

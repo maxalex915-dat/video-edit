@@ -19,16 +19,19 @@ const LiftCtx = React.createContext(0);
 // the cursor glides from card to card; like a weak magnet it draws the card under it (and a little the ones
 // near it) up toward the viewer. The pull trails the cursor by a few frames so it eases in and out.
 const HoverCtx = React.createContext<Way[] | null>(null);
+export const GLIDE = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t); // a soft, even speed curve
 const pull = (f: number, path: Way[] | null, x: number, y: number, w: number, h: number) => {
   if (!path || f < path[0].f) return 0;
-  let m = 0;
-  for (let k = 0; k < 8; k++) {
-    const c = cursorPos(f - k, path);
+  // the card answers the cursor slowly: a weighted look back over the last 0.8 s
+  let m = 0, wsum = 0;
+  for (let k = 0; k < 24; k++) {
+    const c = cursorPos(f - k, path, GLIDE);
     const dx = Math.max(x - c.x, 0, c.x - (x + w)), dy = Math.max(y - c.y, 0, c.y - (y + h));
     const d = Math.hypot(dx, dy);
-    m += d === 0 ? 1 : Math.max(0, 1 - d / 160) * 0.35;
+    const wt = Math.sin(((k + 0.5) / 24) * Math.PI);
+    m += wt * (d === 0 ? 1 : Math.max(0, 1 - d / 200) * 0.3); wsum += wt;
   }
-  return m / 8;
+  return m / wsum;
 };
 const Card: React.FC<{x: number; y: number; w: number; h: number; children: React.ReactNode; at: number; z?: number; bg?: string}> = ({x, y, w, h, children, at, z = 60, bg = 'linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.62))'}) => {
   const f = useF();
@@ -193,7 +196,7 @@ export const RealHome: React.FC<{at?: number; lift?: number; hover?: Way[]}> = (
           })}
         </div>
       </Card>
-      {hover && <div style={{position: 'absolute', inset: 0, transform: 'translateZ(220px)', pointerEvents: 'none'}}><Cursor path={hover} show={hover[0].f} s={1.5} /></div>}
+      {hover && <div style={{position: 'absolute', inset: 0, transform: 'translateZ(220px)', pointerEvents: 'none'}}><Cursor path={hover} show={hover[0].f} s={1.5} ease={GLIDE} /></div>}
       <span style={{display: 'none'}}>{lerp(0, 0, 0)}{C.ink}</span>
     </div></LiftCtx.Provider></HoverCtx.Provider>
   );
