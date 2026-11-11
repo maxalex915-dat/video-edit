@@ -17,11 +17,11 @@ import {BrandFieldRaw, MistRaw} from './Look';
 type G = {k: 'brand'; seed: number} | {k: 'mist'; lift: number} | {k: 'own'};
 export const BEATS9: [number, React.FC<{dur: number}>, string, G][] = [
   [2.9, V.Stat, 'statistic', {k: 'brand', seed: 0}], [5.43, V.Platforms, '15 platforms', {k: 'mist', lift: 0.45}], [4.34, V.Fragmented, 'fragmented', {k: 'mist', lift: 0.55}],
-  [5.3, Manual, 'sheets and slides', {k: 'mist', lift: 0.5}], [14.1, Consuming, 'consuming time', {k: 'mist', lift: 0.7}],
+  [5.3, Manual, 'sheets and slides', {k: 'mist', lift: 0.5}], [14.83, Consuming, 'consuming time', {k: 'mist', lift: 0.7}],
   [3.6, V.Intro, 'introducing', {k: 'mist', lift: 0.3}], [5.25, V.Home, 'home', {k: 'mist', lift: 1}],
   [5.0, TrendsZoom, 'trends', {k: 'mist', lift: 0.6}], [9.3, PlanReport, 'ai report and action plan', {k: 'brand', seed: 3}],
   [3.66, A.AuditOpen, 'audit tool', {k: 'brand', seed: 5}], [4.2, A.Dials, 'dials', {k: 'mist', lift: 0.7}], [7.2, A.Issues, 'issues', {k: 'mist', lift: 0.5}],
-  [5.1, A.Review, 'expert review', {k: 'brand', seed: 6}], [4.12, A.Cancel, 'saving', {k: 'mist', lift: 0.6}], [2.3, More, 'but wait', {k: 'brand', seed: 7}],
+  [5.1, A.Review, 'expert review', {k: 'brand', seed: 6}], [4.35, A.Cancel, 'saving', {k: 'mist', lift: 0.6}], [2.6, More, 'but wait', {k: 'brand', seed: 7}],
   [12.5, Montage, 'feature montage', {k: 'mist', lift: 0.55}], [8.5, En.End, 'bento and logo', {k: 'own'}],
 ];
 type K = 'pushIn' | 'pullOut' | 'left' | 'right' | 'up' | 'down';
