@@ -56,14 +56,14 @@ export const Platforms: React.FC<{dur: number}> = ({dur}) => {
       <Drift dur={dur} z={0.08}>
         {FILES.map(([n, x, y], i) => {
           const q = prog(f, 60 + i * 3, 20, E.snappy);
-          return <div key={n} style={{position: 'absolute', left: x - 120 + Math.sin(t + i) * 10, top: y - 22, opacity: q * 0.55, filter: 'blur(2.5px)', transform: `scale(${0.8 + q * 0.1})`, fontFamily: F.text, fontSize: 18, color: MUTE, background: 'rgba(255,255,255,.7)', borderRadius: 99, padding: '8px 18px', boxShadow: '0 6px 20px -10px rgba(4,63,69,.3)'}}>{n}</div>;
+          return <div key={n} style={{position: 'absolute', left: x - 120 + Math.sin(t + i) * 10, top: y - 22, opacity: q * 0.55, filter: 'blur(2.5px)', transform: `scale(${0.8 + q * 0.1})`, fontFamily: F.text, fontSize: 18, color: MUTE, background: 'rgba(255,255,255,.3)', border: '1px solid rgba(255,255,255,.75)', borderRadius: 99, padding: '8px 18px', boxShadow: '0 6px 20px -10px rgba(4,63,69,.25)'}}>{n}</div>;
         })}
         {CHIPS.map(([x, y, z], i) => {
           const q = spr(f, 46 + ORDER15.indexOf(i) * 3, S.pop);
           const own = i < PS.length;
           const icon = own ? <PlatformIcon p={PS[i][0]} size={44} style={{borderRadius: 99}} /> : <span style={{width: 44, height: 44, borderRadius: 99, background: EXTRA[i - PS.length][2], color: '#fff', fontWeight: 800, fontSize: 20, display: 'grid', placeItems: 'center'}}>{EXTRA[i - PS.length][1]}</span>;
           return (
-            <div key={i} style={{position: 'absolute', left: x + Math.cos(t * 0.6 + i) * 10, top: y + Math.sin(t * 0.8 + i * 1.3) * 12, transform: `translate(-50%,-50%) scale(${Math.min(1.04, q) * z})`, opacity: Math.min(1, q), filter: z < 0.86 ? 'blur(1.2px)' : undefined, display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,.92)', borderRadius: 99, padding: '9px 24px 9px 9px', boxShadow: '0 0 0 1.5px #fff, 0 18px 40px -18px rgba(4,63,69,.35)', fontFamily: F.text, fontSize: 25, fontWeight: 600, color: INK, whiteSpace: 'nowrap'}}>
+            <div key={i} style={{position: 'absolute', left: x + Math.cos(t * 0.6 + i) * 10, top: y + Math.sin(t * 0.8 + i * 1.3) * 12, transform: `translate(-50%,-50%) scale(${Math.min(1.04, q) * z})`, opacity: Math.min(1, q), filter: z < 0.86 ? 'blur(1.2px)' : undefined, display: 'flex', alignItems: 'center', gap: 12, background: 'linear-gradient(160deg, rgba(255,255,255,.62), rgba(255,255,255,.26))', backdropFilter: 'blur(18px) saturate(1.4)', WebkitBackdropFilter: 'blur(18px) saturate(1.4)', border: '1.5px solid rgba(255,255,255,.85)', borderRadius: 99, padding: '9px 24px 9px 9px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 20px -12px rgba(255,255,255,.6), 0 18px 40px -18px rgba(4,63,69,.3)', fontFamily: F.text, fontSize: 25, fontWeight: 600, color: INK, whiteSpace: 'nowrap'}}>
               {icon}{own ? PS[i][1] : EXTRA[i - PS.length][0]}
             </div>
           );
@@ -205,7 +205,6 @@ export const Intro: React.FC<{dur: number}> = ({dur}) => {
               <span style={{fontFamily: F.display, fontSize: 116, fontWeight: 650, letterSpacing: '-0.045em', backgroundImage: `linear-gradient(100deg, ${INK} 0%, ${INK} ${sweep * 120 - 30}%, ${GR} ${sweep * 120 - 15}%, ${CY} ${sweep * 120}%, ${INK} ${sweep * 120 + 15}%, ${INK} 100%)`, WebkitBackgroundClip: 'text', color: 'transparent'}}>Marketing Dashboard</span>
             </div>
           )}
-          {f >= 70 && <div style={{marginTop: 26}}><Words parts={[['Every channel. One place. Automated.']]} at={72} size={34} color={MUTE} weight={500} stagger={2} /></div>}
         </Center>
       </Drift>
     </AbsoluteFill>

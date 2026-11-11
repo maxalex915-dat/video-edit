@@ -41,11 +41,11 @@ const slot = (col: number, i: number): [number, number, number] => [BX + col * (
 const stackSlot = (k: number): [number, number, number] => [1110, 250 + k * 178, 1.08];
 // each card: [frame, column (-1 = stack beside the report), row]
 const MOVES: [number, number, number][][] = [
-  [[0, -1, 0], [150, 0, 0], [205, 1, 0], [258, 2, 1]],
-  [[0, -1, 1], [156, 0, 1], [205, 0, 0], [232, 1, 1], [258, 1, 0]],
-  [[0, -1, 2], [162, 0, 2], [205, 0, 1], [232, 0, 0]],
-  [[0, -1, 3], [168, 0, 3], [205, 0, 2], [232, 0, 1]],
-];
+  [[0, -1, 0], [150, 0, 0], [194, 1, 0], [246, 2, 1]],
+  [[0, -1, 1], [156, 0, 1], [194, 0, 0], [214, 1, 1], [250, 1, 0]],
+  [[0, -1, 2], [162, 0, 2], [194, 0, 1], [214, 0, 0], [232, 1, 2], [252, 1, 1]],
+  [[0, -1, 3], [168, 0, 3], [194, 0, 2], [214, 0, 1], [232, 0, 0]],
+]
 const MV = 16;
 const posOf = (k: number, f: number): [number, number, number] => {
   const m = MOVES[k];
@@ -59,7 +59,7 @@ const posOf = (k: number, f: number): [number, number, number] => {
   return [x, y, s];
 };
 // drags done with the cursor: [card, start frame]
-const DRAGS: [number, number][] = [[0, 205], [1, 232], [0, 258]];
+const DRAGS: [number, number][] = [[0, 194], [1, 214], [2, 232], [0, 246]]; // Dat, Sophie, Lucas, Dat
 
 const SOFT = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
 // a teammate's cursor: the usual arrow in their colour with their name beside it
@@ -92,10 +92,10 @@ export const Report: React.FC<{dur: number}> = ({dur}) => {
     pts.push(end);
     return pts;
   };
-  const pA = [...grab(0, 205, 0.5, 0.45, {f: 172, x: 760, y: 1120}, {f: 236, x: 820, y: 560}).slice(0, -1), ...grab(0, 258, 0.5, 0.45, {f: 236, x: 820, y: 560}, {f: dur + 20, x: 1500, y: 640})];
-  const pB = grab(1, 232, 0.62, 0.5, {f: 180, x: 120, y: 1100}, {f: dur + 20, x: 800, y: 760});
-  const pC: Way[] = [{f: 186, x: 1960, y: 900}, {f: 214, x: 330, y: 760}, {f: 236, x: 300, y: 720}, {f: 252, x: 360, y: 600}, {f: 275, x: 1440, y: 820}, {f: dur + 20, x: 1460, y: 840}];
-  const PEOPLE: [string, string, Way[], number[], number][] = [['Dat', GR, pA, [203, 256], 176], ['Sophie', CY, pB, [230], 186], ['Lucas', '#f08a5d', pC, [], 192]];
+  const pA = [...grab(0, 194, 0.5, 0.45, {f: 166, x: 760, y: 1120}, {f: 224, x: 700, y: 640}).slice(0, -1), ...grab(0, 246, 0.5, 0.45, {f: 224, x: 700, y: 640}, {f: dur + 20, x: 1500, y: 680})];
+  const pB = grab(1, 214, 0.62, 0.5, {f: 176, x: 120, y: 1100}, {f: dur + 20, x: 820, y: 780});
+  const pC = grab(2, 232, 0.36, 0.55, {f: 186, x: 1980, y: 940}, {f: dur + 20, x: 1100, y: 860});
+  const PEOPLE: [string, string, Way[], number[], number][] = [['Dat', GR, pA, [192, 244], 166], ['Sophie', CY, pB, [212], 176], ['Lucas', '#f08a5d', pC, [230], 186]];
   return (
     <AbsoluteFill>
       <Swish at={6} />{RECS.map((_, k) => <Pop key={k} at={40 + k * 14} k={k} v={0.18} />)}
@@ -130,7 +130,8 @@ export const Report: React.FC<{dur: number}> = ({dur}) => {
           {/* the board */}
           {board > 0.01 && ['To do', 'In progress', 'Done'].map((n, c) => {
             const q = Math.min(1, spr(f, 134 + c * 4, S.soft));
-            const cnt = c === 0 ? 4 - [205, 232].filter((t) => f >= t + MV / 2).length : c === 1 ? (f >= 205 + MV / 2 ? 1 : 0) + (f >= 232 + MV / 2 ? 1 : 0) - (f >= 258 + MV / 2 ? 1 : 0) : 1 + (f >= 258 + MV / 2 ? 1 : 0);
+            const colAt = (k: number) => MOVES[k].reduce((c0, [t, cc]) => (f >= t + MV / 2 ? cc : c0), -1);
+            const cnt = [0, 1, 2, 3].filter((k) => colAt(k) === c).length + (c === 2 ? 1 : 0);
             const showCnt = f >= 150 ? cnt : c === 2 ? 1 : 0;
             return (
               <div key={n} style={{position: 'absolute', left: BX + c * (COLW + GAP), top: BY, width: COLW, height: 700, borderRadius: 30, background: 'rgba(255,255,255,.28)', border: '2px solid rgba(255,255,255,.75)', boxShadow: 'inset 0 0 40px rgba(255,255,255,.25)', transform: `translateY(${(1 - q) * 240}px)`, opacity: q, fontFamily: F.text}}>

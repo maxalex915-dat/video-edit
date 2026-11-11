@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Img, interpolate, staticFile} from 'remotion';
 import {prog, spr, S, E, useF, Cue, lerp} from '../v3/util';
 import {BentoAnim, ORDER, land} from './BentoV4';
-import {LOOP_PATHS} from '../v9/loopPaths';
+import {LOOP_PATHS, LOOP_FILLS} from '../v9/loopPaths';
 
 // Close: the bento builds in random order while the camera pulls back (corners blurred, a gust of wind),
 // the centre card lands last. Hold. The centre card fills the screen; that colour is the loop, seen up close;
@@ -38,6 +38,7 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
   const sx = ax + (960 - ax) * (1 - sh), sy = ay + (540 - ay) * (1 - sh); // where the anchor sits now
   const gx = sx - OX * 2403 * gs, gy = sy - OY * 2496 * gs;
   const real = prog(f, T3 - 6, 10);
+  const own = prog(sh, 0.05, 0.4, E.inOut); // sh runs 0 to 1
   const wa = prog(f, T3 + 2, 20, E.snappy), wg = prog(f, T3 + 8, 20, E.snappy);
   const end = prog(f, T3, dur - T3, E.glide);
   const mask = `radial-gradient(70% 70% at 50% 50%, transparent 55%, black 100%)`;
@@ -68,11 +69,14 @@ export const End: React.FC<{dur: number}> = ({dur}) => {
           {/* the loop as a vector cut-out of the same screen-wide gradient as the card, so the colour cannot jump */}
           <svg width="1920" height="1080" style={{position: 'absolute', left: 0, top: 0, opacity: 1 - real}}>
             <defs>
-              <linearGradient id="endG" gradientUnits="userSpaceOnUse" x1={lerp(sh, 210, gx)} y1={lerp(sh, -210, gy)} x2={lerp(sh, 1710, gx + 2403 * gs)} y2={lerp(sh, 1290, gy + 2496 * gs)}><stop offset="0" stopColor="#7fbc42" /><stop offset=".45" stopColor="#00b9ef" /><stop offset="1" stopColor="#70cbf3" /></linearGradient>
+              <linearGradient id="endG" gradientUnits="userSpaceOnUse" x1="210" y1="-210" x2="1710" y2="1290"><stop offset="0" stopColor="#7fbc42" /><stop offset=".45" stopColor="#00b9ef" /><stop offset="1" stopColor="#70cbf3" /></linearGradient>
               <clipPath id="endLoop">{LOOP_PATHS.map((d, i) => <path key={i} d={d} transform={`translate(${gx}, ${gy}) scale(${gs})`} />)}</clipPath>
               <filter id="endN"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={f % 5} /><feColorMatrix type="saturate" values="0" /><feComponentTransfer><feFuncA type="linear" slope="0.06" /></feComponentTransfer></filter>
             </defs>
-            <g clipPath="url(#endLoop)"><rect width="1920" height="1080" fill="url(#endG)" /><rect width="1920" height="1080" filter="url(#endN)" /></g>
+            {/* while it is huge it carries the card's gradient; as it pulls back it takes on the logo's own colours */}
+            <g clipPath="url(#endLoop)" opacity={1 - own}><rect width="1920" height="1080" fill="url(#endG)" /></g>
+            <g opacity={own}>{LOOP_PATHS.map((d, i) => <path key={i} d={d} fill={LOOP_FILLS[i]} stroke={LOOP_FILLS[i]} strokeWidth={1.2 / gs} transform={`translate(${gx}, ${gy}) scale(${gs})`} />)}</g>
+            <g clipPath="url(#endLoop)"><rect width="1920" height="1080" filter="url(#endN)" /></g>
           </svg>
           {real > 0 && <Img src={staticFile('logo_loop.svg')} style={{position: 'absolute', left: LOOP_X, top: LOOP_Y, width: LOOP_W, height: LOOP_H, opacity: real}} />}
           <Img src={staticFile('logo_word_a.svg')} style={{position: 'absolute', left: LX, top: LY, width: 900, opacity: wa, filter: `blur(${(1 - wa) * 12}px)`, transform: `translateX(${(1 - wa) * -60}px)`}} />

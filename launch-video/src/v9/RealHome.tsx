@@ -5,7 +5,7 @@ import {prog, E, lerp} from '../theme/motion';
 import {C} from '../theme/tokens';
 import {F} from '../theme/fonts';
 import {PlatformIcon, Platform} from '../components/ui/Primitives';
-import {Cursor, cursorPos, Way} from '../components/kit/Anim';
+import {cursorPos, Way} from '../components/kit/Anim';
 const GLASS_BG = 'linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.42)), linear-gradient(135deg, rgba(127,188,66,.22) 0%, rgba(0,185,239,.22) 45%, rgba(112,203,243,.22) 100%)';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
@@ -196,7 +196,6 @@ export const RealHome: React.FC<{at?: number; lift?: number; hover?: Way[]}> = (
           })}
         </div>
       </Card>
-      {hover && <div style={{position: 'absolute', inset: 0, transform: 'translateZ(220px)', pointerEvents: 'none'}}><Cursor path={hover} show={hover[0].f} s={1.5} ease={GLIDE} /></div>}
       <span style={{display: 'none'}}>{lerp(0, 0, 0)}{C.ink}</span>
     </div></LiftCtx.Provider></HoverCtx.Provider>
   );

@@ -11,7 +11,7 @@ import {Mist, Words, Pop, Swish, Dots, BRAND, INK, GR, CY, SKY, MIST} from './Lo
 //    The dot rises slowly, sways a touch right then left, fades a little, while the pills dissolve from the top down.
 // 3) The dot drops back to the middle, a glass square grows round it and becomes "Simpler" (large, in the brand
 //    colour, then ink); the card widens into a panel with a frame round it: "Everything in one place".
-const CUT = 257; // the field appears (scene frame); "Simpler" lands 61 frames later, as in the reference
+const CUT = 241; // the field appears (scene frame); "Simpler" lands 61 frames later, as in the reference
 const PH = 95, PITCH = 126, ROWS = 7, RY0 = 165; // pill height, row spacing, rows, first row centre
 const PILLS: [number, number, number, number][] = []; // x, centre y, w, row
 for (let r = 0; r < ROWS; r++) {
