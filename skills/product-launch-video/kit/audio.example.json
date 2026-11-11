@@ -1,0 +1,14 @@
+{
+  "fps": 30,
+  "gap": 0.6,
+  "same_scene_gap": 0.3,
+  "scenes": [["Stat", 2.9], ["Chaos", 5.4], ["Manual", 5.3], ["Problems", 14.1], ["Intro", 3.6], ["Home", 5.25], ["Montage", 12.5], ["End", 8.5]],
+  "lines": [
+    {"label": "Millions of teams ...", "file": "public/vo/01_millions.mp3", "tempo": 1.04, "scene": "Stat", "offset": 0.4},
+    {"label": "Not to mention ...", "file": "public/vo/03_not_to_mention.mp3", "tempo": 1.04, "scene": "Problems", "offset": 0.2, "cut": [0, 7.42]},
+    {"label": "But what if ...", "file": "public/vo/04_simpler.mp3", "tempo": 1.04, "scene": "Problems", "offset": 7.65},
+    {"label": "Introducing ...", "file": "public/vo/05_introducing.mp3", "tempo": 1.04, "scene": "Intro", "offset": 0.07}
+  ],
+  "music": {"file": "public/music/track_no_vocals.wav", "drop": 21.98, "loop": [21.98, 38.18], "bar2": 3.75,
+            "intro_end": 20.42, "intro_bars": 4.4, "drop_scene": "Intro", "drop_offset": 0}
+}
