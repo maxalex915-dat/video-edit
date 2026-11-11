@@ -4,6 +4,7 @@ import {useF} from '../frame';
 import {prog, E, lerp} from '../theme/motion';
 import {C} from '../theme/tokens';
 import {F} from '../theme/fonts';
+import {PlatformIcon, Platform} from '../components/ui/Primitives';
 const GLASS_BG = 'linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.42)), linear-gradient(135deg, rgba(127,188,66,.22) 0%, rgba(0,185,239,.22) 45%, rgba(112,203,243,.22) 100%)';
 
 // The real Home tab of the dashboard (key numbers fold), redrawn as vectors from the approved design
@@ -146,10 +147,32 @@ export const RealHome: React.FC<{at?: number; lift?: number}> = ({at = 0, lift =
       </Card>
 
       {/* start of the Every platform section, below the fold */}
-      <Card x={274} y={678} w={1304} h={136} at={26} z={60}>
+      <Card x={274} y={678} w={1304} h={204} at={26} z={60}>
         <div style={{display: 'flex', alignItems: 'baseline', gap: 10}}><span style={{fontSize: 17, fontWeight: 700}}>Every platform</span><span style={{fontSize: 12, color: MUTE}}>the last 30 days · each platform in its own words</span></div>
-        <div style={{display: 'flex', gap: 12, marginTop: 14}}>
-          {[['LinkedIn', '47,415', '#0a66c2'], ['Facebook', '37,951', '#1877f2'], ['Instagram', '401', '#e1306c'], ['YouTube', '2,342', '#ff0000'], ['Website', '13,246', TEAL], ['Search', '77,699', '#00768f']].map(([a, b, c]) => <div key={a} style={{flex: 1, borderRadius: 14, boxShadow: `0 0 0 1px ${LINE}`, padding: '12px 14px'}}><div style={{display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, fontWeight: 700}}><span style={{width: 24, height: 24, borderRadius: 7, background: c}} />{a}</div><div style={{fontSize: 22, fontWeight: 750, marginTop: 10}}>{b}</div></div>)}
+        <div style={{display: 'flex', gap: 12, marginTop: 12}}>
+          {([['li', 'Impressions', '47,415', '12%', true, '#0a66c2', [3, 4, 3.6, 5, 4.4, 6, 5.2, 7, 6.4, 8]], ['fb', 'Views', '37,951', '5%', true, '#1877f2', [5, 4.6, 5.4, 5, 6, 5.6, 6.4, 6, 6.8, 7]], ['ig', 'Reach', '401', '9%', false, '#e1306c', [6, 5, 5.6, 4.4, 4.8, 4, 4.6, 3.8, 4.2, 3.6]], ['yt', 'Views', '2,342', '44%', true, '#ff0000', [2, 2.4, 2.2, 3, 2.8, 3.6, 4.4, 4, 5.6, 7]], ['web', 'Visitors', '13,246', '18%', true, TEAL, [4, 4.4, 4.2, 5, 5.6, 5.2, 6.2, 6.8, 6.4, 7.4]], ['search', 'Clicks', '77,699', '7%', true, '#00768f', [5, 5.4, 5.2, 5.8, 6, 6.4, 6.2, 6.8, 7, 7.2]]] as [Platform, string, string, string, boolean, string, number[]][]).map(([pl, lab, v, d, up, c, ser], i) => {
+            const W2 = 180, H2 = 46, mx = Math.max(...ser), mn = Math.min(...ser) - 1;
+            const draw = prog(f, 30 + i * 3, 30, E.inOut);
+            const n = Math.max(2, Math.ceil(draw * ser.length));
+            const pts = ser.slice(0, n).map((y, k) => [k * (W2 / (ser.length - 1)), H2 - ((y - mn) / (mx - mn)) * H2]);
+            const line = pts.map(([x, y], k) => `${k ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+            return (
+              <div key={pl} style={{flex: 1, borderRadius: 16, background: 'rgba(255,255,255,.75)', boxShadow: `0 0 0 1px ${LINE}`, padding: '12px 14px 10px', position: 'relative', overflow: 'hidden'}}>
+                <div style={{display: 'flex', gap: 8, alignItems: 'center', fontSize: 13.5, fontWeight: 700}}><PlatformIcon p={pl} size={24} />{{li: 'LinkedIn', fb: 'Facebook', ig: 'Instagram', yt: 'YouTube', web: 'Website', search: 'Search', email: 'Email'}[pl]}</div>
+                <div style={{display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 8}}>
+                  <span style={{fontSize: 22, fontWeight: 750, fontVariantNumeric: 'tabular-nums'}}>{v}</span>
+                  <span style={{fontSize: 11, fontWeight: 700, color: up ? '#2f7a4a' : '#b3261e', background: up ? '#e7f4ea' : '#fbe9e7', borderRadius: 99, padding: '2px 7px'}}>{up ? '▲' : '▼'} {d}</span>
+                </div>
+                <div style={{fontSize: 11, color: MUTE}}>{lab}</div>
+                <svg width={W2} height={H2 + 4} style={{display: 'block', marginTop: 6, overflow: 'visible'}}>
+                  <defs><linearGradient id={`ep${i}`} x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor={c} stopOpacity=".28" /><stop offset="1" stopColor={c} stopOpacity="0" /></linearGradient></defs>
+                  <path d={`${line} L${pts[pts.length - 1][0]},${H2 + 4} L0,${H2 + 4} Z`} fill={`url(#ep${i})`} />
+                  <path d={line} fill="none" stroke={c} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r={3.5} fill="#fff" stroke={c} strokeWidth={2} />
+                </svg>
+              </div>
+            );
+          })}
         </div>
       </Card>
       <span style={{display: 'none'}}>{lerp(0, 0, 0)}{C.ink}</span>
