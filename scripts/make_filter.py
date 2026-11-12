@@ -14,9 +14,14 @@ xf = ed["crossfade_seconds"]
 off = float(os.environ.get("SOURCE_OFFSET", "0"))  # seconds, master_time = reference_time + off
 segs = ed["segments"]
 lines, args = [], []
+# SEG_OVERRIDE="7=/path/seg7.mkv,8=/path/seg8.mkv": use a pre-cut lossless clip (same cut as the edit list) for those segments
+ovr = dict(x.split("=", 1) for x in os.environ.get("SEG_OVERRIDE", "").split(",") if "=" in x)
 for i, s in enumerate(segs):
     a, b = s["source_start"] + off, s["source_end"] + off
-    args += ["-ss", f"{a:.3f}", "-t", f"{b - a:.3f}", "-i", master]
+    if str(s["n"]) in ovr:
+        args += ["-ss", "0", "-t", f"{b - a:.3f}", "-i", ovr[str(s["n"])]]   # same 6 tokens as the normal branch (render.sh counts them)
+    else:
+        args += ["-ss", f"{a:.3f}", "-t", f"{b - a:.3f}", "-i", master]
     lines.append(f"[{i}:v]setpts=PTS-STARTPTS,fps=25[v{i}];")
 cur, acc = "v0", segs[0]["source_end"] - segs[0]["source_start"]
 for i in range(1, len(segs)):
